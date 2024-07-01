@@ -941,41 +941,42 @@ class PlayState extends MusicBeatState
 
 	public function startVideo(name:String) #if VIDEOS_ALLOWED :VideoManager#end
 	{
-		#if VIDEOS_ALLOWED
-		var filepath:String = Paths.video(name);
-		var video:VideoManager = new VideoManager();
-		inCutscene = true;
+    #if VIDEOS_ALLOWED
+    var filepath:String = Paths.video(name);
+    var video:VideoManager = new VideoManager();
+    inCutscene = true;
 
-		if(#if MODS_ALLOWED !FileSystem.exists(filepath) #else !Assets.exists(filepath) #end) {
-			FlxG.log.warn('Couldnt find video file: ' + name);
-			startAndEnd();
-			return null;
-		}
+    if (#if MODS_ALLOWED !FileSystem.exists(filepath) #else !Assets.exists(filepath) #end) {
+        FlxG.log.warn('Couldnt find video file: ' + name);
+        startAndEnd();
+        return null;
+    }
 
-		var video:VideoHandler = new VideoHandler();
-			#if (hxCodec >= "3.0.0")
-			// Recent versions
-			video.play(filepath);
-			video.onEndReached.add(function(){
-				video.dispose();
-				startAndEnd();
-				return;
-			}, true);
-		#else
-		// Older Versions
-		video.startVideo(filepath);
-		video.onVideoEnd.add(function(){
-			startAndEnd();
-			return;
-		});
+    var video:VideoHandler = new VideoHandler();
+    #if (hxCodec >= "3.0.0")
+    // Recent versions
+    video.play(filepath);
+    video.onEndReached.add(function() {
+        video.dispose();
+        startAndEnd();
+        return;
+    }, true);
+    #else
+    // Older Versions
+    video.startVideo(filepath);
+    video.onVideoEnd.add(function() {
+        startAndEnd();
+        return;
+    });
+    #end // Closing the hxCodec check
 
-		return video;
-		#else
-		FlxG.log.warn('Platform not supported for video play back!');
-		startAndEnd();
-		return;
-		#end
-	}
+    return video;
+    #else
+    FlxG.log.warn('Platform not supported for video play back!');
+    startAndEnd();
+    return;
+    #end // Closing the VIDEOS_ALLOWED check
+}
 
 	function startAndEnd()
 	{
