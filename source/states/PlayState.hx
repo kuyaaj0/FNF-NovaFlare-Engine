@@ -946,12 +946,6 @@ class PlayState extends MusicBeatState
 		var video:VideoManager = new VideoManager();
 		inCutscene = true;
 
-		#if sys
-		if(!FileSystem.exists(filepath))
-		#else
-		if(!OpenFlAssets.exists(filepath))
-		#end
-
 		if(#if MODS_ALLOWED !FileSystem.exists(filepath) #else !Assets.exists(filepath) #end) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
