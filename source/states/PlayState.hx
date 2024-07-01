@@ -942,9 +942,15 @@ class PlayState extends MusicBeatState
 	public function startVideo(name:String) #if VIDEOS_ALLOWED :VideoManager#end
 	{
 		#if VIDEOS_ALLOWED
+		inCutscene = true;
+
 		var filepath:String = Paths.video(name);
 		var video:VideoManager = new VideoManager();
-		inCutscene = true;
+		#if sys
+		if(!FileSystem.exists(filepath))
+		#else
+		if(!OpenFlAssets.exists(filepath))
+		#end
 
 		if(#if MODS_ALLOWED !FileSystem.exists(filepath) #else !Assets.exists(filepath) #end) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
@@ -952,6 +958,17 @@ class PlayState extends MusicBeatState
 			return null;
 		}
 
+		var video:VideoHandler = new VideoHandler();
+			#if (hxCodec >= "3.0.0")
+			// Recent versions
+			video.play(filepath);
+			video.onEndReached.add(function(){
+				video.dispose();
+				startAndEnd();
+				return;
+			}, true);
+		#else
+		// Older Versions
 		video.startVideo(filepath);
 		video.onVideoEnd.add(function(){
 			startAndEnd();
