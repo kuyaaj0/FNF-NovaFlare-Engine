@@ -942,10 +942,10 @@ class PlayState extends MusicBeatState
 	public function startVideo(name:String) #if VIDEOS_ALLOWED :VideoManager#end
 	{
 		#if VIDEOS_ALLOWED
-		inCutscene = true;
-
 		var filepath:String = Paths.video(name);
 		var video:VideoManager = new VideoManager();
+		inCutscene = true;
+
 		#if sys
 		if(!FileSystem.exists(filepath))
 		#else
