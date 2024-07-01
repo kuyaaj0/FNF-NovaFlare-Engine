@@ -939,15 +939,19 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String) #if VIDEOS_ALLOWED :VideoManager#end
-	{
+	public function startVideo(name:String) #if VIDEOS_ALLOWED :VideoManager #end
+{
     #if VIDEOS_ALLOWED
     var filepath:String = Paths.video(name);
     var video:VideoManager = new VideoManager();
     inCutscene = true;
 
-    if (#if MODS_ALLOWED !FileSystem.exists(filepath) #else !Assets.exists(filepath) #end) {
-        FlxG.log.warn('Couldnt find video file: ' + name);
+    #if MODS_ALLOWED
+    if (!FileSystem.exists(filepath)) {
+    #else
+    if (!Assets.exists(filepath)) {
+    #end
+        FlxG.log.warn('Couldn\'t find video file: ' + name);
         startAndEnd();
         return null;
     }
@@ -974,17 +978,17 @@ class PlayState extends MusicBeatState
     #else
     FlxG.log.warn('Platform not supported for video play back!');
     startAndEnd();
-    return;
+    return null;
     #end // Closing the VIDEOS_ALLOWED check
 }
 
-	function startAndEnd()
-	{
-		if(endingSong)
-			endSong();
-		else
-			startCountdown();
-	}
+function startAndEnd()
+{
+    if (endingSong)
+        endSong();
+    else
+        startCountdown();
+}
 
 	var dialogueCount:Int = 0;
 	public var psychDialogue:DialogueBoxPsych;
