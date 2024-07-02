@@ -23,7 +23,7 @@
 	<define name="HSCRIPT_ALLOWED" if="desktop || mobile || web" />
 	<define name="LUA_ALLOWED" if="desktop || mobile" unless="hl"/>
 	<define name="ACHIEVEMENTS_ALLOWED" />
-	<define name="DISCORD_ALLOWED" if="desktop || mobile" unless="hl"/>
+	<!--define name="DISCORD_ALLOWED" if="desktop || mobile" unless="hl"/-->
 	<define name="PSYCH_WATERMARKS"/> <!-- DELETE THIS TO REMOVE WATERMARKS/DEV NAMES ON TITLE SCREEN -->
         <define name="CUSTOM_SHADERS_ALLOWED" if="LUA_ALLOWED"/>
 
