@@ -939,55 +939,53 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String) #if VIDEOS_ALLOWED :VideoManager #end
+	public function startVideo(name:String)
 {
-    #if VIDEOS_ALLOWED
-    var filepath:String = Paths.video(name);
-    var video:VideoManager = new VideoManager();
-    inCutscene = true;
+	#if VIDEOS_ALLOWED
+	inCutscene = true;
 
-    #if MODS_ALLOWED
-    if (!FileSystem.exists(filepath)) {
-    #else
-    if (!Assets.exists(filepath)) {
-    #end
-        FlxG.log.warn('Couldn\'t find video file: ' + name);
-        startAndEnd();
-        return null;
-    }
+	var filepath:String = Paths.video(name);
+	#if sys
+	if(!FileSystem.exists(filepath))
+	#else
+	if(!OpenFlAssets.exists(filepath))
+	#end
+	{
+		FlxG.log.warn('Couldn\'t find video file: ' + name);
+		startAndEnd();
+		return;
+	}
 
-    var video:VideoHandler = new VideoHandler();
-    #if (hxCodec >= "3.0.0")
-    // Recent versions
-    video.play(filepath);
-    video.onEndReached.add(function() {
-        video.dispose();
-        startAndEnd();
-        return;
-    }, true);
-    #else
-    // Older Versions
-    video.startVideo(filepath);
-    video.onVideoEnd.add(function() {
-        startAndEnd();
-        return;
-    });
-    #end // Closing the hxCodec check
-
-    return video;
-    #else
-    FlxG.log.warn('Platform not supported for video play back!');
-    startAndEnd();
-    return null;
-    #end // Closing the VIDEOS_ALLOWED check
+	var video:VideoHandler = new VideoHandler();
+	#if (hxCodec >= "3.0.0")
+	// Recent versions
+	video.play(filepath);
+	video.onEndReached.add(function()
+	{
+		video.dispose();
+		startAndEnd();
+	}, true);
+	#else
+	// Older versions
+	video.playVideo(filepath);
+	video.finishCallback = function()
+	{
+		startAndEnd();
+	};
+	#end
+	#else
+	FlxG.log.warn('Platform not supported!');
+	startAndEnd();
+	return;
+	#end
 }
 
 function startAndEnd()
 {
-    if (endingSong)
-        endSong();
-    else
-        startCountdown();
+	if (endingSong)
+		endSong();
+	else
+		startCountdown();
 }
 
 	var dialogueCount:Int = 0;
