@@ -29,10 +29,8 @@
 
 	<section if="officialBuild">
 		<define name="TITLE_SCREEN_EASTER_EGG"/>
-		<!-- F*ck the codes im gonna use videos outside -->
+		<define name="VIDEOS_ALLOWED" if="desktop || mobile" unless="32bits || hl || NOVIDEO || rpi"/> <!-- F*ck the codes im gonna use videos outside nvm -->
 	</section>
-
-	<define name="VIDEOS_ALLOWED" if="desktop || mobile" unless="32bits || hl || NOVIDEO || rpi"/>
 
 	<!-- ____________________________ Window Settings ___________________________ -->
 
