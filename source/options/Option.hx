@@ -231,6 +231,27 @@ class GhostTap extends Option
 	}
 }
 
+class Smooth Health extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	override function press()
+	{
+		
+		ClientPrefs.data.smoothHealth = !ClientPrefs.data.smoothHealth;
+		display = updateDisplay();
+    }
+
+	private override function updateDisplay():String
+	{
+		return "smoothHealth: " + (ClientPrefs.data.smoothHealth ? enable_O : disable_O);
+	}
+}
+
 class NoReset extends Option
 {
 	public function new(desc:String)
