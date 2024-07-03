@@ -194,6 +194,7 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
+	public var smoothHealth:Float = 1;
 	public var combo:Int = 0;	
 	public var highestCombo:Int = 0;
 	
@@ -567,7 +568,6 @@ class PlayState extends MusicBeatState
 		uiGroup.add(timeTxt);
 		
 		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return (ClientPrefs.data.smoothHealth) ? smoothHealth : health, 0, 2);
-		healthBar.screenCenter(X););
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
