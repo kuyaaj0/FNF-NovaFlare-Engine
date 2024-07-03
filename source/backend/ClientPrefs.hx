@@ -15,6 +15,7 @@ import states.TitleState;
 	public var noteDetectionFix:Bool = true;
 	public var ghostTapping:Bool = true;
 	public var guitarHeroSustains:Bool = true;
+	public var smoothHealth:Bool = true;
 	public var resultsScreen:Bool = true;
 	
 	public var playOpponent:Bool = false;
