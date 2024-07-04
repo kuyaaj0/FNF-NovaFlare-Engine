@@ -45,6 +45,7 @@ import states.TitleState;
 	public var hideHud:Bool = false;	
 	public var timeBarType:String = 'Time Left';
 	public var scoreZoom:Bool = true;
+	public var smoothScore:Bool = true;
 	public var healthBarAlpha:Float = 1;
 	public var hitsoundType:String = 'Default';
 	public var hitsoundVolume:Float = 0;
