@@ -105,7 +105,8 @@ class OptionsSubstate extends MusicBeatSubstate
 			    //new HitSoundType('Choose sound type for hitSound.'),
                 new HitSound("Adds 'hitsound' on note hits."),				               
 				new CamZoom("Toggle the camera zoom in-game."),
-				new ScoreZoom("Zoom score on"),				
+				new ScoreZoom("Zoom score on"),
+				new SmoothScore("smooth score is still on beta and not working"),
 				new JudgementCounter("Show your judgements that you've gotten in the song"),								
                 new HideHud("Shows to you hud."),           
                 new HideOppStrums("Shows/Hides opponent strums on screen."),		
@@ -729,11 +730,13 @@ class OptionsSubstate extends MusicBeatSubstate
         
             case 0:
                 ClientPrefs.data.resultsScreen = ClientPrefs.defaultData.resultsScreen;
+		ClientPrefs.data.smoothHealth = ClientPrefs.defaultData.smoothHealth;
             case 1:                
                 //ClientPrefs.data.hitsoundType = ClientPrefs.defaultData.hitsoundType;
                 ClientPrefs.data.hitsoundVolume = ClientPrefs.defaultData.hitsoundVolume;
                 ClientPrefs.data.camZooms = ClientPrefs.defaultData.camZooms;
                 ClientPrefs.data.scoreZoom = ClientPrefs.defaultData.scoreZoom;
+		ClientPrefs.data.smoothScore = ClientPrefs.defaultData.smoothScore;
                 ClientPrefs.data.judgementCounter = ClientPrefs.defaultData.judgementCounter;
                 ClientPrefs.data.hideHud = ClientPrefs.defaultData.hideHud;
                 ClientPrefs.data.opponentStrums = ClientPrefs.defaultData.opponentStrums;
