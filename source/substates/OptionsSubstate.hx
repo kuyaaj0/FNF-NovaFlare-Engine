@@ -99,7 +99,8 @@ class OptionsSubstate extends MusicBeatSubstate
 		
 		options = [
 			new OptionCata(50, 40, OptionsName.setGameplay(), [								
-                new ResultsScreen('If checked, Open Results Screen at end song.'),                          
+                new ResultsScreen('If checked, Open Results Screen at end song.'),  
+		new SmoothHealth('If checked, the health clearly smooth at the start of the song clearly it's still on beta anyway.'),  
 			]),
 			new OptionCata(345, 40, OptionsName.setAppearance(), [
                 new HitSound("Adds 'hitsound' on note hits."),				               
@@ -109,6 +110,7 @@ class OptionsSubstate extends MusicBeatSubstate
                 new HideHud("Shows to you hud."),           
                 new HideOppStrums("Shows/Hides opponent strums on screen."),		
                 new ShowComboNum("Combo sprite appearance."),
+                new SmoothScore("it's still on f*ck*ng beta and not works it's better to turn off."),                
                 new ComboColor("Allow combo Sprite to get and use rating color."),	
                 new ComboOffset('Fix combo member position skewing.'),
                 new ShowRating("Rating sprite appearance."),               
@@ -727,10 +729,12 @@ class OptionsSubstate extends MusicBeatSubstate
         
             case 0:
                 ClientPrefs.data.resultsScreen = ClientPrefs.defaultData.resultsScreen;
+                ClientPrefs.data.smoothHealth = ClientPrefs.defaultData.smoothHealth;
             case 1:                
                 ClientPrefs.data.hitsoundVolume = ClientPrefs.defaultData.hitsoundVolume;
                 ClientPrefs.data.camZooms = ClientPrefs.defaultData.camZooms;
                 ClientPrefs.data.scoreZoom = ClientPrefs.defaultData.scoreZoom;
+                ClientPrefs.data.smoothScore = ClientPrefs.defaultData.smoothScore;
                 ClientPrefs.data.judgementCounter = ClientPrefs.defaultData.judgementCounter;
                 ClientPrefs.data.hideHud = ClientPrefs.defaultData.hideHud;
                 ClientPrefs.data.opponentStrums = ClientPrefs.defaultData.opponentStrums;
