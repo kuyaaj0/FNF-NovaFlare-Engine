@@ -98,7 +98,8 @@ class OptionsState extends MusicBeatState
 				new FixLNL('reduce Long Note length\nFix for some mod engines have been reduced'),												
 				new GhostTap("Toggle counting pressing a directional input when no arrow is there as a miss."),								
 				new NoReset("Toggle pressing R to gameover."),								               
-                new ResultsScreen('If checked, Open Results Screen at end song.'),          
+                new ResultsScreen('If checked, Open Results Screen at end song.'),      
+		new SmoothHealth('If checked, the health clearly smooth at the start of the song clearly it's still on beta anyway.'),
                 new NoteOffset('Change NoteOffset and judgement position.'),
 				new Judgement("Create a custom judgement preset."),
 			]),
@@ -114,7 +115,8 @@ class OptionsState extends MusicBeatState
 				new ScoreZoom("Zoom score on 2'nd beat."),				
 				new JudgementCounter("Show your judgements that you've gotten in the song"),								
                 new HideHud("Shows to you hud."),           
-                new HideOppStrums("Shows/Hides opponent strums on screen."),		
+                new HideOppStrums("Shows/Hides opponent strums on screen."),	
+                new SmoothScore("it's still on f*ck*ng beta and not works it's better to turn off."),
                 new ShowComboNum("Combo sprite appearance."),
                 new ComboColor("Allow combo Sprite to get and use rating color."),	
                 new ComboOffset('Fix combo member position skewing.'),
@@ -770,6 +772,7 @@ class OptionsState extends MusicBeatState
                 ClientPrefs.data.ghostTapping = ClientPrefs.defaultData.ghostTapping;
                 ClientPrefs.data.noReset = ClientPrefs.defaultData.noReset;
                 ClientPrefs.data.resultsScreen = ClientPrefs.defaultData.resultsScreen;
+                ClientPrefs.data.smoothHealth = ClientPrefs.defaultData.smoothHealth;
             case 1:
                 ClientPrefs.data.noteSkin = ClientPrefs.defaultData.noteSkin;
                 ClientPrefs.data.noteRGB = ClientPrefs.defaultData.noteRGB;
@@ -779,6 +782,7 @@ class OptionsState extends MusicBeatState
                 ClientPrefs.data.hitsoundVolume = ClientPrefs.defaultData.hitsoundVolume;
                 ClientPrefs.data.camZooms = ClientPrefs.defaultData.camZooms;
                 ClientPrefs.data.scoreZoom = ClientPrefs.defaultData.scoreZoom;
+                ClientPrefs.data.smoothScore = ClientPrefs.defaultData.smoothScore;
                 ClientPrefs.data.judgementCounter = ClientPrefs.defaultData.judgementCounter;
                 ClientPrefs.data.hideHud = ClientPrefs.defaultData.hideHud;
                 ClientPrefs.data.opponentStrums = ClientPrefs.defaultData.opponentStrums;
