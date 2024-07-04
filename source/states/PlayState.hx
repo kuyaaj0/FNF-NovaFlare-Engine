@@ -260,6 +260,7 @@ class PlayState extends MusicBeatState
 	public var camPause:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
+	public var smoothScore:Float = 0;
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
@@ -2188,6 +2189,9 @@ function startAndEnd()
 
 		var mult:Float = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
 		smoothHealth = mult;
+
+		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.108);
+		smoothScore = scoreMult;
 
 		setOnScripts('cameraX', camFollow.x);
 		setOnScripts('cameraY', camFollow.y);
