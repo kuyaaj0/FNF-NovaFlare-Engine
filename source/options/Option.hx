@@ -583,6 +583,27 @@ class ScoreZoom extends Option
 	}
 }
 
+class SmoothScore extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	override function press()
+	{
+		
+		ClientPrefs.data.smoothScore = !ClientPrefs.data.smoothScore;
+		display = updateDisplay();
+    }
+
+	private override function updateDisplay():String
+	{
+		return "smoothScore: " + (ClientPrefs.data.smoothScore ? enable_O : disable_O);
+	}
+}
+
 class JudgementCounter extends Option
 {
 	public function new(desc:String)
