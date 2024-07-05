@@ -1325,6 +1325,27 @@ class FunkinLua {
 			#end
 		});
 
+		set("play", function(videoFile:String, loop:Bool = false, ?camera:String) {
+			#if VIDEOS_ALLOWED
+			if(FileSystem.exists(Paths.video(videoFile), loop, camera)) {
+				Video.play(videoFile, loop, camera);
+				return true;
+			} else {
+			    Video.play(videoFile); //just fix bug
+				luaTrace('play: Video file not found: ' + videoFile, false, false, FlxColor.RED);
+			}
+			return false;
+
+			#else
+			if(Video.endingSong) {
+			   Video.endSong();
+			} else {
+				Video.startCountdown();
+			}
+			return true;
+			#end
+		});
+		
 		set("playMusic", function(sound:String, volume:Float = 1, loop:Bool = false) {
 			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
 		});
