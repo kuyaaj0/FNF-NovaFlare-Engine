@@ -1,12 +1,13 @@
 package backend;
 
 #if VIDEOS_ALLOWED 
-#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as VideoHandler;
-#elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler as VideoHandler;
-#elseif (hxCodec == "2.6.0") import VideoHandler;
-#else import vlc.MP4Handler as VideoHandler; #end
+#if hxCodec
+#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as Video;
+#elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler as Video;
+#elseif (hxCodec == "2.6.0") import VideoHandler as Video;
+#else import vlc.MP4Handler as Video; #end
 #elseif hxvlc
-import hxvlc.flixel.FlxVideo as VideoHandler;
+import hxvlc.flixel.FlxVideo as Video;
 #end
 #end
 import haxe.extern.EitherType;
