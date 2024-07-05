@@ -10,29 +10,27 @@
     {
       "name": "openfl",
       "type": "haxelib",
-      "version": null
+      "version": "9.3.2"
     },
     {
       "name": "flixel",
-      "type": "git",
-      "dir": null,
-      "ref": "dev",
-      "url": "https://github.com/beihu235/flixel"
+      "type": "haxelib",
+      "version": "5.5.0"
     },
     {
       "name": "flixel-addons",
+      "type": "haxelib",
+      "version": "3.2.1"
+    },
+    {
+      "name": "flixel-ui",
       "type": "haxelib",
       "version": null
     },
     {
       "name": "flixel-tools",
       "type": "haxelib",
-      "version": null
-    },
-    {
-      "name": "flixel-ui",
-      "type": "haxelib",
-      "version": null
+      "version": "1.5.1"
     },
     {
       "name": "hxcpp",
@@ -89,15 +87,22 @@
       "name": "extension-androidtools",
       "type": "git",
       "dir": null,
-      "ref": "main",
-      "url": "https://github.com/beihu235/extension-androidtools"
+      "ref": "SAF",
+      "url": "https://github.com/MobilePorting/extension-androidtools-Base.git"
     },
     {
-      "name": "androiddialogs",
+      "name": "funkin.vis",
       "type": "git",
       "dir": null,
-      "ref": "master",
-      "url": "https://github.com/beihu235/AndroidDialogs"
+      "ref": "38261833590773cb1de34ac5d11e0825696fc340",
+      "url": "https://github.com/FunkinCrew/funkVis"
+    },
+    {
+      "name": "grig.audio",
+      "type": "git",
+      "dir": "src",
+      "ref": "57f5d47f2533fd0c3dcd025a86cb86c0dfa0b6d2",
+      "url": "https://gitlab.com/haxe-grig/grig.audio.git"
     }
   ]
 }

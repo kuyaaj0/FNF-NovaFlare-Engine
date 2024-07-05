@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="NovaFlare Engine" file="NovaFlare Engine" packageName="com.NovaFlareEngine" package="com.NovaFlareEngine" main="Main" version="1.1.3" company="beihu" />
+	<app title="NovaFlare Engine" file="NovaFlare Engine" packageName="com.NovaFlareEngine" package="com.NovaFlareEngine" main="Main" version="1.1.4" company="beihu" />
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
 
@@ -23,13 +23,13 @@
 	<define name="HSCRIPT_ALLOWED" if="desktop || mobile || web" />
 	<define name="LUA_ALLOWED" if="desktop || mobile" unless="hl"/>
 	<define name="ACHIEVEMENTS_ALLOWED" />
-	<!--define name="DISCORD_ALLOWED" if="desktop || mobile" unless="hl"/-->
+	<!--define name="DISCORD_ALLOWED" if="desktop" unless="hl"/-->
 	<define name="PSYCH_WATERMARKS"/> <!-- DELETE THIS TO REMOVE WATERMARKS/DEV NAMES ON TITLE SCREEN -->
+	<define name="VIDEOS_ALLOWED" if="desktop || mobile" unless="32bits || hl || NOVIDEO || rpi"/> <!-- i'll keep this cuz it makes vscode think i don't use videos -->
         <define name="CUSTOM_SHADERS_ALLOWED" if="LUA_ALLOWED"/>
 
 	<section if="officialBuild">
 		<define name="TITLE_SCREEN_EASTER_EGG"/>
-		<define name="VIDEOS_ALLOWED" if="desktop || mobile" unless="32bits || hl || NOVIDEO || rpi"/> <!-- F*ck the codes im gonna use videos outside nvm -->
 	</section>
 
 	<!-- ____________________________ Window Settings ___________________________ -->
@@ -110,9 +110,11 @@
 	<haxelib name="hxvlc" if="VIDEOS_ALLOWED ios"/>
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 	<haxelib name="flxanimate" unless="html5"/>
-	<haxelib name="androiddialogs" if="android"/>
 	<haxelib name="tjson"/>
 
+        <haxelib name="funkin.vis"/>
+	<haxelib name="grig.audio" />
+	
 	<!-- Mobile Specific-->
 	<haxelib name="extension-androidtools" if="android" />
 	<!--<haxelib name="hx-ios-uikit" if="ios" />-->
@@ -123,7 +125,6 @@
 
 	<!-- Enables a terminal log prompt on debug builds -->
 	<haxelib name="hxcpp-debug-server" if="debug"/>
-	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -185,10 +186,10 @@
 			<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
 		</section>
 
-		<!--<section if="ios">
+		<section if="ios">
 			<define name='objc' />
 			<ios linker-flags='-ObjC' />
-		</section>-->
+		</section>
 
 	<!--Avoid memory leaks with for loops in HScript-->
 	<haxedef name="loop_unroll_max_cost" value="25" />
