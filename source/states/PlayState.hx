@@ -1245,7 +1245,7 @@ class PlayState extends MusicBeatState
 
 		callOnScripts('onUpdateScore', [miss]);
 
-	public dynamic function fullComboFunction()
+	public dynamic function fullComboFunction() {
 	{
 		var sicks:Int = ratingsData[0].hits;
 		var goods:Int = ratingsData[1].hits;
@@ -1265,7 +1265,7 @@ class PlayState extends MusicBeatState
 			else ratingFC = 'Clear';
 		}
 	}
-
+}
 	public function doScoreBop():Void {
 		if(!ClientPrefs.data.scoreZoom)
 			return;
