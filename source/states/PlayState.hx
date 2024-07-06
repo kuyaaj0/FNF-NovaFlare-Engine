@@ -1885,31 +1885,7 @@ override public function create(){{
 			#if FLX_PITCH vocals.pitch = playbackRate; #end
 		}
 
-		if (Conductor.songPosition <= opponentVocals.length)
-		{
-			if (fixVocals) opponentVocals.time = Conductor.songPosition;
-			#if FLX_PITCH opponentVocals.pitch = playbackRate; #end
-		}
-		vocals.play();
-		opponentVocals.play();
-	}
-	
-	public var fixDesyncedStep:Int = 0;
-	function musicCheck(music:FlxSound, getTime:Float, deviation:Float):Bool
-	{
-	    if (music.length > 0 && Math.abs(music.time - getTime) > deviation)
-	        return true;
-        return false;		
-	}
-
-	public var paused:Bool = false;
-	public var canReset:Bool = true;
-	var startedCountdown:Bool = false;
-	var canPause:Bool = true;
-	var freezeCamera:Bool = false;
-	var allowDebugKeys:Bool = true;	
-
-	override public function update(elapsed:Float):Void {
+override public function update(elapsed:Float):Void {
     super.update(elapsed);
 
     // Other update logic...
@@ -1950,6 +1926,28 @@ override public function create(){{
         }
     }
 
+    if ((controls.PAUSE #if android || FlxG.android.justReleased.BACK #end) && (startedCountdown && canPause)) {
+        var ret:Dynamic = callOnScripts('onPause', null, true);
+        if (ret != LuaUtils.Function_Stop) {
+            openPauseMenu();
+        }
+    }
+
+    if (!endingSong && !inCutscene && allowDebugKeys) {
+        if (controls.justPressed('debug_1')) {
+            openChartEditor();
+        } else if (controls.justPressed('debug_2')) {
+            openCharacterEditor();
+        }
+    }
+
+    if (healthBar.bounds.max != null && health > healthBar.bounds.max) {
+        health = healthBar.bounds.max;
+    }
+
+    updateIconsScale(elapsed);
+    updateIconsPosition();
+
     keyboardDisplay.dataUpdate(elapsed);
 
     if (!inCutscene && !paused && !freezeCamera) {
@@ -1976,24 +1974,31 @@ override public function create(){{
         botplaySine += 180 * elapsed;
         botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
     }
-}
-
-		if ((controls.PAUSE #if android || FlxG.android.justReleased.BACK #end) && (startedCountdown && canPause))
+			if (Conductor.songPosition <= opponentVocals.length)
 		{
-			var ret:Dynamic = callOnScripts('onPause', null, true);
-			if(ret != LuaUtils.Function_Stop) {
-				openPauseMenu();
-			}
+			if (fixVocals) opponentVocals.time = Conductor.songPosition;
+			#if FLX_PITCH opponentVocals.pitch = playbackRate; #end
 		}
+		vocals.play();
+		opponentVocals.play();
+	}
+	
+	public var fixDesyncedStep:Int = 0;
+	function musicCheck(music:FlxSound, getTime:Float, deviation:Float):Bool
+	{
+	    if (music.length > 0 && Math.abs(music.time - getTime) > deviation)
+	        return true;
+        return false;		
+	}
 
-		if(!endingSong && !inCutscene && allowDebugKeys)
-		{
-			if (controls.justPressed('debug_1'))
-				openChartEditor();
-			else if (controls.justPressed('debug_2'))
-				openCharacterEditor();
-		}
+	public var paused:Bool = false;
+	public var canReset:Bool = true;
+	var startedCountdown:Bool = false;
+	var canPause:Bool = true;
+	var freezeCamera:Bool = false;
+	var allowDebugKeys:Bool = true;	
 
+	
 		if (healthBar.bounds.max != null && health > healthBar.bounds.max)
 			health = healthBar.bounds.max;
 
