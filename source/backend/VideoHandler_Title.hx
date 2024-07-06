@@ -4,16 +4,19 @@ import flixel.FlxG;
 import openfl.Lib;
 import openfl.events.Event;
 import sys.FileSystem;
+
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
 #if VIDEOS_ALLOWED
 #if hxCodec
-    #if (hxCodec >= "3.0.0") 
+    #if (hxCodec >= "3.0.0")
         import hxcodec.VLCBitmap;
-    #else 
+    #else
         import vlc.VLCBitmap;
     #end
+#else
+    import vlc.VLCBitmap;
 #end
 
 class VideoHandler_Title extends VLCBitmap {
