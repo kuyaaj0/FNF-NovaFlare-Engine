@@ -2184,7 +2184,8 @@ class PlayState extends MusicBeatState
 		var mult:Float = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
 		smoothHealth = mult;
 
-		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, ((songScore / smoothScore) * (elapsed * 8)) * playbackRate);
+		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.108);
+		smoothScore = scoreMult;
 
 		setOnScripts('cameraX', camFollow.x);
 		setOnScripts('cameraY', camFollow.y);
