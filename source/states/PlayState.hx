@@ -1230,9 +1230,9 @@ class PlayState extends MusicBeatState
 		}
 
 		if (!practiceMode && !miss) {
-			if (instakillOnMiss) { (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) 
-	{
+			if (instakillOnMiss) { (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) {
 		scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accurarcy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
+			}
 	}
 }
 		scoreTxtUpdate();		
@@ -1241,7 +1241,6 @@ class PlayState extends MusicBeatState
 			doScoreBop();
 
 		callOnScripts('onUpdateScore', [miss]);
-	}
 
 	public dynamic function fullComboFunction()
 	{
