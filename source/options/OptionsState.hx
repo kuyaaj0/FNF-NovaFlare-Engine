@@ -99,7 +99,7 @@ class OptionsState extends MusicBeatState
 				new GhostTap("Toggle counting pressing a directional input when no arrow is there as a miss."),								
 				new NoReset("Toggle pressing R to gameover."),								               
                 new ResultsScreen('If checked, Open Results Screen at end song.'),    
-            new Smooth health("If checked, Health gain if it's smooth to gain on every song,"),
+            new SmoothHealth("If checked, Health gain if it's smooth to gain on every song,"),
                 new NoteOffset('Change NoteOffset and judgement position.'),
 				new Judgement("Create a custom judgement preset."),
 			]),
