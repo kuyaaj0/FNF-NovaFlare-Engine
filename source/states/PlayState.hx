@@ -1229,12 +1229,12 @@ class PlayState extends MusicBeatState
 			str += ' (${percent}%) - ${ratingFC}';
 		}
 
-		if (!practiceMode && !miss) 
-			if (instakillOnMiss)  (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) 
+		if (!practiceMode && !miss) {
+			if (instakillOnMiss) { (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) 
 	{
-		scoreTxt.text = ('NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accurarcy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]');
+		scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accurarcy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
 	}
-
+}
 		scoreTxtUpdate();		
 
 		if (!miss && ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
