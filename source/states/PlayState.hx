@@ -1926,56 +1926,57 @@ override public function create(){{
     }
 
     // Other update logic...
+
+    if (ClientPrefs.data.pauseButton) {
+        var Pressed:Bool = false;
+        for (touch in FlxG.touches.list) {
+            var realTouch = touch.getScreenPosition(camPause);
+            if (realTouch.y >= pauseButton_menu.y 
+                && realTouch.y <= pauseButton_menu.y + pauseButton_menu.height
+                && realTouch.x >= pauseButton_menu.x 
+                && realTouch.x <= pauseButton_menu.x + pauseButton_menu.width
+                && touch.justPressed) {
+                Pressed = true;
+            }
+        }
+
+        if (Pressed && (startedCountdown && canPause)) {
+            var ret:Dynamic = callOnScripts('onPause', null, true);
+            if (ret != LuaUtils.Function_Stop) {
+                openPauseMenu();
+                super.update(elapsed);
+                return;
+            }
+        }
+    }
+
+    keyboardDisplay.dataUpdate(elapsed);
+
+    if (!inCutscene && !paused && !freezeCamera) {
+        FlxG.camera.followLerp = 2.4 * cameraSpeed * playbackRate;
+        if (!startingSong && !endingSong && boyfriend.getAnimationName().startsWith('idle')) {
+            boyfriendIdleTime += elapsed;
+            if (boyfriendIdleTime >= 0.15) { // Mercy thing for making the achievement easier
+                boyfriendIdled = true;
+            }
+        } else {
+            boyfriendIdleTime = 0;
+        }
+    } else {
+        FlxG.camera.followLerp = 0;
+    }
+
+    callOnScripts('onUpdate', [elapsed]);
+    super.update(elapsed);
+
+    setOnScripts('curDecStep', curDecStep);
+    setOnScripts('curDecBeat', curDecBeat);
+
+    if (botplayTxt != null && botplayTxt.visible) {
+        botplaySine += 180 * elapsed;
+        botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
+    }
 }
-	
-	    if (ClientPrefs.data.pauseButton){
-	        var Pressed:Bool = false;
-	        for (touch in FlxG.touches.list){
-	           var realTouch = touch.getScreenPosition(camPause);
-    	       if (realTouch.y >= pauseButton_menu.y 
-    	       && realTouch.y <= pauseButton_menu.y + pauseButton_menu.height
-    	       && realTouch.x >= pauseButton_menu.x 
-    	       && realTouch.x <= pauseButton_menu.x + pauseButton_menu.width
-    	       && touch.justPressed
-    	       ) Pressed = true;
-    	    }
-    	       
-    	    if (Pressed && (startedCountdown && canPause))
-    		{
-    			var ret:Dynamic = callOnScripts('onPause', null, true);
-    			if(ret != LuaUtils.Function_Stop) {
-    				openPauseMenu();
-    				super.update(elapsed);
-    				return;
-    			}
-    		}
-		}
-
-		keyboardDisplay.dataUpdate(elapsed);
-		
-		if(!inCutscene && !paused && !freezeCamera) {
-			FlxG.camera.followLerp = 2.4 * cameraSpeed * playbackRate;
-			if(!startingSong && !endingSong && boyfriend.getAnimationName().startsWith('idle')) {
-				boyfriendIdleTime += elapsed;
-				if(boyfriendIdleTime >= 0.15) { // Kind of a mercy thing for making the achievement easier to get as it's apparently frustrating to some playerss
-					boyfriendIdled = true;
-				}
-			} else {
-				boyfriendIdleTime = 0;
-			}
-		}
-		else FlxG.camera.followLerp = 0;
-		callOnScripts('onUpdate', [elapsed]);
-
-		super.update(elapsed);
-
-		setOnScripts('curDecStep', curDecStep);
-		setOnScripts('curDecBeat', curDecBeat);
-
-		if(botplayTxt != null && botplayTxt.visible) {
-			botplaySine += 180 * elapsed;
-			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
-		}
 
 		if ((controls.PAUSE #if android || FlxG.android.justReleased.BACK #end) && (startedCountdown && canPause))
 		{
