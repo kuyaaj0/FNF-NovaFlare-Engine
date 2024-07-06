@@ -323,15 +323,8 @@ class PlayState extends MusicBeatState
 	    if (preloadEvents != null) extraEvents = preloadEvents;
 	}
 	
-	override public function create(){{
-    super.create();
-    
-    // Other initialization logic...
-
-    smoothScore = songScore;
-
-    // Other initialization logic...
-}
+	override public function create(){
+		   
 		//trace('Playback Rate: ' + playbackRate);
 		if (!ClientPrefs.data.loadingScreen) Paths.clearStoredMemory();
 
@@ -573,8 +566,8 @@ class PlayState extends MusicBeatState
 		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
 		
-		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return health, 0, 2, ClientPrefs.data.oldHealthBarVersion);
-		healthBar.screenCenter(X);
+		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return (ClientPrefs.data.smoothHealth) ? smoothHealth : health, 0, 2);
+      healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
 		healthBar.visible = !ClientPrefs.data.hideHud;
@@ -1908,23 +1901,8 @@ class PlayState extends MusicBeatState
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;	
 
-	override public function update(elapsed:Float):Void {
-    super.update(elapsed);
-
-    // Other update logic...
-
-    if (ClientPrefs.data.smoothScore) {
-        if (smoothScore < songScore) {
-            smoothScore += Math.min((songScore - smoothScore) * 0.2, 0.5);
-            if (smoothScore > songScore) {
-                smoothScore = songScore;
-            }
-        }
-    } else {
-        smoothScore = songScore;
-    }
-    // Other update logic...
-
+	override public function update(elapsed:Float)
+	{
 	    if (ClientPrefs.data.pauseButton){
 	        var Pressed:Bool = false;
 	        for (touch in FlxG.touches.list){
@@ -2206,8 +2184,7 @@ class PlayState extends MusicBeatState
 		var mult:Float = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
 		smoothHealth = mult;
 
-		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.108);
-		smoothScore = scoreMult;
+		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, ((songScore / smoothScore) * (elapsed * 8)) * playbackRate);
 
 		setOnScripts('cameraX', camFollow.x);
 		setOnScripts('cameraY', camFollow.y);
