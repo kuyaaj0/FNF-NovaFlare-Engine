@@ -64,8 +64,6 @@ class ControlsSubState extends MusicBeatSubstate
 	
 	public function new()
 	{
-        controls.isInSubstate = true;
-
 		super();
 
 		#if DISCORD_ALLOWED
