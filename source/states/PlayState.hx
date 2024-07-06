@@ -1927,7 +1927,7 @@ override public function create(){{
 
     // Other update logic...
 }
-	{
+	
 	    if (ClientPrefs.data.pauseButton){
 	        var Pressed:Bool = false;
 	        for (touch in FlxG.touches.list){
