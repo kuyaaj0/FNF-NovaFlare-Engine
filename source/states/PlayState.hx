@@ -1245,27 +1245,25 @@ class PlayState extends MusicBeatState
 
 		callOnScripts('onUpdateScore', [miss]);
 
-	public dynamic function fullComboFunction() {
-	{
-		var sicks:Int = ratingsData[0].hits;
-		var goods:Int = ratingsData[1].hits;
-		var bads:Int = ratingsData[2].hits;
-		var shits:Int = ratingsData[3].hits;
-        var marvelous:Int = ClientPrefs.data.marvelousRating ? ratingsData[4].hits : 0;    
-        
-		ratingFC = "";
-		if(songMisses == 0)
-		{
-			if (bads > 0 || shits > 0) ratingFC = 'FC';
-			else if (goods > 0) ratingFC = 'GFC';
-			else if (sicks > 0) ratingFC = 'SFC';
-			else if (marvelous > 0) ratingFC = 'MFC';
-		} else {
-			if (songMisses < 10) ratingFC = 'SDCB';
-			else ratingFC = 'Clear';
-		}
-	}
+public dynamic function fullComboFunction() {
+    var sicks:Int = ratingsData[0].hits;
+    var goods:Int = ratingsData[1].hits;
+    var bads:Int = ratingsData[2].hits;
+    var shits:Int = ratingsData[3].hits;
+    var marvelous:Int = ClientPrefs.data.marvelousRating ? ratingsData[4].hits : 0;    
+
+    ratingFC = "";
+    if(songMisses == 0) {
+        if (bads > 0 || shits > 0) ratingFC = 'FC';
+        else if (goods > 0) ratingFC = 'GFC';
+        else if (sicks > 0) ratingFC = 'SFC';
+        else if (marvelous > 0) ratingFC = 'MFC';
+    } else {
+        if (songMisses < 10) ratingFC = 'SDCB';
+        else ratingFC = 'Clear';
+    }
 }
+
 	public function doScoreBop():Void {
 		if(!ClientPrefs.data.scoreZoom)
 			return;
