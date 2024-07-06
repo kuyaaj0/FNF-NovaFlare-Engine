@@ -103,6 +103,12 @@ class MusicBeatSubstate extends FlxSubState
 				mobileControls = null;
 			}
 	}
+	
+	override function close()
+	{
+		super.close();
+		controls.isInSubstate = false;
+	}
 
 	override function update(elapsed:Float)
 	{

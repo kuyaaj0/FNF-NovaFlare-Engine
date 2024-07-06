@@ -495,6 +495,10 @@ class Paths
 		return modFolders('images/' + key + '.json');
 	}
 
+	inline static public function rpgData(key:String) {
+		return modFolders('rpg/' + key + '.rd');
+	}
+
 	/* Goes unused for now
 
 	inline static public function modsShaderFragment(key:String, ?library:String)
@@ -602,22 +606,8 @@ class Paths
 			}
 		}
 
-		//trace(folderOrImg);
-		//trace(spriteJson);
-		//trace(animationJson);
 		spr.loadAtlasEx(folderOrImg, spriteJson, animationJson);
 	}
 
-	/*private static function getContentFromFile(path:String):String
-	{
-		var onAssets:Bool = false;
-		var path:String = Paths.getPath(path, TEXT, true);
-		if(FileSystem.exists(path) || (onAssets = true && Assets.exists(path, TEXT)))
-		{
-			//trace('Found text: $path');
-			return !onAssets ? File.getContent(path) : Assets.getText(path);
-		}
-		return null;
-	}*/
 	#end
 }

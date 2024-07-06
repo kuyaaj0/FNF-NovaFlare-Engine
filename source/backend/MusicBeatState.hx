@@ -1,8 +1,8 @@
 package backend;
 
-import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
+import flixel.addons.ui.FlxUIState;
 import backend.PsychCamera;
 
 class MusicBeatState extends FlxUIState
@@ -154,7 +154,7 @@ class MusicBeatState extends FlxUIState
 					rollbackSection();
 			}
 		}
-
+	
 		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 		
 		stagesFunc(function(stage:BaseStage) {
@@ -263,7 +263,6 @@ class MusicBeatState extends FlxUIState
 	public var stages:Array<BaseStage> = [];
 	public function beatHit():Void
 	{
-		//trace('Beat: ' + curBeat);
 		stagesFunc(function(stage:BaseStage) {
 			stage.curBeat = curBeat;
 			stage.curDecBeat = curDecBeat;
