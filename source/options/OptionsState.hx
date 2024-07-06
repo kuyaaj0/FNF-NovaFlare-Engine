@@ -113,7 +113,7 @@ class OptionsState extends MusicBeatState
                 new HitSound("Adds 'hitsound' on note hits."),				               
 				new CamZoom("Toggle the camera zoom in-game."),
 				new ScoreZoom("Zoom score on 2'nd beat."),		
-            new SmoothScore("If checked, Score smooth on display in every song but still on beta testing.")
+                new SmoothScore("If checked, Score smooth on display in every song but still on beta testing."),
 				new KeyboardDisplayOption("Change Keyboard Display option"),		
 				new JudgementCounter("Show your judgements that you've gotten in the song"),								
                 new HideHud("Shows to you hud."),           
