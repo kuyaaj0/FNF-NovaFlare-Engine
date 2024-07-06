@@ -1923,10 +1923,8 @@ class PlayState extends MusicBeatState
     } else {
         smoothScore = songScore;
     }
-
     // Other update logic...
-}
-	{
+
 	    if (ClientPrefs.data.pauseButton){
 	        var Pressed:Bool = false;
 	        for (touch in FlxG.touches.list){
