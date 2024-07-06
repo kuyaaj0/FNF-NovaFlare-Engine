@@ -323,7 +323,7 @@ class PlayState extends MusicBeatState
 	    if (preloadEvents != null) extraEvents = preloadEvents;
 	}
 	
-override public function create(){{
+	override public function create(){{
     super.create();
     
     // Other initialization logic...
@@ -332,7 +332,6 @@ override public function create(){{
 
     // Other initialization logic...
 }
-		   
 		//trace('Playback Rate: ' + playbackRate);
 		if (!ClientPrefs.data.loadingScreen) Paths.clearStoredMemory();
 
@@ -574,7 +573,7 @@ override public function create(){{
 		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
 		
-		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return (ClientPrefs.data.smoothHealth) ? smoothHealth : health, 0, 2);
+		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return health, 0, 2, ClientPrefs.data.oldHealthBarVersion);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
@@ -1885,96 +1884,7 @@ override public function create(){{
 			#if FLX_PITCH vocals.pitch = playbackRate; #end
 		}
 
-override public function update(elapsed:Float):Void {
-    super.update(elapsed);
-
-    // Other update logic...
-
-    if (ClientPrefs.data.smoothScore) {
-        if (smoothScore < songScore) {
-            smoothScore += Math.min((songScore - smoothScore) * 0.2, 0.5);
-            if (smoothScore > songScore) {
-                smoothScore = songScore;
-            }
-        }
-    } else {
-        smoothScore = songScore;
-    }
-
-    // Other update logic...
-
-    if (ClientPrefs.data.pauseButton) {
-        var Pressed:Bool = false;
-        for (touch in FlxG.touches.list) {
-            var realTouch = touch.getScreenPosition(camPause);
-            if (realTouch.y >= pauseButton_menu.y 
-                && realTouch.y <= pauseButton_menu.y + pauseButton_menu.height
-                && realTouch.x >= pauseButton_menu.x 
-                && realTouch.x <= pauseButton_menu.x + pauseButton_menu.width
-                && touch.justPressed) {
-                Pressed = true;
-            }
-        }
-
-        if (Pressed && (startedCountdown && canPause)) {
-            var ret:Dynamic = callOnScripts('onPause', null, true);
-            if (ret != LuaUtils.Function_Stop) {
-                openPauseMenu();
-                super.update(elapsed);
-                return;
-            }
-        }
-    }
-
-    if ((controls.PAUSE #if android || FlxG.android.justReleased.BACK #end) && (startedCountdown && canPause)) {
-        var ret:Dynamic = callOnScripts('onPause', null, true);
-        if (ret != LuaUtils.Function_Stop) {
-            openPauseMenu();
-        }
-    }
-
-    if (!endingSong && !inCutscene && allowDebugKeys) {
-        if (controls.justPressed('debug_1')) {
-            openChartEditor();
-        } else if (controls.justPressed('debug_2')) {
-            openCharacterEditor();
-        }
-    }
-
-    if (healthBar.bounds.max != null && health > healthBar.bounds.max) {
-        health = healthBar.bounds.max;
-    }
-
-    updateIconsScale(elapsed);
-    updateIconsPosition();
-
-    keyboardDisplay.dataUpdate(elapsed);
-
-    if (!inCutscene && !paused && !freezeCamera) {
-        FlxG.camera.followLerp = 2.4 * cameraSpeed * playbackRate;
-        if (!startingSong && !endingSong && boyfriend.getAnimationName().startsWith('idle')) {
-            boyfriendIdleTime += elapsed;
-            if (boyfriendIdleTime >= 0.15) { // Mercy thing for making the achievement easier
-                boyfriendIdled = true;
-            }
-        } else {
-            boyfriendIdleTime = 0;
-        }
-    } else {
-        FlxG.camera.followLerp = 0;
-    }
-
-    callOnScripts('onUpdate', [elapsed]);
-    super.update(elapsed);
-
-    setOnScripts('curDecStep', curDecStep);
-    setOnScripts('curDecBeat', curDecBeat);
-
-    if (botplayTxt != null && botplayTxt.visible) {
-        botplaySine += 180 * elapsed;
-        botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
-    }
-			if (Conductor.songPosition <= opponentVocals.length)
+		if (Conductor.songPosition <= opponentVocals.length)
 		{
 			if (fixVocals) opponentVocals.time = Conductor.songPosition;
 			#if FLX_PITCH opponentVocals.pitch = playbackRate; #end
@@ -1998,7 +1908,90 @@ override public function update(elapsed:Float):Void {
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;	
 
-	
+	override public function update(elapsed:Float):Void {
+    super.update(elapsed);
+
+    // Other update logic...
+
+    if (ClientPrefs.data.smoothScore) {
+        if (smoothScore < songScore) {
+            smoothScore += Math.min((songScore - smoothScore) * 0.2, 0.5);
+            if (smoothScore > songScore) {
+                smoothScore = songScore;
+            }
+        }
+    } else {
+        smoothScore = songScore;
+    }
+
+    // Other update logic...
+}
+	{
+	    if (ClientPrefs.data.pauseButton){
+	        var Pressed:Bool = false;
+	        for (touch in FlxG.touches.list){
+	           var realTouch = touch.getScreenPosition(camPause);
+    	       if (realTouch.y >= pauseButton_menu.y 
+    	       && realTouch.y <= pauseButton_menu.y + pauseButton_menu.height
+    	       && realTouch.x >= pauseButton_menu.x 
+    	       && realTouch.x <= pauseButton_menu.x + pauseButton_menu.width
+    	       && touch.justPressed
+    	       ) Pressed = true;
+    	    }
+    	       
+    	    if (Pressed && (startedCountdown && canPause))
+    		{
+    			var ret:Dynamic = callOnScripts('onPause', null, true);
+    			if(ret != LuaUtils.Function_Stop) {
+    				openPauseMenu();
+    				super.update(elapsed);
+    				return;
+    			}
+    		}
+		}
+
+		keyboardDisplay.dataUpdate(elapsed);
+		
+		if(!inCutscene && !paused && !freezeCamera) {
+			FlxG.camera.followLerp = 2.4 * cameraSpeed * playbackRate;
+			if(!startingSong && !endingSong && boyfriend.getAnimationName().startsWith('idle')) {
+				boyfriendIdleTime += elapsed;
+				if(boyfriendIdleTime >= 0.15) { // Kind of a mercy thing for making the achievement easier to get as it's apparently frustrating to some playerss
+					boyfriendIdled = true;
+				}
+			} else {
+				boyfriendIdleTime = 0;
+			}
+		}
+		else FlxG.camera.followLerp = 0;
+		callOnScripts('onUpdate', [elapsed]);
+
+		super.update(elapsed);
+
+		setOnScripts('curDecStep', curDecStep);
+		setOnScripts('curDecBeat', curDecBeat);
+
+		if(botplayTxt != null && botplayTxt.visible) {
+			botplaySine += 180 * elapsed;
+			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
+		}
+
+		if ((controls.PAUSE #if android || FlxG.android.justReleased.BACK #end) && (startedCountdown && canPause))
+		{
+			var ret:Dynamic = callOnScripts('onPause', null, true);
+			if(ret != LuaUtils.Function_Stop) {
+				openPauseMenu();
+			}
+		}
+
+		if(!endingSong && !inCutscene && allowDebugKeys)
+		{
+			if (controls.justPressed('debug_1'))
+				openChartEditor();
+			else if (controls.justPressed('debug_2'))
+				openCharacterEditor();
+		}
+
 		if (healthBar.bounds.max != null && health > healthBar.bounds.max)
 			health = healthBar.bounds.max;
 
@@ -2240,7 +2233,7 @@ override public function update(elapsed:Float):Void {
 		        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 		        {
 		        scoreTxt.text += " | "
-                		     + "Score: " + Std.int(ClientPrefs.data.smoothScore ? smoothScore : songScore);
+                		     + "Score: " + songScore
                 		     + " | Misses: " + songMisses
                 		     + " | Accuracy: " + Math.ceil(ratingPercent * 10000) / 100 + '%'
                 		     + " | ";
