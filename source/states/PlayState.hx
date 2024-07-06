@@ -323,7 +323,15 @@ class PlayState extends MusicBeatState
 	    if (preloadEvents != null) extraEvents = preloadEvents;
 	}
 	
-	override public function create(){
+override public function create(){{
+    super.create();
+    
+    // Other initialization logic...
+
+    smoothScore = songScore;
+
+    // Other initialization logic...
+}
 		   
 		//trace('Playback Rate: ' + playbackRate);
 		if (!ClientPrefs.data.loadingScreen) Paths.clearStoredMemory();
@@ -567,7 +575,7 @@ class PlayState extends MusicBeatState
 		uiGroup.add(timeTxt);
 		
 		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return (ClientPrefs.data.smoothHealth) ? smoothHealth : health, 0, 2);
-      healthBar.screenCenter(X);
+		healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
 		healthBar.visible = !ClientPrefs.data.hideHud;
@@ -1901,7 +1909,24 @@ class PlayState extends MusicBeatState
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;	
 
-	override public function update(elapsed:Float)
+	override public function update(elapsed:Float):Void {
+    super.update(elapsed);
+
+    // Other update logic...
+
+    if (ClientPrefs.data.smoothScore) {
+        if (smoothScore < songScore) {
+            smoothScore += Math.min((songScore - smoothScore) * 0.2, 0.5);
+            if (smoothScore > songScore) {
+                smoothScore = songScore;
+            }
+        }
+    } else {
+        smoothScore = songScore;
+    }
+
+    // Other update logic...
+}
 	{
 	    if (ClientPrefs.data.pauseButton){
 	        var Pressed:Bool = false;
@@ -2209,7 +2234,7 @@ class PlayState extends MusicBeatState
 		        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 		        {
 		        scoreTxt.text += " | "
-                		     + "Score: " + songScore
+                		     + "Score: " + Std.int(ClientPrefs.data.smoothScore ? smoothScore : songScore);
                 		     + " | Misses: " + songMisses
                 		     + " | Accuracy: " + Math.ceil(ratingPercent * 10000) / 100 + '%'
                 		     + " | ";
