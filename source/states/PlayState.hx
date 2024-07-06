@@ -1909,7 +1909,7 @@ override public function create(){{
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;	
 
-	override public function update(elapsed:Float):Void {
+	override public function update(elapsed:Float):Void {{
     super.update(elapsed);
 
     // Other update logic...
@@ -1927,7 +1927,6 @@ override public function create(){{
 
     // Other update logic...
 }
-	{
 	    if (ClientPrefs.data.pauseButton){
 	        var Pressed:Bool = false;
 	        for (touch in FlxG.touches.list){
