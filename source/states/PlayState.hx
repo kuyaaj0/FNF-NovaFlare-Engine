@@ -323,15 +323,7 @@ class PlayState extends MusicBeatState
 	    if (preloadEvents != null) extraEvents = preloadEvents;
 	}
 	
-override public function create(){{
-    super.create();
-    
-    // Other initialization logic...
-
-    smoothScore = songScore;
-
-    // Other initialization logic...
-}
+	override public function create(){
 		   
 		//trace('Playback Rate: ' + playbackRate);
 		if (!ClientPrefs.data.loadingScreen) Paths.clearStoredMemory();
@@ -575,7 +567,7 @@ override public function create(){{
 		uiGroup.add(timeTxt);
 		
 		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return (ClientPrefs.data.smoothHealth) ? smoothHealth : health, 0, 2);
-		healthBar.screenCenter(X);
+      healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
 		healthBar.visible = !ClientPrefs.data.hideHud;
@@ -1236,7 +1228,13 @@ override public function create(){{
 			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
 			str += ' (${percent}%) - ${ratingFC}';
 		}
-		
+
+		if (!practiceMode && !miss) 
+			if (instakillOnMiss)  (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)) 
+	{
+		scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accurarcy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
+	}
+
 		scoreTxtUpdate();		
 
 		if (!miss && ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
@@ -1909,24 +1907,8 @@ override public function create(){{
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;	
 
-	override public function update(elapsed:Float):Void {{
-    super.update(elapsed);
-
-    // Other update logic...
-
-    if (ClientPrefs.data.smoothScore) {
-        if (smoothScore < songScore) {
-            smoothScore += Math.min((songScore - smoothScore) * 0.2, 0.5);
-            if (smoothScore > songScore) {
-                smoothScore = songScore;
-            }
-        }
-    } else {
-        smoothScore = songScore;
-    }
-
-    // Other update logic...
-}
+	override public function update(elapsed:Float)
+	{
 	    if (ClientPrefs.data.pauseButton){
 	        var Pressed:Bool = false;
 	        for (touch in FlxG.touches.list){
@@ -2233,7 +2215,7 @@ override public function create(){{
 		        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 		        {
 		        scoreTxt.text += " | "
-                		     + "Score: " + Std.int(ClientPrefs.data.smoothScore ? smoothScore : songScore);
+                		     + "Score: " + songScore
                 		     + " | Misses: " + songMisses
                 		     + " | Accuracy: " + Math.ceil(ratingPercent * 10000) / 100 + '%'
                 		     + " | ";
