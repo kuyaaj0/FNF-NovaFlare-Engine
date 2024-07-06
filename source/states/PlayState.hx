@@ -1229,9 +1229,11 @@ class PlayState extends MusicBeatState
 			str += ' (${percent}%) - ${ratingFC}';
 		}
 
+// bruh my brain will frickin insane for a moment of this fucking retard codes 
+// frickin retard code moment xD
 		if (!practiceMode && !miss) {
 			if (instakillOnMiss) {
-			(ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) {
+			(ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled); {
 		scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accurarcy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
 			}
 	}
