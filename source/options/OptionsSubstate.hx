@@ -99,14 +99,14 @@ class OptionsSubstate extends MusicBeatSubstate
 		
 		options = [
 			new OptionCata(50, 40, OptionsName.setGameplay(), [								
-                new ResultsScreen('If checked, Open Results Screen at end song.'),                          
+                new ResultsScreen('If checked, Open Results Screen at end song.'),                   
+                new SmoothHealth("If checked, Health if it's smooth to gain on every song."),
 			]),
 			new OptionCata(345, 40, OptionsName.setAppearance(), [
 			    //new HitSoundType('Choose sound type for hitSound.'),
                 new HitSound("Adds 'hitsound' on note hits."),				               
 				new CamZoom("Toggle the camera zoom in-game."),
-				new ScoreZoom("Zoom score on"),
-				new SmoothScore("smooth score is still on beta and not working"),
+				new ScoreZoom("Zoom score on"),				
 				new JudgementCounter("Show your judgements that you've gotten in the song"),								
                 new HideHud("Shows to you hud."),           
                 new HideOppStrums("Shows/Hides opponent strums on screen."),		
@@ -247,9 +247,7 @@ class OptionsSubstate extends MusicBeatSubstate
 		camMouseCheck.bgColor.alpha = 0;
 		FlxG.cameras.add(camMouseCheck, false);	
 		
-		super.create();					
-		
-		controls.isInSubstate = true;
+		super.create();									
 	}
 
 	public function switchCat(cat:OptionCata, checkForOutOfBounds:Bool = true)
@@ -487,8 +485,7 @@ class OptionsSubstate extends MusicBeatSubstate
 
 				if (back)
 				{
-				    ClientPrefs.saveSettings();
-				    controls.isInSubstate = true;
+				    ClientPrefs.saveSettings();				    
 				    pauseMusic.pause();
 				    close();
 				}
@@ -730,13 +727,11 @@ class OptionsSubstate extends MusicBeatSubstate
         
             case 0:
                 ClientPrefs.data.resultsScreen = ClientPrefs.defaultData.resultsScreen;
-		ClientPrefs.data.smoothHealth = ClientPrefs.defaultData.smoothHealth;
             case 1:                
                 //ClientPrefs.data.hitsoundType = ClientPrefs.defaultData.hitsoundType;
                 ClientPrefs.data.hitsoundVolume = ClientPrefs.defaultData.hitsoundVolume;
                 ClientPrefs.data.camZooms = ClientPrefs.defaultData.camZooms;
                 ClientPrefs.data.scoreZoom = ClientPrefs.defaultData.scoreZoom;
-		ClientPrefs.data.smoothScore = ClientPrefs.defaultData.smoothScore;
                 ClientPrefs.data.judgementCounter = ClientPrefs.defaultData.judgementCounter;
                 ClientPrefs.data.hideHud = ClientPrefs.defaultData.hideHud;
                 ClientPrefs.data.opponentStrums = ClientPrefs.defaultData.opponentStrums;

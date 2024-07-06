@@ -13,6 +13,9 @@ class OptionsHelpers
     public static var TimeBarArray = ['Time Left', 'Time Elapsed', 'Song Name', 'Disabled'];
     public static var PauseMusicArray = ['None', 'Breakfast', 'Tea Time'];
     public static var fileLoadArray = ["NovaFlare Engine", "NF Engine", "PsychEngine", "OS Engine", "TG Engine", "SB Engine"];
+	public static var colorArray:Array<FlxColor> = [FlxColor.BLACK,FlxColor.WHITE,FlxColor.GRAY,FlxColor.RED,FlxColor.GREEN,FlxColor.BLUE,FlxColor.YELLOW,FlxColor.PINK,FlxColor.ORANGE,FlxColor.PURPLE,FlxColor.BROWN,FlxColor.CYAN];
+	public static var colorStingArray = ['BLACK', 'WHITE', 'GRAY', 'RED', 'GREEN', 'BLUE', 'YELLOW', 'PINK', 'ORANGE', 'PURPLE', 'BROWN', 'CYAN'];
+	
     static public function setNoteSkin()
     {
         var noteSkins:Array<String> = [];

@@ -98,8 +98,8 @@ class OptionsState extends MusicBeatState
 				new FixLNL('reduce Long Note length\nFix for some mod engines have been reduced'),												
 				new GhostTap("Toggle counting pressing a directional input when no arrow is there as a miss."),								
 				new NoReset("Toggle pressing R to gameover."),								               
-                new ResultsScreen('If checked, Open Results Screen at end song.'),      
-		                new SmoothHealth("If checked the health clearly smooth at the start of the song clearly it's still on beta anyway."),     
+                new ResultsScreen('If checked, Open Results Screen at end song.'),    
+            new Smooth health("If checked, Health gain if it's smooth to gain on every song,"),
                 new NoteOffset('Change NoteOffset and judgement position.'),
 				new Judgement("Create a custom judgement preset."),
 			]),
@@ -112,11 +112,12 @@ class OptionsState extends MusicBeatState
 				new HitSoundType('Choose sound type for hitSound.'),
                 new HitSound("Adds 'hitsound' on note hits."),				               
 				new CamZoom("Toggle the camera zoom in-game."),
-				new ScoreZoom("Zoom score on 2'nd beat."),				
+				new ScoreZoom("Zoom score on 2'nd beat."),		
+            new SmoothScore("If checked, Score smooth on display in every song but still on beta testing.")
+				new KeyboardDisplayOption("Change Keyboard Display option"),		
 				new JudgementCounter("Show your judgements that you've gotten in the song"),								
                 new HideHud("Shows to you hud."),           
-                new HideOppStrums("Shows/Hides opponent strums on screen."),	
-                new SmoothScore("it's still on f*ck*ng beta and not works it's better to turn off."),      
+                new HideOppStrums("Shows/Hides opponent strums on screen."),		
                 new ShowComboNum("Combo sprite appearance."),
                 new ComboColor("Allow combo Sprite to get and use rating color."),	
                 new ComboOffset('Fix combo member position skewing.'),
@@ -186,7 +187,7 @@ class OptionsState extends MusicBeatState
                 new WaterMarkOption('Toggle the watermark.'),
                 new WaterMarkScale('Set the size of watermark.'),
 			]),			
-			new OptionCata(-1, 125, "Editing Judgements", [			
+			new OptionCata(-1000, 125, "Editing Judgements", [			
 				new FrameOption("Changes how many frames you have for hitting a note earlier or late."),
                 new RatingOffset('Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.'),			
 				new MarvelousMsOption("How many milliseconds are in the MARVELOUS hit window."),
@@ -195,6 +196,13 @@ class OptionsState extends MusicBeatState
 				new BadMsOption("How many milliseconds are in the BAD hit window."),
 				new MarvelousRating('Extend marvelous rate for playing.'),
 				new MarvelousSprite('If unchecked,Marvelous rate will also use sick sprite.'),
+			], true),
+			new OptionCata(-1000, 125, "KeyBoard Display", [			
+				new KeyboardDisplay("Feedback the key you pressed."),
+                new KeyboardAlpha('Changes keyBoard display alpha.'),			
+				new KeyboardTime("How many milliseconds are display sustain."),
+				new KeyboardBGColor("KeyBoard display BG color."),
+				new KeyboardTextColor("KeyBoard display text color.")
 			], true)
 		];
 		
@@ -267,6 +275,9 @@ class OptionsState extends MusicBeatState
 		
 		isReset = false;                  
         
+		#if !mobile
+		FlxG.mouse.visible = true;
+		#end
 		
         addVirtualPad(OptionStateC, OptionStateC);        
         addVirtualPadCamera(false);
@@ -323,6 +334,7 @@ class OptionsState extends MusicBeatState
 
 			if (selectedCat.middle)
 				add(selectedCat.titleObject);
+			selectedCat.titleObject.alpha = 1;
 
 			for (i in selectedCat.optionObjects)
 				shownStuff.add(i);
@@ -537,24 +549,6 @@ class OptionsState extends MusicBeatState
 			}
 			else
 			{
-				if (selectedOption != null)
-					if (selectedOption.acceptType)
-					{
-						if (back && selectedOption.waitingType)
-						{
-							FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
-							selectedOption.waitingType = false;
-							var object = selectedCat.optionObjects.members[selectedOptionIndex];
-							object.text = selectedOption.getValue();
-							return;
-						}
-						else if (anyKey)
-						{
-							var object = selectedCat.optionObjects.members[selectedOptionIndex];
-							selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
-							object.text = selectedOption.getValue();
-						}
-					}
 				if (selectedOption.acceptType || !selectedOption.acceptType) //这啥玩意这
 				{
 					if (accept)
@@ -849,7 +843,13 @@ class OptionsState extends MusicBeatState
                 ClientPrefs.data.goodWindow = ClientPrefs.defaultData.goodWindow;
                 ClientPrefs.data.badWindow = ClientPrefs.defaultData.badWindow;     
                 ClientPrefs.data.marvelousRating = ClientPrefs.defaultData.marvelousRating;          
-                ClientPrefs.data.marvelousSprite = ClientPrefs.defaultData.marvelousSprite; 
+                ClientPrefs.data.marvelousSprite = ClientPrefs.defaultData.marvelousSprite;
+			case 9:
+				ClientPrefs.data.keyboardDisplay = ClientPrefs.defaultData.keyboardDisplay;
+				ClientPrefs.data.keyboardAlpha = ClientPrefs.defaultData.keyboardAlpha;
+				ClientPrefs.data.keyboardTime = ClientPrefs.defaultData.keyboardTime;
+				ClientPrefs.data.keyboardBGColor = ClientPrefs.defaultData.keyboardBGColor;
+				ClientPrefs.data.keyboardTextColor = ClientPrefs.defaultData.keyboardTextColor;	 
         }
         
         ClientPrefs.saveSettings();
@@ -880,7 +880,7 @@ class OptionsState extends MusicBeatState
 			for (i in 0...selectedCat.options.length)
 			{
 			    var opt = selectedCat.optionObjects.members[i];
-				opt.y = selectedCat.positionFix + 54 + (46 * (i + (selectedOptionIndex - 5))); 
+				opt.y = selectedCat.positionFix + 54 + (46 * (i - selectedOptionIndex + 5)); 
 			}
 		}
 	}
@@ -1110,6 +1110,7 @@ class OptionCata extends FlxSprite
 		titleObject.setFormat(Paths.font(langTTF), 30, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		titleObject.antialiasing = ClientPrefs.data.antialiasing;
 		titleObject.borderSize = 2;
+		titleObject.alpha = middleType ? 0 : 1;
         
 		if (middleType)
 		{
