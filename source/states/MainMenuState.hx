@@ -24,7 +24,7 @@ import openfl.Lib;
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.7.3'; //This is also used for Discord RPC
-	public static var novaFlareEngineVersion:String = '1.1.3';
+	public static var novaFlareEngineVersion:String = '1.1.4';
 	public static var curSelected:Int = 0;
     public static var saveCurSelected:Int = 0;
     
@@ -70,7 +70,6 @@ class MainMenuState extends MusicBeatState
 	public static var currentColor:Int = 1;    
 	public static var currentColorAgain:Int = 0;
 			
-	var bgMove:FlxBackdrop;
 	public static var Mainbpm:Float = 0;
 	public static var bpm:Float = 0;
 	
@@ -105,8 +104,6 @@ class MainMenuState extends MusicBeatState
 		FlxG.cameras.add(camOther, false);		
 
 		persistentUpdate = persistentDraw = true;
-		
-		
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
@@ -117,17 +114,11 @@ class MainMenuState extends MusicBeatState
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 		
-	    bgMove = new FlxBackdrop(Paths.image('menuExtend/Others/backdrop'), XY, 0, 0);
-		bgMove.alpha = 0.1;
-		bgMove.color = ColorArray[currentColor];		
-		bgMove.velocity.set(FlxG.random.bool(50) ? 90 : -90, FlxG.random.bool(50) ? 90 : -90);
-		bgMove.antialiasing = ClientPrefs.data.antialiasing;
-		add(bgMove);
-        bgMove.screenCenter(XY);
+	    var test:AudioDisplay = new AudioDisplay(FlxG.sound.music, 0, FlxG.height,  FlxG.width, FlxG.height, 200, FlxColor.WHITE);
+		add(test);
+		test.alpha = 0.7;
+
 		bg.scrollFactor.set(0, 0);
-		
-		/*musicDisplay = new SpectogramSprite(FlxG.sound.music);
-		add(musicDisplay);*/
 
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
 		magenta.scrollFactor.set(0, yScroll);
@@ -361,14 +352,7 @@ class MainMenuState extends MusicBeatState
 			{
 				endCheck = true;
 				MusicBeatState.switchState(new MasterEditorMenu());
-			}
-
-			else if (FlxG.keys.justPressed.EIGHT)
-			{
-				//MusicBeatState.switchState(new MainRPG());
-			}
-			
-		
+			}		
         }
       
         SoundTime = FlxG.sound.music.time / 1000;
@@ -384,8 +368,7 @@ class MainMenuState extends MusicBeatState
             if (currentColorAgain <= 0) currentColorAgain = 6;
             
             logoBl.animation.play('bump');
-            
-            FlxTween.color(bgMove, 0.6, ColorArray[currentColorAgain], ColorArray[currentColor], {ease: FlxEase.cubeOut});           
+               
 			camGame.zoom = 1 + 0.015;			
 			cameraTween[0] = FlxTween.tween(camGame, {zoom: 1}, 0.6, {ease: FlxEase.cubeOut});
 		    
@@ -400,10 +383,6 @@ class MainMenuState extends MusicBeatState
             
         }
         if ( Math.floor(SoundTime/BeatTime + 0.5) % 4  == 2) canBeat = true;        
-        
-        bgMove.alpha = 0.1;
-   
-		
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{

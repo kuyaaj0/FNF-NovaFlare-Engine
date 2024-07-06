@@ -38,14 +38,6 @@ import options.OptionsSubstate;
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
 #end
-
-#if VIDEOS_ALLOWED
-#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as VideoHandler;
-#elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler as VideoHandler;
-#elseif (hxCodec == "2.6.0") import VideoHandler;
-#else import vlc.MP4Handler as VideoHandler; #end
-#end
-	
 #if CUSTOM_SHADERS_ALLOWED
 import shaders.openfl.filters.ShaderFilter as CustomShaderFilter;
 import openfl.filters.BitmapFilter;
@@ -194,7 +186,7 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
-	public var smoothHealth:Float = 1;
+   public var smoothHealth:Float = 1;
 	public var combo:Int = 0;	
 	public var highestCombo:Int = 0;
 	
@@ -228,6 +220,7 @@ class PlayState extends MusicBeatState
 	public var healthBarBG:FlxSprite;
 	public var timeBarBG:FlxSprite;  //修复那傻逼lua
 	var songPercent:Float = 0;
+	public var keyboardDisplay:KeyboardDisplay;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
 
@@ -330,7 +323,15 @@ class PlayState extends MusicBeatState
 	    if (preloadEvents != null) extraEvents = preloadEvents;
 	}
 	
-	override public function create(){
+override public function create(){{
+    super.create();
+    
+    // Other initialization logic...
+
+    smoothScore = songScore;
+
+    // Other initialization logic...
+}
 		   
 		//trace('Playback Rate: ' + playbackRate);
 		if (!ClientPrefs.data.loadingScreen) Paths.clearStoredMemory();
@@ -539,6 +540,11 @@ class PlayState extends MusicBeatState
 		}
 		stagesFunc(function(stage:BaseStage) stage.createPost());
 
+		/*var test:AudioDisplay = new AudioDisplay(FlxG.sound.music, 0, FlxG.height,  FlxG.width, Std.int(FlxG.height / 2), 300, FlxColor.WHITE);
+		add(test);
+		test.alpha = 0.7;
+		test.cameras = [camHUD];*/
+
 		comboGroup = new FlxSpriteGroup();
 		add(comboGroup);
 		cachePopUpScore();
@@ -626,7 +632,7 @@ class PlayState extends MusicBeatState
 		botplayTxt.cameras = [camHUD];	
 		uiGroup.add(botplayTxt);
 		if(ClientPrefs.data.downScroll)
-			botplayTxt.y = timeBar.y - 78;
+			botplayTxt.y = timeBar.y - 78;	
 			
 		if(ClientPrefs.data.timeBarType == 'Song Name')
 		{
@@ -655,6 +661,12 @@ class PlayState extends MusicBeatState
 		playerStrums = new FlxTypedGroup<StrumNote>();
 
 		generateSong(SONG.song);
+
+		keyboardDisplay = new KeyboardDisplay(ClientPrefs.data.comboOffset[4], ClientPrefs.data.comboOffset[5]);
+		keyboardDisplay.antialiasing = ClientPrefs.data.antialiasing;
+		keyboardDisplay.visible = ClientPrefs.data.keyboardDisplay;
+		add(keyboardDisplay);
+		keyboardDisplay.cameras = [camHUD];
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollow.setPosition(camPos.x, camPos.y);
@@ -941,54 +953,40 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String)
-{
-	#if VIDEOS_ALLOWED
-	inCutscene = true;
-
-	var filepath:String = Paths.video(name);
-	#if sys
-	if(!FileSystem.exists(filepath))
-	#else
-	if(!OpenFlAssets.exists(filepath))
-	#end
+	public function startVideo(name:String) #if VIDEOS_ALLOWED :VideoManager#end
 	{
-		FlxG.log.warn('Couldn\'t find video file: ' + name);
+		#if VIDEOS_ALLOWED
+		var filepath:String = Paths.video(name);
+		var video:VideoManager = new VideoManager();
+		inCutscene = true;
+
+		if(#if MODS_ALLOWED !FileSystem.exists(filepath) #else !Assets.exists(filepath) #end) {
+			FlxG.log.warn('Couldnt find video file: ' + name);
+			startAndEnd();
+			return null;
+		}
+
+		video.startVideo(filepath);
+		video.onVideoEnd.add(function(){
+			startAndEnd();
+			return;
+		});
+
+		return video;
+		#else
+		FlxG.log.warn('Platform not supported for video play back!');
 		startAndEnd();
 		return;
+		#end
 	}
 
-	var video:VideoHandler = new VideoHandler();
-	#if (hxCodec >= "3.0.0")
-	// Recent versions
-	video.play(filepath);
-	video.onEndReached.add(function()
+	function startAndEnd()
 	{
-		video.dispose();
-		startAndEnd();
-	}, true);
-	#else
-	// Older versions
-	video.playVideo(filepath);
-	video.finishCallback = function()
-	{
-		startAndEnd();
-	};
-	#end
-	#else
-	FlxG.log.warn('Platform not supported!');
-	startAndEnd();
-	return;
-	#end
-}
-
-function startAndEnd()
-{
-	if (endingSong)
-		endSong();
-	else
-		startCountdown();
-}
+		if(endingSong)
+			endSong();
+		else
+			startCountdown();
+	}
 
 	var dialogueCount:Int = 0;
 	public var psychDialogue:DialogueBoxPsych;
@@ -1799,10 +1797,12 @@ function startAndEnd()
 		{
 		    if (PauseSubState.moveType == 1){
 		        PauseSubState.moveType = 2; //really back to pause
+		        super.closeSubState();
 		        openSubState(new OptionsSubstate());
 		        return;
 		    }
-		    else if (PauseSubState.moveType == 2){		        
+		    else if (PauseSubState.moveType == 2){		
+		        super.closeSubState();        
 		        openSubState(new PauseSubState());		        
 		        return;
 		    }
@@ -1909,7 +1909,24 @@ function startAndEnd()
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;	
 
-	override public function update(elapsed:Float)
+	override public function update(elapsed:Float):Void {
+    super.update(elapsed);
+
+    // Other update logic...
+
+    if (ClientPrefs.data.smoothScore) {
+        if (smoothScore < songScore) {
+            smoothScore += Math.min((songScore - smoothScore) * 0.2, 0.5);
+            if (smoothScore > songScore) {
+                smoothScore = songScore;
+            }
+        }
+    } else {
+        smoothScore = songScore;
+    }
+
+    // Other update logic...
+}
 	{
 	    if (ClientPrefs.data.pauseButton){
 	        var Pressed:Bool = false;
@@ -1933,6 +1950,8 @@ function startAndEnd()
     			}
     		}
 		}
+
+		keyboardDisplay.dataUpdate(elapsed);
 		
 		if(!inCutscene && !paused && !freezeCamera) {
 			FlxG.camera.followLerp = 2.4 * cameraSpeed * playbackRate;
@@ -2215,7 +2234,7 @@ function startAndEnd()
 		        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 		        {
 		        scoreTxt.text += " | "
-                		     + "Score: " + songScore
+                		     + "Score: " + Std.int(ClientPrefs.data.smoothScore ? smoothScore : songScore);
                 		     + " | Misses: " + songMisses
                 		     + " | Accuracy: " + Math.ceil(ratingPercent * 10000) / 100 + '%'
                 		     + " | ";
@@ -2297,6 +2316,9 @@ function startAndEnd()
 		persistentDraw = true;
 		mobileControls.visible = false;
 		paused = true;
+
+		keyboardDisplay.save();
+		for (i in 0...4) keyboardDisplay.released(i);
 
 		#if VIDEOS_ALLOWED
 		if(videoSprites.length > 0)
@@ -2764,6 +2786,8 @@ function startAndEnd()
 			}
 		}
 
+		keyboardDisplay.save();
+
 		timeBar.visible = false;
 		timeTxt.visible = false;
 		canPause = false;
@@ -3198,6 +3222,8 @@ function startAndEnd()
 		var char:Character = ClientPrefs.data.playOpponent ? dad : boyfriend;
 		if(!generatedMusic || endingSong || char.stunned) return;
 
+		keyboardDisplay.pressed(key);
+
 		// had to name it like this else it'd break older scripts lol
 		var ret:Dynamic = callOnScripts('preKeyPress', [key], true);		
 
@@ -3300,6 +3326,8 @@ function startAndEnd()
 	{
 		if(ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled && startedCountdown && !paused)
 		{
+			keyboardDisplay.released(key);
+
 			var spr:StrumNote = ClientPrefs.data.playOpponent ? opponentStrums.members[key] : playerStrums.members[key];
 			if(spr != null)
 			{

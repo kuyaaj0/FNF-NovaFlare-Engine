@@ -271,9 +271,7 @@ class ResetAchievementSubstate extends MusicBeatSubstate
 	var noText:Alphabet;
 
 	public function new()
-	{
-                controls.isInSubstate = true;
-
+	{               
 		super();
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -349,7 +347,7 @@ class ResetAchievementSubstate extends MusicBeatSubstate
 
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 			}
-                        controls.isInSubstate = false;
+                        
 			close();
 			return;
 		}

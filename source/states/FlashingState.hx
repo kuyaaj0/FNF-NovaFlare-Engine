@@ -28,8 +28,6 @@ class FlashingState extends MusicBeatState
 		guh += "\n\npress Keyboard will Disable touch control\n";
 		#end
 		
-
-		controls.isInSubstate = false; // qhar I hate it
 		warnText = new FlxText(0, 0, FlxG.width, guh, 32);
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);

@@ -46,6 +46,7 @@ class LoadingState extends MusicBeatState
 	{
 		this.target = target;
 		this.stopMusic = stopMusic;		
+		loaded = 0;
 		startThreads();
 		super();
 	}
@@ -588,31 +589,50 @@ class LoadingState extends MusicBeatState
 				pushData = pushData.replace("'", '');  
 				imagesToPrepare.push(pushData);        
 			}
-		}
-		
-		var input:String = File.getContent(path);
-		var regex = ~/precacheImage\(['"]([^'"]*)['"],.*?\)/g;
-		while (regex.match(input)) {
-			var result = regex.matched(1); 
-			imagesToPrepare.push(result);
-			input = regex.matchedRight();
-		}				    	
-		
-		var input:String = File.getContent(path);       
-		var regex = ~/addCharacterToList\(['"]([^'"]*)['"],.*?\)/g;
-		while (regex.match(input)) {    
-			var result = regex.matched(1);
-			preloadCharacter(result);
-			input = regex.matchedRight();
-		}
-		
-		var input:String = File.getContent(path);
-		var regex = ~/addLuaScript\(['"]([^'"]*)['"],.*?\)/g;
-		while (regex.match(input)) {
-			var result = regex.matched(1); 
-			startScriptNamed(result + '.lua');
-			input = regex.matchedRight();
-		}
+			if (line.startsWith("precacheImage('")) {          
+				var keyValue = line.split("('"); 
+				var pushData:String = keyValue[1].trim();
+				pushData = pushData.replace("'", '');  
+				pushData = pushData.replace(")", '');  
+				imagesToPrepare.push(pushData);        
+			}
+			else if (line.startsWith('precacheImage("')) {          
+				var keyValue = line.split('("'); 
+				var pushData:String = keyValue[1].trim();
+				pushData = pushData.replace('"', '');  
+				pushData = pushData.replace(")", '');  
+				imagesToPrepare.push(pushData);        
+			}
+			if (line.startsWith("addLuaScript('")) {          
+				var keyValue = line.split("('"); 
+				var pushData:String = keyValue[1].trim();
+				pushData = pushData.replace("'", '');  
+				pushData = pushData.replace(")", '');  
+				imagesToPrepare.push(pushData);        
+			}
+			else if (line.startsWith('addLuaScript("')) {          
+				var keyValue = line.split('("'); 
+				var pushData:String = keyValue[1].trim();
+				pushData = pushData.replace('"', '');  
+				pushData = pushData.replace(")", '');  
+				imagesToPrepare.push(pushData);        
+			}
+			if (line.startsWith("addCharacterToList")) {          
+				var keyValue = line.split(","); 
+				var pushData:String = keyValue[0].trim();
+				pushData = pushData.replace("addCharacterToList(", '');  
+				pushData = pushData.replace("'", '');
+				pushData = pushData.replace('"', '');
+				imagesToPrepare.push(pushData);        
+			}
+			if (line.startsWith("precacheSound")) {          
+				var keyValue = line.split("('"); 
+				var pushData:String = keyValue[1].trim();
+				pushData = pushData.replace("'", '');  
+				pushData = pushData.replace(")", '');  
+				imagesToPrepare.push(pushData);        
+			}
+		}		    	
 	}
 	
 	public static var unspawnNotes:Array<Note> = [];	
@@ -635,7 +655,7 @@ class LoadingState extends MusicBeatState
 	}
 	
 	static function preloadChart()
-	{	    	    
+	{
 	    addNote();
 	    
 	    Note.globalRgbShaders = [];

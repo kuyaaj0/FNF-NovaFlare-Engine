@@ -202,6 +202,10 @@ class FreeplayState extends MusicBeatState {
 		bg.camera = camGame;
 		add(bg);
 		bg.screenCenter();
+
+		var test:AudioDisplay = new AudioDisplay(FlxG.sound.music, 0, FlxG.height - 60, 580, 100, 100, FlxColor.WHITE);
+		add(test);
+		test.alpha = 0.7;
 		
 		mousechecker = new FlxSprite(114, 514).makeGraphic(1, 1, FlxColor.WHITE);
 		
@@ -531,7 +535,7 @@ class FreeplayState extends MusicBeatState {
 				if(FlxG.mouse.wheel != 0)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
-					changeSong(-2 * FlxG.mouse.wheel);
+					changeSong(-1 * FlxG.mouse.wheel);
 					curSelectedFloat = curSelected;
 				}
 				
@@ -1160,7 +1164,7 @@ class FreeplayState extends MusicBeatState {
 			if(FlxG.mouse.wheel != 0)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
-				searchChangeSong(-2 * FlxG.mouse.wheel);
+				searchChangeSong(-1 * FlxG.mouse.wheel);
 			}
 			
 			if (controls.UI_UP_P)

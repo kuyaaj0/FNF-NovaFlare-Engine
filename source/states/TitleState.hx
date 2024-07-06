@@ -214,7 +214,6 @@ class TitleState extends MusicBeatState
 		if(!ClientPrefs.data.openedFlash) {
 		    ClientPrefs.data.openedFlash = true;
 		    ClientPrefs.saveSettings();
-			controls.isInSubstate = false; //idfk what's wrong
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
