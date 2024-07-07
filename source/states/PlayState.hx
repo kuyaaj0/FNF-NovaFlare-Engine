@@ -1216,39 +1216,36 @@ class PlayState extends MusicBeatState
 	// `updateScore = function(miss:Bool = false) { ... }
 	// its like if it was a variable but its just a function!
 	// cool right? -Crow
-	public dynamic function updateScore(miss:Bool = false)
-	{
-		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
-		if (ret == LuaUtils.Function_Stop)
-			return;
+public dynamic function updateScore(miss:Bool = false) {
+    var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
+    if (ret == LuaUtils.Function_Stop)
+        return;
 
-		var str:String = ratingName;
-		if(totalPlayed != 0)
-		{
-			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
-			str += ' (${percent}%) - ${ratingFC}';
-		}
+    var str:String = ratingName;
+    if(totalPlayed != 0) {
+        var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
+        str += ' (${percent}%) - ${ratingFC}';
+    }
 
-// bruh my brain will frickin insane for a moment of this fucking retard codes 
-// frickin retard code moment xD
-// Existing function or method containing the added code
-if (!practiceMode && !miss) {
-    if (instakillOnMiss) {
-        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) {
-            scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accuracy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
+    // Existing function or method containing the added code
+    if (!practiceMode && !miss) {
+        if (instakillOnMiss) {
+            if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) {
+                scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accuracy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
+            }
         }
     }
+    scoreTxtUpdate();
+
+    if (!miss && (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)) {
+        doScoreBop();
+    }
+
+    callOnScripts('onUpdateScore', [miss]);
 }
-scoreTxtUpdate();
 
-if (!miss && (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)) {
-    doScoreBop();
-}
-
-callOnScripts('onUpdateScore', [miss]);
-
-public dynamic function fullComboFunction() 
-{
+// Make sure fullComboFunction is defined outside of updateScore
+public dynamic function fullComboFunction() {
     var sicks:Int = ratingsData[0].hits;
     var goods:Int = ratingsData[1].hits;
     var bads:Int = ratingsData[2].hits;
