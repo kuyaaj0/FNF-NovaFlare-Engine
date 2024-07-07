@@ -3188,6 +3188,13 @@ public dynamic function fullComboFunction() {
         rateSpr_S.offset.y += rateSpr_S.height / 2;
 	}
 
+	public static function truncateFloat( number: Float, precision: Int): Float {
+		var num = number;
+		num = num * Math.pow(10, precision);
+		num = Math.round( num ) / Math.pow(10, precision);
+		return num;
+	}
+
 	public var strumsBlocked:Array<Bool> = [];
 	private function onKeyPress(event:KeyboardEvent):Void
 	{
