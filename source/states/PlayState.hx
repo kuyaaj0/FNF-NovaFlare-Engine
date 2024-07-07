@@ -1247,7 +1247,8 @@ if (!miss && (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuCont
 
 callOnScripts('onUpdateScore', [miss]);
 
-public dynamic function fullComboFunction() {
+public dynamic function fullComboFunction() 
+{
     var sicks:Int = ratingsData[0].hits;
     var goods:Int = ratingsData[1].hits;
     var bads:Int = ratingsData[2].hits;
