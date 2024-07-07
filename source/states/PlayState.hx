@@ -1231,26 +1231,28 @@ class PlayState extends MusicBeatState
 
 // bruh my brain will frickin insane for a moment of this fucking retard codes 
 // frickin retard code moment xD
-		if (!practiceMode && !miss) {
-			if (instakillOnMiss) {
-			(ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled); {
-		scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accurarcy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
-			}
-	}
+// Existing function or method containing the added code
+if (!practiceMode && !miss) {
+    if (instakillOnMiss) {
+        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) {
+            scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accuracy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
+        }
+    }
 }
-		scoreTxtUpdate();		
+scoreTxtUpdate();
 
-		if (!miss && ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
-			doScoreBop();
+if (!miss && (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)) {
+    doScoreBop();
+}
 
-		callOnScripts('onUpdateScore', [miss]);
+callOnScripts('onUpdateScore', [miss]);
 
 public dynamic function fullComboFunction() {
     var sicks:Int = ratingsData[0].hits;
     var goods:Int = ratingsData[1].hits;
     var bads:Int = ratingsData[2].hits;
     var shits:Int = ratingsData[3].hits;
-    var marvelous:Int = ClientPrefs.data.marvelousRating ? ratingsData[4].hits : 0;    
+    var marvelous:Int = ClientPrefs.data.marvelousRating ? ratingsData[4].hits : 0;
 
     ratingFC = "";
     if (songMisses == 0) {
