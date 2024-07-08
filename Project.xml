@@ -126,10 +126,6 @@
 	<!-- Enables a terminal log prompt on debug builds -->
 	<haxelib name="hxcpp-debug-server" if="debug"/>
 
-	<section if="cpp">
-	<haxelib name="hxvlc" if="desktop || mobile" />
-</section>
-
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Enable the Flixel core recording system-->
