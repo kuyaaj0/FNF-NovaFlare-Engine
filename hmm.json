@@ -45,6 +45,13 @@
       "dir": null,
       "ref": "master",
       "url": "https://github.com/polybiusproxy/hxCodec"
+    },
+    {
+      "name": "hxvlc",
+      "type": "haxelib",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/MAJigsaw77/hxvlc.git"
       
     },
     {
