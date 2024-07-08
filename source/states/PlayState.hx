@@ -566,7 +566,7 @@ class PlayState extends MusicBeatState
 		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
 		
-		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return (ClientPrefs.data.smoothHealth || ClientPrefs.data.oldHealthBarVersion) ? smoothHealth : health, 0, 2);
+        healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return (ClientPrefs.data.smoothHealth || ClientPrefs.data.oldHealthBarVersion) ? smoothHealth : health, 0, 2);
       healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
@@ -1216,61 +1216,47 @@ class PlayState extends MusicBeatState
 	// `updateScore = function(miss:Bool = false) { ... }
 	// its like if it was a variable but its just a function!
 	// cool right? -Crow
-public dynamic function updateScore(miss:Bool = false) {
-    var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
-    if (ret == LuaUtils.Function_Stop)
-        return;
+	public dynamic function updateScore(miss:Bool = false)
+	{
+		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
+		if (ret == LuaUtils.Function_Stop)
+			return;
 
-    var str:String = ratingName;
-    if(totalPlayed != 0) {
-        var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
-        str += ' (${percent}%) - ${ratingFC}';
-    }
+		var str:String = ratingName;
+		if(totalPlayed != 0)
+		{
+			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
+			str += ' (${percent}%) - ${ratingFC}';
+		}
+		
+		scoreTxtUpdate();		
 
-    // Existing function or method containing the added code
-    if (!practiceMode && !miss) {
-        if (instakillOnMiss) {
-            if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled) {
-                scoreTxt.text = 'NPS: ${nps} (Max: ${maxNPS}) | Score: ${(ClientPrefs.data.smoothScore) ? truncateFloat(smoothScore, 0) : songScore} | Accuracy: ${CoolUtil.floorDecimal(ratingPercent * 100, 2)}% | ${ratingName} [${ratingFC}]';
-            }
-        }
-    }
-    scoreTxtUpdate();
+		if (!miss && ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
+			doScoreBop();
 
-    if (!miss && (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)) {
-        doScoreBop();
-    }
+		callOnScripts('onUpdateScore', [miss]);
+	}
 
-    callOnScripts('onUpdateScore', [miss]);
-}
-
-// Make sure fullComboFunction is defined outside of updateScore
-public dynamic function fullComboFunction() {
-    var sicks:Int = ratingsData[0].hits;
-    var goods:Int = ratingsData[1].hits;
-    var bads:Int = ratingsData[2].hits;
-    var shits:Int = ratingsData[3].hits;
-    var marvelous:Int = ClientPrefs.data.marvelousRating ? ratingsData[4].hits : 0;
-
-    ratingFC = "";
-    if (songMisses == 0) {
-        if (bads > 0 || shits > 0) {
-            ratingFC = 'FC';
-        } else if (goods > 0) {
-            ratingFC = 'GFC';
-        } else if (sicks > 0) {
-            ratingFC = 'SFC';
-        } else if (marvelous > 0) {
-            ratingFC = 'MFC';
-        }
-    } else {
-        if (songMisses < 10) {
-            ratingFC = 'SDCB';
-        } else {
-            ratingFC = 'Clear';
-        }
-    }
-}
+	public dynamic function fullComboFunction()
+	{
+		var sicks:Int = ratingsData[0].hits;
+		var goods:Int = ratingsData[1].hits;
+		var bads:Int = ratingsData[2].hits;
+		var shits:Int = ratingsData[3].hits;
+        var marvelous:Int = ClientPrefs.data.marvelousRating ? ratingsData[4].hits : 0;    
+        
+		ratingFC = "";
+		if(songMisses == 0)
+		{
+			if (bads > 0 || shits > 0) ratingFC = 'FC';
+			else if (goods > 0) ratingFC = 'GFC';
+			else if (sicks > 0) ratingFC = 'SFC';
+			else if (marvelous > 0) ratingFC = 'MFC';
+		} else {
+			if (songMisses < 10) ratingFC = 'SDCB';
+			else ratingFC = 'Clear';
+		}
+	}
 
 	public function doScoreBop():Void {
 		if(!ClientPrefs.data.scoreZoom)
@@ -3186,13 +3172,6 @@ public dynamic function fullComboFunction() {
 		
 		rateSpr_S.offset.x += rateSpr_S.width / 2;
         rateSpr_S.offset.y += rateSpr_S.height / 2;
-	}
-
-	public static function truncateFloat( number: Float, precision: Int): Float {
-		var num = number;
-		num = num * Math.pow(10, precision);
-		num = Math.round( num ) / Math.pow(10, precision);
-		return num;
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
