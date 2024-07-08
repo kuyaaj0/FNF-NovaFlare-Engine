@@ -42,9 +42,7 @@
     {
       "name": "hxCodec",
       "type": "haxelib",
-      "dir": null,
-      "ref": "master",
-      "url": "https://github.com/kuyaaj0/hxCodec"
+      "version": "2.6.0"
     },
     {
       "name": "hxvlc",
