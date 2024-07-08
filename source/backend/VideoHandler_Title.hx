@@ -15,6 +15,8 @@ import flixel.util.FlxColor;
     #else 
         import vlc.VLCBitmap;
     #end
+#else
+    import vlc.VLCBitmap;
 #end
 
 class VideoHandler_Title extends VLCBitmap
@@ -201,5 +203,4 @@ class VideoSprite extends FlxSprite
 		bitmap.playVideo(Path, Loop, PauseMusic, newWidth, newHeight);				
 	}
 }
-#end
 #end
