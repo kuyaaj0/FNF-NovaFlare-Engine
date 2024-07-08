@@ -11,12 +11,12 @@ import flixel.util.FlxColor;
 #if VIDEOS_ALLOWED
 #if hxCodec
     #if (hxCodec >= "3.0.2") 
-        import hxcodec;
+        import hxcodec. // Ensure hxcodec is the correct module and class name
     #else 
-        import vlc.VLCBitmap;
+        import vlc.VLCBitmap; // Ensure VLCBitmap is part of the vlc module
     #end
 #else
-    import vlc.VLCBitmap;
+    import vlc.VLCBitmap; // Ensure VLCBitmap is part of the vlc module
 #end
 
 class VideoHandler_Title extends VLCBitmap
