@@ -15,7 +15,7 @@ import flixel.util.FlxColor;
     #end
 #end
 
-class VideoHandler_Title extends VLCBitmap
+class VideoHandler_Title extends VLCBitmap;
 {
 	public var canSkip:Bool = true;
 	public var canUseSound:Bool = true;
