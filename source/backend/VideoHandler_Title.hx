@@ -10,8 +10,10 @@ import flixel.util.FlxColor;
 
 #if VIDEOS_ALLOWED
 #if hxCodec
-    #if (hxCodec >= "3.0.2") import hxcodec;
-    #else import vlc.VLCBitmap;
+    #if (hxCodec >= "3.0.2") 
+        import hxcodec;
+    #else 
+        import vlc.VLCBitmap;
     #end
 #end
 
@@ -199,4 +201,5 @@ class VideoSprite extends FlxSprite
 		bitmap.playVideo(Path, Loop, PauseMusic, newWidth, newHeight);				
 	}
 }
+#end
 #end
