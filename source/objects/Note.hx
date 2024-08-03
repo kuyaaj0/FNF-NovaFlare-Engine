@@ -9,6 +9,8 @@ import shaders.RGBPalette.RGBShaderReference;
 import objects.StrumNote;
 
 import flixel.math.FlxRect;
+import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 using StringTools;
 
