@@ -10,7 +10,15 @@ import backend.Rating;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
+import flixel.addons.display.FlxGridOverlay;
+import flixel.addons.effects.FlxTrail;
+import flixel.addons.effects.FlxTrailArea;
+import flixel.addons.effects.chainable.FlxEffectSprite;
+import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxSave;
@@ -42,6 +50,7 @@ import flixel.addons.display.FlxRuntimeShader;
 import shaders.openfl.filters.ShaderFilter as CustomShaderFilter;
 import openfl.filters.BitmapFilter;
 import shaders.CustomShaders;
+import shaders.WiggleEffect.WiggleEffectType;
 #end
 
 import objects.Note.EventNote;
