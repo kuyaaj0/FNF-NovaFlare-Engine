@@ -121,11 +121,11 @@ class Main extends Sprite
 		
         #if mobile
             #if EXTERNAL
-    		if (!FileSystem.exists(Environment.getExternalStorageDirectory() + '/.' + Application.current.meta.get('file')))
-    		    FileSystem.createDirectory(Environment.getExternalStorageDirectory() + '/.' + Application.current.meta.get('file'));
+    		if (!FileSystem.exists(AndroidEnvironment.getExternalStorageDirectory() + '/.' + Application.current.meta.get('file')))
+    		    FileSystem.createDirectory(AndroidEnvironment.getExternalStorageDirectory() + '/.' + Application.current.meta.get('file'));
     		#elseif MEDIA
-    		if (!FileSystem.exists(Environment.getExternalStorageDirectory() + '/Android/media/' + Application.current.meta.get('packageName')))
-    		    FileSystem.createDirectory(Environment.getExternalStorageDirectory() + '/Android/media/' + Application.current.meta.get('packageName'));
+    		if (!FileSystem.exists(AndroidEnvironment.getExternalStorageDirectory() + '/Android/media/' + Application.current.meta.get('packageName')))
+    		    FileSystem.createDirectory(AndroidEnvironment.getExternalStorageDirectory() + '/Android/media/' + Application.current.meta.get('packageName'));
     		#end       		    		
     		Sys.setCwd(SUtil.getStorageDirectory());
 		#end			

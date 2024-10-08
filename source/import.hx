@@ -12,13 +12,15 @@ import backend.Achievements;
 import backend.VideoSprite;
 #end
 
+//Android
 #if android
-import android.content.Context;
-import android.widget.Toast;
-import android.os.Environment;
-import android.Permissions;
-import lime.app.Application;
-import backend.AppData;
+import android.content.Context as AndroidContext;
+import android.widget.Toast as AndroidToast;
+import android.os.Environment as AndroidEnvironment;
+import android.Permissions as AndroidPermissions;
+import android.Settings as AndroidSettings;
+import android.Tools as AndroidTools;
+import android.os.BatteryManager as AndroidBatteryManager;
 #end
 
 //Mobile Controls
