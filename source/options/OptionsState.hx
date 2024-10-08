@@ -36,6 +36,7 @@ class OptionsState extends MusicBeatState
 				Language.get('Gameplay'), 
 				Language.get('Backend'), 
 				Language.get('GameUITitle'), 
+				Language.get('SmoothOptionTitle'), 
 				Language.get('Skin'), 
 				Language.get('Input'), 
 				Language.get('UserInterfaceTitle'), 
@@ -95,12 +96,14 @@ class OptionsState extends MusicBeatState
 				case 3:
 					UIGroup.add(bg);
 				case 4:
-					SkinGroup.add(bg);
+					SmoothGroup.add(bg);
 				case 5:
-					InputGroup.add(bg);
+					SkinGroup.add(bg);
 				case 6:
-					InterfaceGroup.add(bg);
+					InputGroup.add(bg);
 				case 7:
+					InterfaceGroup.add(bg);
+				case 8:
 					WatermarkGroup.add(bg);
 			}
 
