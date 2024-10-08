@@ -96,6 +96,17 @@
     "tweenableScoreTxt": "如果勾选，则为得分文本启用补间动画。",
 
 
+    "SmoothOption": "平滑选项",
+    "SmoothOptionTitle": "平滑选项",
+
+    "smoothhealthearlyaccess": "平滑健康的抢先体验",
+    "smoothHealth": "平滑健康",
+    "EarlyAccess": "抢先体验",
+    "smoothScore": "平滑分数",
+    "SecretAccess": "秘密访问",
+    "commaSeparated": "使得分像这样分开 10,000，像在官方的 Friday Night Funkin 中一样",
+
+
     
     "Skin": "皮肤设置",
     
