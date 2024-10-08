@@ -253,19 +253,17 @@ class PlayState extends MusicBeatState
 	public var camPause:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
+	public var commaSeparated:Bool = true;
 	public var smoothScore:Float = 0;
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
-	public var commaSeparated:Bool = true;
 	public var scoreTxt:FlxText;
 	public var judgementCounter_S:JudgementCounter; //add _S is make sure nobody make a new one broken this
 	public var judgementCounter_STween:FlxTween;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 	var timeTxtTween:FlxTween;
-
-
 	
 	public var pauseButton_menu:FlxSprite;
 
@@ -294,7 +292,6 @@ class PlayState extends MusicBeatState
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
 	#end
-
 
 	//Achievement shit
 	var keysPressed:Array<Int> = [];
@@ -570,7 +567,7 @@ class PlayState extends MusicBeatState
 		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
 		
-        healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() { return (ClientPrefs.data.smoothHealth || ClientPrefs.data.oldHealthBarVersion) ? smoothHealth : health; }, 0, 2);
+		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() { return (ClientPrefs.data.smoothHealth || ClientPrefs.data.oldHealthBarVersion) ? smoothHealth : health; }, 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
@@ -1076,7 +1073,7 @@ class PlayState extends MusicBeatState
 
 	public function startCountdown()
 	{
-		new FlxTimer().start(0.05, function(tmr:FlxTimer){mobileControls.visible = true;});
+		new FlxTimer().start(1, function(tmr:FlxTimer){mobileControls.active = mobileControls.visible = true;});
 		if (ClientPrefs.data.pauseButton)
 		pauseButton_menu.visible = true;
 				
@@ -1263,7 +1260,7 @@ class PlayState extends MusicBeatState
 			str += ' (${percent}%) - ${ratingFC}';
 		}
 		
-		scoreTxtUpdate(0);		
+		scoreTxtUpdate();		
 
 		if (!miss && ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 			doScoreBop();
@@ -1450,6 +1447,8 @@ class PlayState extends MusicBeatState
 				for (i in 0...event[1].length)
 					makeEvent(event, i);
 		}
+
+		Note.checkSkin();
 		
         if (unspawnNotes.length == 0){
     		for (section in noteData)
@@ -1556,6 +1555,8 @@ class PlayState extends MusicBeatState
     
     		unspawnNotes.sort(sortByTime);
 		}
+
+		Note.defaultNoteSkin = 'noteSkins/NOTE_assets';
 		
 		if (extraEvents.length > 0)
 		    for (event in 0...extraEvents.length)
@@ -2001,8 +2002,6 @@ class PlayState extends MusicBeatState
 				    if (fixDesyncedStep >= 10){
 				        fixDesyncedStep = 0;
 					    resyncVocals(true);
-					} else {
-					    resyncVocals();
 					}
 				}
 				checkIfDesynced = false;
@@ -2185,7 +2184,7 @@ class PlayState extends MusicBeatState
 			if (npsCheck != nps) {
 			
 			    npsCheck = nps;			    
-			    scoreTxtUpdate(elapsed);				  
+			    scoreTxtUpdate();				  
 			}
 		}
 
@@ -2196,9 +2195,9 @@ class PlayState extends MusicBeatState
         smoothHealth = health;
     }
 
-	var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.108);
+		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.108);
 		smoothScore = scoreMult;
-		updateScore();
+		updateScore()
 		super.update(elapsed);
 
 		setOnScripts('cameraX', camFollow.x);
@@ -2210,9 +2209,10 @@ class PlayState extends MusicBeatState
         #end
 		callOnScripts('onUpdatePost', [elapsed]);
     }
+    
 
 // Update the function definition to include the elapsed parameter
-    public function scoreTxtUpdate(elapsed:Float = 0):Void {
+public function scoreTxtUpdate(elapsed:Float = 0):Void {
     // Format the score with commas using FlxStringUtil.formatMoney
     scoreTxt.text = 
         "Score: " + FlxStringUtil.formatMoney(Std.int(smoothScore), false, commaSeparated)
@@ -3049,6 +3049,7 @@ class PlayState extends MusicBeatState
 		
 		if (!ClientPrefs.data.showComboNum && !ClientPrefs.data.showRating)
 		return;
+        
         
 		if(ClientPrefs.data.judgementZoom && !cpuControlled)
 		{
