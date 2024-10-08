@@ -96,6 +96,14 @@
     "tweenableScoreTxt": "If checked, enables tween text for score text.",
 
 
+    "smoothhealthearlyaccess": "Early access to smooth health",
+    "smoothHealth": "Smooth health",
+    "EarlyAccess": "Early Access",
+    "smoothScore": "Smooth Score",
+    "SecretAccess": "Secret Access",
+    "commaSeparated": "Make the score look separated like this 10,000 like in the official Friday Night Funkin",
+
+
     
     "Skin": "Skin",
     
