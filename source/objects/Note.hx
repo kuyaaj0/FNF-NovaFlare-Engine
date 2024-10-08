@@ -55,7 +55,6 @@ class Note extends FlxSprite
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
 	public var noteWasHit:Bool = false;
-	public var isEndNote:Bool = false; // for better playAnim
 	public var prevNote:Note;
 	public var nextNote:Note;
 
@@ -88,7 +87,7 @@ class Note extends FlxSprite
 	public static var SUSTAIN_SIZE:Int = 44;
 	public static var swagWidth:Float = 160 * 0.7;
 	public static var colArray:Array<String> = ['purple', 'blue', 'green', 'red'];
-	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
+	public static var defaultNoteSkin:String = 'noteSkins/NOTE_assets';
 
 	public var noteSplashData:NoteSplashData = {
 		disabled: false,
@@ -116,10 +115,10 @@ class Note extends FlxSprite
 	public var hitHealth:Float = 0.023;
 	public var missHealth:Float = 0.0475;
 	public var rating:String = 'unknown';
-	public var ratingMod:Float = 0; //0 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
+	public var ratingMod:Float = 0; //9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
 	public var ratingDisabled:Bool = false;
 
-	public var texture(default, set):String = null;	
+	public var texture(default, set):String = null;
 	public var noteSplashTexture:String = null;  //just use fix old mods  XD
 
 	public var noAnimation:Bool = false;
@@ -130,12 +129,12 @@ class Note extends FlxSprite
 	public var hitsoundDisabled:Bool = false;
 	public var hitsoundChartEditor:Bool = true;
 	public var hitsound:String = 'hitsound';
-	
+
 	public var noteSplashBrt:Int = 0;
 	public var noteSplashSat:Int = 0;
 	public var noteSplashHue:Int = 0;
     // fix old lua😡
-    
+
 	private function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
 		multSpeed = value;
@@ -218,7 +217,7 @@ class Note extends FlxSprite
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null)
 	{
 		super();
-		
+
 		if (ClientPrefs.data.hitsoundType != ClientPrefs.defaultData.hitsoundType) hitsound = 'hitsounds/' + ClientPrefs.data.hitsoundType;
 
 		animation = new PsychAnimationController(this);
@@ -257,16 +256,15 @@ class Note extends FlxSprite
 
 		// trace(prevNote);
 
-		if (prevNote != null) prevNote.nextNote = this;		
-		
+		if(prevNote != null)
+			prevNote.nextNote = this;
+
 		if (isSustainNote && prevNote != null)
 		{
 			alpha = 0.6;
 			multAlpha = 0.6;
 			hitsoundDisabled = true;
-			if(ClientPrefs.data.downScroll) flipY = true;								
-			
-			isEndNote = true;
+			if(ClientPrefs.data.downScroll) flipY = true;
 
 			offsetX += width / 2;
 			copyAngle = false;
@@ -291,8 +289,8 @@ class Note extends FlxSprite
 					prevNote.scale.y *= 1.19;
 					prevNote.scale.y *= (6 / height); //Auto adjust note size
 				}
-				prevNote.updateHitbox();												
-				prevNote.isEndNote = false;
+				prevNote.updateHitbox();
+				// prevNote.setGraphicSize();
 			}
 
 			if(PlayState.isPixelStage)
@@ -300,14 +298,14 @@ class Note extends FlxSprite
 				scale.y *= PlayState.daPixelZoom;
 				updateHitbox();
 			}
-			
+			earlyHitMult = 0;
 		}
 		else if(!isSustainNote)
 		{
 			centerOffsets();
-			centerOrigin();	
+			centerOrigin();
 		}
-		x += offsetX;		    
+		x += offsetX;
 	}
 
 	public static function initializeGlobalRGBShader(noteData:Int)
@@ -329,8 +327,7 @@ class Note extends FlxSprite
 	}
 
 	var _lastNoteOffX:Float = 0;
-	static var _lastValidChecked:String = ''; //optimization
-	static var _modChecked:String = 'shits wdf'; //用于旧版剪头读取，如果mods不同会重新读取是否新的路径有贴图，实际上这个是用于优化加载，不用这个会导致每次普通剪头都要检查是否有贴图文件
+	static var _lastValidChecked:String; //optimization
 	public var originalHeight:Float = 6;
 	public var correctionOffset:Float = 0; //dont mess with this
 	public function reloadNote(texture:String = '', postfix:String = '') {
@@ -340,16 +337,8 @@ class Note extends FlxSprite
 		var skin:String = texture + postfix;
 		if(texture.length < 1) {
 			skin = PlayState.SONG != null ? PlayState.SONG.arrowSkin : null;
-			if(skin == null || skin.length < 1){
+			if(skin == null || skin.length < 1)
 				skin = defaultNoteSkin + postfix;
-				if(ClientPrefs.data.noteSkin == ClientPrefs.defaultData.noteSkin){ 
-					if (_modChecked == Mods.currentModDirectory || (Paths.fileExists('images/NOTE_assets.png', IMAGE) && Paths.fileExists('images/NOTE_assets.xml', TEXT)))
-					{ //fix for load old mods note assets
-						_modChecked = Mods.currentModDirectory;
-						skin = 'NOTE_assets';
-					}
-				}
-			}
 		}
 
 		var animName:String = null;
@@ -483,12 +472,6 @@ class Note extends FlxSprite
 				}		
 			}			
 		}
-
-		if (tooLate && !inEditor)
-		{
-			if (alpha > 0.3)
-				alpha = 0.3;
-		}
 	}
 
 	override public function destroy()
@@ -497,7 +480,6 @@ class Note extends FlxSprite
 		_lastValidChecked = '';
 	}
 
-	
 	public function followStrumNote(myStrum:StrumNote, fakeCrochet:Float, songSpeed:Float = 1)
 	{
 		var strumX:Float = myStrum.x;
@@ -510,8 +492,8 @@ class Note extends FlxSprite
 		if (!myStrum.downScroll) distance *= -1;
 
 		var angleDir = strumDirection * Math.PI / 180;
-		if (copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
-		else angle = strumDirection - 90 + offsetAngle;
+		if (copyAngle)
+			angle = strumDirection - 90 + strumAngle + offsetAngle;
 
 		if(copyAlpha)
 			alpha = strumAlpha * multAlpha;
@@ -533,7 +515,6 @@ class Note extends FlxSprite
 		}
 	}
 
-
 	public function clipToStrumNote(myStrum:StrumNote)
 	{
 		var center:Float = myStrum.y + offsetY + Note.swagWidth / 2;
@@ -546,17 +527,13 @@ class Note extends FlxSprite
 			&& ClientPrefs.data.playOpponent)
 			)
 		{
-			if (!wasGoodHit && ((ClientPrefs.data.playOpponent && !mustPress) || ((!ClientPrefs.data.playOpponent && mustPress)))) return; //只针对对方箭头
+			if (!wasGoodHit) return;
 			
 			updateHitbox();
 			var swagRect:FlxRect = clipRect;
 			if(swagRect == null) swagRect = new FlxRect(0, 0, frameWidth, frameHeight);
-
-			var speedData:Float = 0;
-			if (Type.getClass(FlxG.state) != PlayState) speedData = EditorPlayState.songSpeed;
-			else speedData = PlayState.instance.songSpeed;
 			
-			var time:Float = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(speedData, 2))), 0, 1);
+			var time:Float = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(PlayState.instance.songSpeed, 2))), 0, 1);
 			
 			swagRect.x = 0;
 			swagRect.y = time * frameHeight;
@@ -580,7 +557,11 @@ class Note extends FlxSprite
 			lateHitMult = 0.75;	
 		}
 	} //this shit can make hold note work better
-	
+
+	public static function checkSkin() //加载检测独立出来检测省的和原来一样粑粑
+	{
+		if (Paths.fileExists('images/NOTE_assets.png', IMAGE) && ClientPrefs.data.noteSkin == ClientPrefs.defaultData.noteSkin) defaultNoteSkin = 'NOTE_assets';
+	}
 
 	@:noCompletion
 	override function set_clipRect(rect:FlxRect):FlxRect
