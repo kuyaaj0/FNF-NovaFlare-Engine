@@ -85,16 +85,16 @@ class PlayState extends MusicBeatState
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['You Suck!', 0.2], //From 0% to 19%
-		['Shit', 0.4], //From 20% to 39%
-		['Bad', 0.5], //From 40% to 49%
-		['Bruh', 0.6], //From 50% to 59%
-		['Meh', 0.69], //From 60% to 68%
-		['Nice', 0.7], //69%
-		['Good', 0.8], //From 70% to 79%
-		['Great', 0.9], //From 80% to 89%
-		['Sick!', 1], //From 90% to 99%
-		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
+		['alr im out', 0.2], //From 0% to 19%
+		['Fuck you', 0.4], //From 20% to 39%
+		['F-rank', 0.5], //From 40% to 49%
+		['E-rank', 0.6], //From 50% to 59%
+		['D-rank', 0.69], //From 60% to 68%
+		['C-rank', 0.7], //69%
+		['B-rank', 0.8], //From 70% to 79%
+		['A-rank', 0.9], //From 80% to 89%
+		['S-rank', 1], //From 90% to 99%
+		['Overpowered mc', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 
 	//event variables
@@ -186,6 +186,7 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
+    public var smoothHealth:Float = 1;
 	public var combo:Int = 0;	
 	public var highestCombo:Int = 0;
 	
@@ -252,13 +253,19 @@ class PlayState extends MusicBeatState
 	public var camPause:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
+	public var smoothScore:Float = 0;
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
+	public var commaSeparated:Bool = true;
 	public var scoreTxt:FlxText;
 	public var judgementCounter_S:JudgementCounter; //add _S is make sure nobody make a new one broken this
+	public var judgementCounter_STween:FlxTween;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
+	var timeTxtTween:FlxTween;
+
+
 	
 	public var pauseButton_menu:FlxSprite;
 
@@ -287,6 +294,7 @@ class PlayState extends MusicBeatState
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
 	#end
+
 
 	//Achievement shit
 	var keysPressed:Array<Int> = [];
@@ -562,7 +570,7 @@ class PlayState extends MusicBeatState
 		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
 		
-		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return health, 0, 2, ClientPrefs.data.oldHealthBarVersion);
+        healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() { return (ClientPrefs.data.smoothHealth || ClientPrefs.data.oldHealthBarVersion) ? smoothHealth : health; }, 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
@@ -720,7 +728,6 @@ class PlayState extends MusicBeatState
 		#end
 
 		addMobileControls(false);
-		mobileControls.active = mobileControls.visible = true;
 
 		startCallback();
 		RecalculateRating();
@@ -1069,6 +1076,7 @@ class PlayState extends MusicBeatState
 
 	public function startCountdown()
 	{
+		new FlxTimer().start(0.05, function(tmr:FlxTimer){mobileControls.visible = true;});
 		if (ClientPrefs.data.pauseButton)
 		pauseButton_menu.visible = true;
 				
@@ -1255,7 +1263,7 @@ class PlayState extends MusicBeatState
 			str += ' (${percent}%) - ${ratingFC}';
 		}
 		
-		scoreTxtUpdate();		
+		scoreTxtUpdate(0);		
 
 		if (!miss && ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 			doScoreBop();
@@ -1442,8 +1450,6 @@ class PlayState extends MusicBeatState
 				for (i in 0...event[1].length)
 					makeEvent(event, i);
 		}
-
-		Note.checkSkin();
 		
         if (unspawnNotes.length == 0){
     		for (section in noteData)
@@ -1550,8 +1556,6 @@ class PlayState extends MusicBeatState
     
     		unspawnNotes.sort(sortByTime);
 		}
-
-		Note.defaultNoteSkin = 'noteSkins/NOTE_assets';
 		
 		if (extraEvents.length > 0)
 		    for (event in 0...extraEvents.length)
@@ -1981,7 +1985,12 @@ class PlayState extends MusicBeatState
 		{
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
 			if(checkIfDesynced)
-			{			    			   			    
+			{			    
+			    if (musicCheck(vocals, FlxG.sound.music.time, 20)
+			    || (musicCheck(opponentVocals, FlxG.sound.music.time, 20)))
+			        fixDesyncedStep++;
+			    else fixDesyncedStep = 0;
+			    
 				var diff:Float = 20 * playbackRate;
 				var timeSub:Float = Conductor.songPosition - Conductor.offset;
 				
@@ -1992,12 +2001,11 @@ class PlayState extends MusicBeatState
 				    if (fixDesyncedStep >= 10){
 				        fixDesyncedStep = 0;
 					    resyncVocals(true);
-					    checkIfDesynced = false;
 					} else {
-					    fixDesyncedStep++;
+					    resyncVocals();
 					}
 				}
-				
+				checkIfDesynced = false;
 			}
 		}
 
@@ -2177,9 +2185,21 @@ class PlayState extends MusicBeatState
 			if (npsCheck != nps) {
 			
 			    npsCheck = nps;			    
-			    scoreTxtUpdate();				  
+			    scoreTxtUpdate(elapsed);				  
 			}
 		}
+
+	// Smooth health update
+    if (ClientPrefs.data.smoothHealth) {
+        smoothHealth = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 30)) * playbackRate);
+    } else {
+        smoothHealth = health;
+    }
+
+	var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.108);
+		smoothScore = scoreMult;
+		updateScore();
+		super.update(elapsed);
 
 		setOnScripts('cameraX', camFollow.x);
 		setOnScripts('cameraY', camFollow.y);
@@ -2190,32 +2210,23 @@ class PlayState extends MusicBeatState
         #end
 		callOnScripts('onUpdatePost', [elapsed]);
     }
-    
-    public function scoreTxtUpdate()
-    {
-        scoreTxt.text = 
-                "NPS: "
-		        + nps
-		        + " (Max: "
-		        + maxNPS
-		        + ")";
-		        
-		        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
-		        {
-		        scoreTxt.text += " | "
-                		     + "Score: " + songScore
-                		     + " | Misses: " + songMisses
-                		     + " | Accuracy: " + Math.ceil(ratingPercent * 10000) / 100 + '%'
-                		     + " | ";
-                		        
-                		     if (ratingName == 'N/A'){
-                		         scoreTxt.text += 'N/A';
-                		     }
-                		     else {
-                		         scoreTxt.text += '(' + ratingFC + ') ' + ratingName;
-                		     }            
-                }
+
+// Update the function definition to include the elapsed parameter
+    public function scoreTxtUpdate(elapsed:Float = 0):Void {
+    // Format the score with commas using FlxStringUtil.formatMoney
+    scoreTxt.text = 
+        "Score: " + FlxStringUtil.formatMoney(Std.int(smoothScore), false, commaSeparated)
+        + " | NPS: " + nps
+        + " (Max: " + maxNPS + ")"
+        + " | Misses: " + songMisses
+        + " | Accuracy: " + Math.ceil(ratingPercent * 10000) / 100 + '%';
+
+    if (ratingName == 'N/A') {
+        scoreTxt.text += ' | N/A';
+    } else {
+        scoreTxt.text += ' | (' + ratingFC + ') ' + ratingName;
     }
+}
 
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
@@ -2864,7 +2875,7 @@ class PlayState extends MusicBeatState
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0.0;
 
-	public var showCombo:Bool = false;
+	public var showCombo:Bool = ClientPrefs.data.showComboPopup;
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
     
@@ -3039,6 +3050,18 @@ class PlayState extends MusicBeatState
 		if (!ClientPrefs.data.showComboNum && !ClientPrefs.data.showRating)
 		return;
         
+		if(ClientPrefs.data.judgementZoom && !cpuControlled)
+		{
+			if(judgementCounter_STween != null) {
+				judgementCounter_STween.cancel();
+			}judgementCounter_STween = FlxTween.tween(judgementCounter_S.scale, {x: 1, y: 1}, 0.2, {
+    onComplete: function(twn:FlxTween) {
+        judgementCounter_STween = null;
+        
+    }
+			    
+			});
+		}			
         
 		var uiPrefix:String = "";
 		var uiSuffix:String = '';
@@ -3852,6 +3875,14 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
+		if (ClientPrefs.data.tweenableTimeTxt) {
+			if (curBeat % gfSpeed == 0) animateTimeTxtTween();
+		}
+
+		if (ClientPrefs.data.tweenableScoreTxt) {
+			if (curBeat % gfSpeed == 0) animateScoreTxtTween();
+		}
+
 		characterBopper(curBeat);
 
 		super.beatHit();
@@ -3910,6 +3941,32 @@ class PlayState extends MusicBeatState
 		setOnScripts('curSection', curSection);
 		callOnScripts('onSectionHit');
 	}
+
+	dynamic public function animateTimeTxtTween() {
+    if (timeTxtTween != null) {
+        timeTxtTween.cancel();
+    }
+    timeTxt.scale.x = 1.075;
+    timeTxt.scale.y = 1.075;
+    timeTxtTween = FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, Conductor.crochet / 1250 / 1.5 / playbackRate * gfSpeed, {
+        onComplete: function(twn:FlxTween) {
+            timeTxtTween = null;
+        }
+    });
+}
+
+    public function animateScoreTxtTween() {
+    if (scoreTxtTween != null) {
+        scoreTxtTween.cancel();
+    }
+    scoreTxt.scale.x = 1.075;
+    scoreTxt.scale.y = 1.075;
+    scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, Conductor.crochet / 1250 / 1.5 / playbackRate * gfSpeed, {
+        onComplete: function(twn:FlxTween) {
+            scoreTxtTween = null;
+        }
+    });
+}
 
 	#if LUA_ALLOWED
 	public function startLuasNamed(luaFile:String)
