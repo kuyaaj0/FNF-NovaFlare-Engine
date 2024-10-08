@@ -65,6 +65,28 @@ class CoolUtil
 		return newValue / tempMult;
 	}
 
+	public static function formatNumberWithCommas(value:Float):String {
+    var num:String = Std.string(Std.int(value));
+    var formatted:String = "";
+
+    while (num.length > 3) {
+        formatted = "," + num.substr(num.length - 3, 3) + formatted;
+        num = num.substr(0, num.length - 3);
+    }
+
+    formatted = num + formatted;
+    return formatted;
+}
+
+    public static function coolLerp(current:Float, target:Float, elapsed:Float, speed:Float):Float {
+        return current + (target - current) * (elapsed * speed);
+    }
+
+    // Example of cameraLerp function (also public)
+    public static function cameraLerp(lerp:Float):Float {
+        return lerp; // example implementation
+    }
+
 	inline public static function dominantColor(sprite:flixel.FlxSprite):Int
 	{
 		var countByColor:Map<Int, Int> = [];
