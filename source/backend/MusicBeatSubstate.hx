@@ -40,7 +40,6 @@ class MusicBeatSubstate extends FlxSubState
 		FlxG.cameras.add(camControls, DefaultDrawTarget);
 
 		mobileControls.cameras = [camControls];
-		mobileControls.visible = false;
 		mobileControls.alpha = ClientPrefs.data.playControlsAlpha + 0.000001;
 		add(mobileControls);
 		#if desktop 
