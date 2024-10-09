@@ -254,4 +254,78 @@ class Note extends FlxSprite {
 
 			x += swagWidth * noteData;
 			if (!isSustainNote && noteData < colArray.length) {
-				var animToPlay: String;
+				var animToPlay: String = colArray[noteData] + animSuffix;
+				if (ClientPrefs.data.noteSkin != '') {
+					animToPlay = ClientPrefs.data.noteSkin + '/' + animToPlay;
+				}
+				reloadNote(defaultNoteSkin, animToPlay);
+			}
+
+			if (isSustainNote) {
+				scale.set(1, 1);
+				tail = [];
+			} else {
+				scale.set(1, 1);
+				updateHitbox();
+			}
+
+			if (!noAnimation) {
+				animation.curAnim.set_curFrame(0);
+			}
+		}
+	}
+
+	// Function to reload the note's texture with a new one
+	private function reloadNote(noteTexture: String, animToPlay: String): Void {
+		this.texture = noteTexture;
+		animation.addByPrefix('idle', animToPlay, 24, false);
+		animation.play('idle');
+	}
+
+	// Function to initialize a global RGB shader if needed
+	private static function initializeGlobalRGBShader(noteData: Int): RGBPalette {
+		if (globalRgbShaders.length <= noteData) {
+			globalRgbShaders[noteData] = new RGBPalette();
+		}
+		return globalRgbShaders[noteData];
+	}
+
+	// Update method for the note object
+	override public function update(elapsed: Float): Void {
+		super.update(elapsed);
+
+		if (!spawned && y < 0) {
+			spawned = true;
+			PlayState.instance.notes.add(this);
+		}
+
+		if (isSustainNote && parent != null && !blockHit && !wasGoodHit) {
+			if (this.prevNote != null && this.prevNote.noteWasHit) {
+				this.noteWasHit = true;
+			}
+		}
+
+		if (PlayState.SONG != null && rgbShader.enabled) {
+			applyShaderRGB();
+		}
+	}
+
+	// Function to apply RGB values to the note shader
+	private function applyShaderRGB(): Void {
+		if (rgbShader != null) {
+			rgbShader.r = FlxMath.lerp(rgbShader.r, noteSplashData.r, 0.1);
+			rgbShader.g = FlxMath.lerp(rgbShader.g, noteSplashData.g, 0.1);
+			rgbShader.b = FlxMath.lerp(rgbShader.b, noteSplashData.b, 0.1);
+			rgbShader.a = FlxMath.lerp(rgbShader.a, noteSplashData.a, 0.1);
+		}
+	}
+
+	// Function to handle the note being hit by a player
+	public function handleHit(): Void {
+		if (!wasGoodHit) {
+			wasGoodHit = true;
+			noteWasHit = true;
+			PlayState.instance.callOnHit();
+		}
+	}
+}
