@@ -254,4 +254,4 @@ class Note extends FlxSprite {
 
 			x += swagWidth * noteData;
 			if (!isSustainNote && noteData < colArray.length) {
-				var animToPlay: String
+				var animToPlay: String;
