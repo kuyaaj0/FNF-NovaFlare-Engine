@@ -147,6 +147,7 @@ typedef OptionData =
 
     //==Smooth Option==\\
     SmoothOption:String,
+    SmoothOptionTitle:String,
     ////////
     smoothhealthearlyaccess:String,
     ////////
