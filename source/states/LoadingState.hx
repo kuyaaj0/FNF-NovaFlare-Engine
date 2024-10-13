@@ -42,6 +42,7 @@ class LoadingState extends MusicBeatState
 	static var requestedBitmaps:Map<String, BitmapData> = [];
 	static var mutex:Mutex = new Mutex();
 	static var chartMutex:Mutex = new Mutex();
+	static var imageMutex:Mutex = new Mutex();
 	static var loadMutex:Mutex = new Mutex();
 	
 	static var isPlayState:Bool = false;
@@ -100,7 +101,6 @@ class LoadingState extends MusicBeatState
 		
 		button = new LoadButton(0, 0, 35, barHeight);
         button.y = FlxG.height - button.height;
-        button.x = -button.width;
         button.antialiasing = ClientPrefs.data.antialiasing;
         button.updateHitbox();
         add(button);
@@ -129,8 +129,8 @@ class LoadingState extends MusicBeatState
 			if (Math.abs(curPercent - intendedPercent) < 0.001) curPercent = intendedPercent;
 			else curPercent = FlxMath.lerp(intendedPercent, curPercent, Math.exp(-elapsed * 15));
 
-			bar.scale.x = FlxG.width * curPercent - button.width / 2;
-			button.x = bar.scale.x - button.width / 2;
+			bar.scale.x = FlxG.width * curPercent;
+			button.x = FlxG.width * curPercent - button.width * curPercent;
 			bar.updateHitbox();
 			button.updateHitbox();
 			var precent:Float = Math.floor(curPercent * 10000) / 100;
@@ -388,11 +388,11 @@ class LoadingState extends MusicBeatState
 		for (sound in soundsToPrepare) initThread(() -> Paths.sound(sound), 'sound $sound');
 		for (music in musicToPrepare) initThread(() -> Paths.music(music), 'music $music');
 		for (song in songsToPrepare) initThread(() -> Paths.returnSound(null, song, 'songs'), 'song $song');
-        //trace(imagesToPrepare);     	
-		// for images, they get to have their own thread
+        
+		// for images, they get to have their own thread   		                        				                 		
 		for (image in imagesToPrepare)
 			Thread.create(() -> {
-				mutex.acquire();
+				imageMutex.acquire();
 				try {
 					var bitmap:BitmapData;
 					var file:String = null;
@@ -400,7 +400,7 @@ class LoadingState extends MusicBeatState
 					#if MODS_ALLOWED
 					file = Paths.modsImages(image);
 					if (Paths.currentTrackedAssets.exists(file)) {
-						mutex.release();
+						imageMutex.release();
 						addLoad();
 						return;
 					}
@@ -411,7 +411,7 @@ class LoadingState extends MusicBeatState
 					{
 						file = Paths.getPath('images/$image.png', IMAGE);
 						if (Paths.currentTrackedAssets.exists(file)) {
-							mutex.release();
+							imageMutex.release();
 							addLoad();
 							return;
 						}
@@ -419,18 +419,18 @@ class LoadingState extends MusicBeatState
 							bitmap = OpenFlAssets.getBitmapData(file);
 						else {
 							trace('no such image $image exists');
-							mutex.release();
+							imageMutex.release();
 							addLoad();
 							return;
 						}
 					}
-					mutex.release();
+					imageMutex.release();
 
 					if (bitmap != null) requestedBitmaps.set(file, bitmap);
 					else trace('oh no the image is null NOOOO ($image)');
 				}
 				catch(e:Dynamic) {
-					mutex.release();
+					imageMutex.release();
 					trace('ERROR! fail on preloading image $image');
 				}
 				addLoad();
@@ -664,7 +664,7 @@ class LoadingState extends MusicBeatState
 	static function preloadChart()
 	{
 		Note.checkSkin();
-	    addNote();
+	    //addNote();
 	    
 	    Note.globalRgbShaders = [];
 		backend.NoteTypesConfig.clearNoteTypesData();
