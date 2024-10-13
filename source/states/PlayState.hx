@@ -260,7 +260,7 @@ class PlayState extends MusicBeatState
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	public var judgementCounter_S:JudgementCounter; //add _S is make sure nobody make a new one broken this
-	var judgementCounter_S:FlxTween;
+	var judgementCounterTween:FlxTween;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 	var timeTxtTween:FlxTween;
@@ -3045,22 +3045,18 @@ class PlayState extends MusicBeatState
 		//---------------------------------
 		
 		
-		if (!ClientPrefs.data.showComboNum && !ClientPrefs.data.showRating)
-		return;
-        
-        
-		if(ClientPrefs.data.judgementZoom && !cpuControlled)
-		{
-			if(judgementCounter_S != null) {
-				judgementCounter_S.cancel();
-			}judgementCounter_S = FlxTween.tween(judgementCounter_S.scale, {x: 1, y: 1}, 0.2, {
-    onComplete: function(twn:FlxTween) {
-        judgementCounter_S = null;
-        
+		if (ClientPrefs.data.judgementZoom && !cpuControlled) {
+    if (judgementCounterTween != null) {
+        judgementCounterTween.cancel(); // Cancel the existing tween
     }
-			    
-			});
-		}			
+    
+    // Create a tween for judgementCounter_S.scale without easing
+    judgementCounterTween = FlxTween.tween(judgementCounter_S.scale, {x: 1, y: 1}, 0.2, {
+        onComplete: function(twn:FlxTween) {
+            judgementCounterTween = null; // Clear the tween after completion
+        }
+    });
+}
         
 		var uiPrefix:String = "";
 		var uiSuffix:String = '';
