@@ -2211,10 +2211,10 @@ class PlayState extends MusicBeatState
     }
     
 
-public function scoreTxtUpdate(elapsed:Float = 0):Void {
-    // Format the score using CoolUtil's custom function
+    public function scoreTxtUpdate(elapsed:Float = 0):Void {
+    // Format the score using CoolUtil's custom function with commaSeparated parameter
     scoreTxt.text = 
-        "Score: " + CoolUtil.formatNumberWithCommas(Std.int(smoothScore), commaSeparated)
+        "Score: " + CoolUtil.formatNumberWithCommas(smoothScore, commaSeparated)
         + " | NPS: " + nps
         + " (Max: " + maxNPS + ")"
         + " | Misses: " + songMisses
@@ -2226,7 +2226,6 @@ public function scoreTxtUpdate(elapsed:Float = 0):Void {
         scoreTxt.text += ' | (' + ratingFC + ') ' + ratingName;
     }
 }
-
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
 	{
