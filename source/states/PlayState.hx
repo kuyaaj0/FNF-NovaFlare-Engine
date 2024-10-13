@@ -253,15 +253,14 @@ class PlayState extends MusicBeatState
 	public var camPause:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
-    public var commaSeparated:Bool = false; // Test switching it off
-    trace(CoolUtil.formatNumberWithCommas(1234567, commaSeparated)); // Should return "1234567" without commas
+    public var commaSeparated:Bool = true; // Test switching it off
 	public var smoothScore:Float = 0;
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	public var judgementCounter_S:JudgementCounter; //add _S is make sure nobody make a new one broken this
-	public var judgementCounter_STween:FlxTween;
+	var judgementCounter_S:FlxTween;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 	var timeTxtTween:FlxTween;
@@ -2213,9 +2212,8 @@ class PlayState extends MusicBeatState
     
 
     public function scoreTxtUpdate(elapsed:Float = 0):Void {
-    // Format the score using CoolUtil's custom function with commaSeparated parameter
     scoreTxt.text = 
-        "Score: " + CoolUtil.formatNumberWithCommas(smoothScore, commaSeparated)
+        "Score: " + CoolUtil.formatNumberWithCommas(Std.int(smoothScore), commaSeparated)
         + " | NPS: " + nps
         + " (Max: " + maxNPS + ")"
         + " | Misses: " + songMisses
@@ -2227,6 +2225,7 @@ class PlayState extends MusicBeatState
         scoreTxt.text += ' | (' + ratingFC + ') ' + ratingName;
     }
 }
+
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
 	{
@@ -3052,11 +3051,11 @@ class PlayState extends MusicBeatState
         
 		if(ClientPrefs.data.judgementZoom && !cpuControlled)
 		{
-			if(judgementCounter_STween != null) {
-				judgementCounter_STween.cancel();
-			}judgementCounter_STween = FlxTween.tween(judgementCounter_S.scale, {x: 1, y: 1}, 0.2, {
+			if(judgementCounter_S != null) {
+				judgementCounter_S.cancel();
+			}judgementCounter_S = FlxTween.tween(judgementCounter_S.scale, {x: 1, y: 1}, 0.2, {
     onComplete: function(twn:FlxTween) {
-        judgementCounter_STween = null;
+        judgementCounter_S = null;
         
     }
 			    
