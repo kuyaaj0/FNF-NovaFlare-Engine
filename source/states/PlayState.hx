@@ -2211,9 +2211,8 @@ class PlayState extends MusicBeatState
     }
     
 
-// Update the function definition to include the elapsed parameter
 public function scoreTxtUpdate(elapsed:Float = 0):Void {
-    // Format the score with commas using FlxStringUtil.formatMoney
+    // Format the score using CoolUtil's custom function
     scoreTxt.text = 
         "Score: " + CoolUtil.formatNumberWithCommas(Std.int(smoothScore), commaSeparated)
         + " | NPS: " + nps
