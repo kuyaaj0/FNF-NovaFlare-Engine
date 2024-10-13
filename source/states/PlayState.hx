@@ -2215,7 +2215,7 @@ class PlayState extends MusicBeatState
 public function scoreTxtUpdate(elapsed:Float = 0):Void {
     // Format the score with commas using FlxStringUtil.formatMoney
     scoreTxt.text = 
-        "Score: " + CoolUtil.formatNumberWithCommas(Std.int(smoothScore), false, commaSeparated)
+        "Score: " + CoolUtil.formatNumberWithCommas(Std.int(smoothScore), commaSeparated)
         + " | NPS: " + nps
         + " (Max: " + maxNPS + ")"
         + " | Misses: " + songMisses
