@@ -28,6 +28,13 @@ class UIGroup
         follow.addOption(option);
 
         var option:Option = new Option(
+            Language.get('showComboPopup'),
+            'showComboPopup',
+            BOOL
+        );
+        follow.addOption(option);
+
+        var option:Option = new Option(
             Language.get('showComboNum'),
             'showComboNum',
             BOOL
@@ -51,6 +58,14 @@ class UIGroup
         var option:Option = new Option(
             Language.get('judgementCounter'),
             'judgementCounter',
+            BOOL
+        );
+        follow.addOption(option);
+        
+
+        var option:Option = new Option(
+            Language.get('judgementZoom'),
+            'judgementZoom',
             BOOL
         );
         follow.addOption(option);
@@ -200,6 +215,28 @@ class UIGroup
             'scoreZoom',
             BOOL
         );
+        follow.addOption(option);
+
+        ///////////////////////////////
+
+        var option:Option = new Option(
+            Language.get('Tweens'),
+            TEXT
+        );
+        follow.addOption(option);
+
+        var option:Option = new Option(
+            Language.get('tweenableTimeTxt'),
+            'tweenableTimeTxt',
+            BOOL
+        );
+        follow.addOption(option);
+
+        var option:Option = new Option(
+            Language.get('tweenableScoreTxt'),
+            'tweenableScoreTxt',
+            BOOL
+            );
         follow.addOption(option);
     }
 }
