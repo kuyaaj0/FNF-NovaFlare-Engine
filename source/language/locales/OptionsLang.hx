@@ -70,10 +70,12 @@ typedef OptionData =
     Visble:String,
     ////////
     hideHud:String, 
+    showComboPopup:String, 
     showComboNum:String, 
     showRating:String, 
     opponentStrums:String, 
     judgementCounter:String, 
+    judgementZoom:String, 
     keyboardDisplay:String, 
     ////////
     TimeBar:String, 
@@ -101,6 +103,11 @@ typedef OptionData =
     ////////
     camZooms:String, 
     scoreZoom:String, 
+    ////////
+    Tweens:String,
+    ////////
+    tweenableTimeTxt:String, 
+    tweenableScoreTxt:String, 
 
     //==Skin==\\
     Skin:String, 
@@ -136,6 +143,18 @@ typedef OptionData =
     extraKey:String, 
     MobileExtraControl:String, 
 
+
+
+    //==Smooth Option==\\
+    SmoothOption:String,
+    ////////
+    smoothhealthearlyaccess:String,
+    ////////
+    smoothHealth:String,
+    ////////
+    EarlyAccess:String,
+    ////////
+    smoothScore:String,
 
 
     //==User Interface==\\
