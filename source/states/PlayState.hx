@@ -253,7 +253,8 @@ class PlayState extends MusicBeatState
 	public var camPause:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
-	public var commaSeparated:Bool = true;
+    public var commaSeparated:Bool = false; // Test switching it off
+    trace(CoolUtil.formatNumberWithCommas(1234567, commaSeparated)); // Should return "1234567" without commas
 	public var smoothScore:Float = 0;
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
@@ -2190,7 +2191,7 @@ class PlayState extends MusicBeatState
 
 	// Smooth health update
     if (ClientPrefs.data.smoothHealth) {
-        smoothHealth = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 30)) * playbackRate);
+        smoothHealth = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
     } else {
         smoothHealth = health;
     }
