@@ -2226,6 +2226,18 @@ class PlayState extends MusicBeatState
     }
 }
 
+	// Smooth health update
+    if (ClientPrefs.data.smoothHealth) {
+        smoothHealth = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
+    } else {
+        smoothHealth = health;
+    }
+
+		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.110);
+		smoothScore = scoreMult;
+		updateScore();
+		super.update(elapsed);
+
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
 	{
