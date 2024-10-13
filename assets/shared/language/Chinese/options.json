@@ -67,10 +67,12 @@
     
     "Visble": "显示设置",
     "hideHud": "隐藏UI",
+    "showComboPopup": "如果未勾选，则隐藏连击弹出提示。",
     "showComboNum": "显示连击数字",
     "showRating": "显示评级贴图",
     "opponentStrums": "显示对手的箭头",
     "judgementCounter": "显示计数板",
+    "judgementZoom": "如果未勾选，则禁用每次打击音符时判断计数器文本的放大效果。",
     "keyboardDisplay": "显示键盘反馈",
     "TimeBar": "时长条",
     "timeBarType": "显示类型",
@@ -89,6 +91,20 @@
     "Camera": "摄像机",
     "camZooms": "摄像机根据音乐节奏进行Beat",
     "scoreZoom": "击打箭头会使分数栏Beat",
+    "Tweens": "补间动画",
+    "tweenableTimeTxt": "如果勾选，则为计时器文本启用补间动画。",
+    "tweenableScoreTxt": "如果勾选，则为得分文本启用补间动画。",
+
+
+    "SmoothOption": "平滑选项",
+    "SmoothOptionTitle": "平滑选项",
+
+    "smoothhealthearlyaccess": "平滑健康的抢先体验",
+    "smoothHealth": "平滑健康",
+    "EarlyAccess": "抢先体验",
+    "smoothScore": "平滑分数",
+    "SecretAccess": "秘密访问",
+    "commaSeparated": "使得分像这样分开 10,000，像在官方的 Friday Night Funkin 中一样",
 
 
     
