@@ -66,8 +66,7 @@ class CoolUtil
 	}
 
     public static function formatNumberWithCommas(value:Float, commaSeparated:Bool):String {
-    if (!commaSeparated) return Std.string(Std.int(value)); // Just return the value as a string if not separated
-
+    if (!commaSeparated) return Std.string(Std.int(value)); // If off, return plain number
     var num:String = Std.string(Std.int(value));
     var formatted:String = "";
 
