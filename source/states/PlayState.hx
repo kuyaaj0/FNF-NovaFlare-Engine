@@ -2224,8 +2224,6 @@ class PlayState extends MusicBeatState
     } else {
         scoreTxt.text += ' | (' + ratingFC + ') ' + ratingName;
     }
-}
-
 	// Smooth health update
     if (ClientPrefs.data.smoothHealth) {
         smoothHealth = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
@@ -2237,6 +2235,8 @@ class PlayState extends MusicBeatState
 		smoothScore = scoreMult;
 		updateScore();
 		super.update(elapsed);
+
+}
 
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
