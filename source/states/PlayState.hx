@@ -2647,9 +2647,22 @@ class PlayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 		}
 
-		stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
-		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
-	}
+		    case 'Play Video':
+            if(!game.startVideo(value1)) {
+                luaTrace('Play Video: Could not start video: ' + value1, false, false, FlxColor.RED);
+            }
+
+            case 'Play Background Video':
+            if(!bgVideo(value1, Std.string(flValue2))) {
+                luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
+            }
+
+        // Continue with other events...
+    }
+
+    stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
+    callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
+}
 
 	function moveCameraSection(?sec:Null<Int>):Void {
 		if(sec == null) sec = curSection;
