@@ -1003,7 +1003,6 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 
-public var videoCutscene:VideoSprite = null;
     public function bgVideo(videoName:String, loop:Bool = false):Bool {
         #if VIDEOS_ALLOWED
         // Check if a video is already playing
@@ -2677,8 +2676,8 @@ public var videoCutscene:VideoSprite = null;
     }
 
             case 'Play Background Video':
-    if (!FunkinLua.bgVideo(value1, Std.string(flValue2))) {
-        FunkinLua.luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
+    if (!this.bgVideo(value1, Std.string(flValue2))) {
+        luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
     }
 		}
 
