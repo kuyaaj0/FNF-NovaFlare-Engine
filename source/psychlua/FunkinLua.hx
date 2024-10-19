@@ -1320,6 +1320,7 @@ class FunkinLua {
 			}
 			return false;
 		});
+
 		set("startVideo", function(videoFile:String, ?canSkip:Bool = true) {
 			#if VIDEOS_ALLOWED
 			if(FileSystem.exists(Paths.video(videoFile)))
@@ -1359,16 +1360,22 @@ class FunkinLua {
             game.remove(game.videoCutscene);
             game.videoCutscene.destroy();
         }
+
         // Start video in the background
         game.videoCutscene = game.startVideo(videoFile, false, canSkip);
         
-        // Ensure video is rendered on camOther (background layer)
-        game.videoCutscene.set_cameras([game.camOther]); 
+        // Instead of using set_cameras (which is private), you can assign the camera directly
+        if (Reflect.hasField(game.videoCutscene, "cameras")) {
+            Reflect.setField(game.videoCutscene, "cameras", [game.camOther]);
+        }
+
         game.videoCutscene.scrollFactor.set(0, 0); // Static background
 
         // Ensure all notes stay on camHUD (foreground layer)
         for (strum in game.strumLineNotes.members) {
-            strum.set_cameras([game.camHUD]); // Render notes on HUD
+            if (Reflect.hasField(strum, "cameras")) {
+                Reflect.setField(strum, "cameras", [game.camHUD]);
+            }
         }
 
         return true;
