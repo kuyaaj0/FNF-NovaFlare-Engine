@@ -2682,8 +2682,9 @@ class PlayState extends MusicBeatState
     if (!this.bgVideo(value1, loop)) {
         FunkinLua.luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
     }
+		}
     stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
-    callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
+    callOnScripts('onEvent', [eventName, value1, value2, strumTime])
 }
 
 	function moveCameraSection(?sec:Null<Int>):Void {
