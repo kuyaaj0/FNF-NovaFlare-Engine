@@ -1003,6 +1003,12 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 
+	public function bgVideo(name:String, loop:Bool = true):Bool {
+    // Call startVideo with looping enabled
+    var video:VideoSprite = this.startVideo(name, false, false, loop, true);
+    return video != null;
+}
+
 	function startAndEnd()
 	{
 		if(endingSong)
