@@ -72,13 +72,14 @@ class FunkinLua {
 
 		this.scriptName = scriptName.trim();
 		var game:PlayState = PlayState.instance;
-		if(game != null) game.luaArray.push(this);
+		game.luaArray.push(this);
 
 		var myFolder:Array<String> = this.scriptName.split('/');
 		#if MODS_ALLOWED
 		if(myFolder[0] + '/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 			this.modFolder = myFolder[1];
 		#end
+
 		// Lua shit
 		set('Function_StopLua', LuaUtils.Function_StopLua);
 		set('Function_StopHScript', LuaUtils.Function_StopHScript);
@@ -645,6 +646,22 @@ class FunkinLua {
 				}));
 			}
 		});
+
+		set("noteTweenScale", function(tag:String, note:Int, scale:Dynamic, duration:Float, ease:String) {
+    LuaUtils.cancelTween(tag);
+    if(note < 0) note = 0;
+    var testicle:StrumNote = game.strumLineNotes.members[note % game.strumLineNotes.length];
+
+    if(testicle != null) {
+        // Apply the same scale value to both x and y axes
+        game.modchartTweens.set(tag, FlxTween.tween(testicle.scale, {x: scale, y: scale}, duration, {ease: LuaUtils.getTweenEaseByString(ease),
+            onComplete: function(twn:FlxTween) {
+                game.callOnLuas('onTweenCompleted', [tag]);
+                game.modchartTweens.remove(tag);
+            }
+        }));
+    }
+});
 
 		set("mouseClicked", function(button:String) {
 			var click:Bool = FlxG.mouse.justPressed;
@@ -1503,11 +1520,12 @@ class FunkinLua {
 				result = LuaL.dostring(lua, scriptName);
 
 			var resultStr:String = Lua.tostring(lua, result);
-			if(resultStr != null && result != 0) {
+			if(resultStr != null && result != 0 && resultStr.indexOf('cannot open') == -1) {
 				trace(resultStr);
 				#if (windows || mobile || js || wasm)
 				SUtil.showPopUp(resultStr, 'Error on lua script!');
 				#else
+				trace(resultStr.indexOf('cannot open'));
 				luaTrace('$scriptName\n$resultStr', true, false, FlxColor.RED);
 				#end
 				lua = null;
