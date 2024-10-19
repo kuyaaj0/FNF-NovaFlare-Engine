@@ -2677,7 +2677,7 @@ class PlayState extends MusicBeatState
 
             case 'Play Background Video':
     if (!this.bgVideo(value1, Std.string(flValue2))) {
-        luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
+        FunkinLua.luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
     }
 		}
 
