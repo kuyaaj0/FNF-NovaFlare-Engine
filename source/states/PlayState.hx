@@ -2647,15 +2647,14 @@ class PlayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 
 		    case 'Play Video':
-    // Assuming `startVideo` is part of `PlayState` or `luaInstance`
-    if (!this.startVideo(value1)) {
-        luaInstance.luaTrace('Play Video: Could not start video: ' + value1, false, false, FlxColor.RED);
+    var video:VideoSprite = this.startVideo(value1);
+    if (video == null) {
+        FunkinLua.luaTrace('Play Video: Could not start video: ' + value1, false, false, FlxColor.RED);
     }
 
             case 'Play Background Video':
-    // Assuming `bgVideo` is part of `PlayState` or `luaInstance`
-    if (!this.bgVideo(value1, Std.string(flValue2))) {
-        luaInstance.luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
+    if (!FunkinLua.bgVideo(value1, Std.string(flValue2))) {
+        FunkinLua.luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
     }
 		}
 
