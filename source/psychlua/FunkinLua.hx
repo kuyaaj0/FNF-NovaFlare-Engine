@@ -647,14 +647,23 @@ class FunkinLua {
 			}
 		});
 
-		set("noteTweenScale", function(tag:String, note:Int, scale:Dynamic, duration:Float, ease:String) {
+		set("noteTweenScale", function(tag:String, note:Int, scale:Float, duration:Float, ease:String) {
     LuaUtils.cancelTween(tag);
-    if(note < 0) note = 0;
-    var testicle:StrumNote = game.strumLineNotes.members[note % game.strumLineNotes.length];
 
-    if(testicle != null) {
-        // Apply the same scale value to both x and y axes
-        game.modchartTweens.set(tag, FlxTween.tween(testicle.scale, {x: scale, y: scale}, duration, {ease: LuaUtils.getTweenEaseByString(ease),
+    if (note < 0) note = 0;
+    var strumCount = game.strumLineNotes.length;
+    
+    if (note >= strumCount) {
+        // Make sure the note index is within bounds
+        return;
+    }
+
+    var targetNote:StrumNote = game.strumLineNotes.members[note % strumCount];
+
+    if (targetNote != null) {
+        // Tween both x and y scale
+        game.modchartTweens.set(tag, FlxTween.tween(targetNote.scale, {x: scale, y: scale}, duration, {
+            ease: LuaUtils.getTweenEaseByString(ease),
             onComplete: function(twn:FlxTween) {
                 game.callOnLuas('onTweenCompleted', [tag]);
                 game.modchartTweens.remove(tag);
@@ -1354,7 +1363,7 @@ class FunkinLua {
 		});
 
 		set("bgVideo", function(videoFile:String, ?canSkip:Bool = true) {
-    #if VIDEOS_ALLOWED
+		    #if VIDEOS_ALLOWED
     if(FileSystem.exists(Paths.video(videoFile))) {
         if(game.videoCutscene != null) {
             game.remove(game.videoCutscene);
