@@ -661,7 +661,7 @@ class FunkinLua {
     var targetNote:StrumNote = game.strumLineNotes.members[note % strumCount];
 
     if (targetNote != null) {
-        // Tween both x and y scale
+        // Tween both x and y scale for the strum line note
         game.modchartTweens.set(tag, FlxTween.tween(targetNote.scale, {x: scale, y: scale}, duration, {
             ease: LuaUtils.getTweenEaseByString(ease),
             onComplete: function(twn:FlxTween) {
@@ -669,6 +669,21 @@ class FunkinLua {
                 game.modchartTweens.remove(tag);
             }
         }));
+    }
+
+    // Now apply the scale tween to the falling notes (unspawnNotes)
+    for (i in 0...game.unspawnNotes.length) {
+        var fallingNote = game.unspawnNotes[i];
+        if (fallingNote.noteData == note) { // Check if the note index matches
+            // Tween both x and y scale for the falling note
+            game.modchartTweens.set(tag + '_falling_' + i, FlxTween.tween(fallingNote.scale, {x: scale, y: scale}, duration, {
+                ease: LuaUtils.getTweenEaseByString(ease),
+                onComplete: function(twn:FlxTween) {
+                    game.callOnLuas('onTweenCompleted', [tag + '_falling_' + i]);
+                    game.modchartTweens.remove(tag + '_falling_' + i);
+                }
+            }));
+        }
     }
 });
 
