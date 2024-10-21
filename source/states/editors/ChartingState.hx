@@ -1365,6 +1365,8 @@ class ChartingState extends MusicBeatState
 	var gameOverLoopInputText:FlxUIInputText;
 	var gameOverEndInputText:FlxUIInputText;
 	var noteSkinInputText:FlxUIInputText;
+	var playerArrowSkinInputText:FlxUIInputText;
+	var opponentArrowSkinInputText:FlxUIInputText;
 	var noteSplashesInputText:FlxUIInputText;
 	function addDataUI()
 	{
@@ -1394,6 +1396,20 @@ class ChartingState extends MusicBeatState
 			//trace('CHECKED!');
 		};
 
+		// Inputs for player (boyfriend) and opponent (dad) arrow textures
+		playerArrowSkinInputText = new FlxUIInputText(10, 350, 150, _song.playerArrowSkin != null ? _song.playerArrowSkin : '', 8); // Moved down to avoid overlap with previous inputs
+		blockPressWhileTypingOn.push(playerArrowSkinInputText);
+
+		opponentArrowSkinInputText = new FlxUIInputText(10, playerArrowSkinInputText.y + 35, 150, _song.opponentArrowSkin != null ? _song.opponentArrowSkin : '', 8); // Positioned directly below the player input
+		blockPressWhileTypingOn.push(opponentArrowSkinInputText);
+
+		// Button to apply the changes to the note textures
+		var reloadNotesButton:FlxButton = new FlxButton(opponentArrowSkinInputText.x + 5, opponentArrowSkinInputText.y + 30, 'Change Arrow Skins', function() {
+    _song.playerArrowSkin = playerArrowSkinInputText.text;
+    _song.opponentArrowSkin = opponentArrowSkinInputText.text;
+    updateGrid(); // Update grid with the new arrow skins
+});
+
 		//
 		noteSkinInputText = new FlxUIInputText(10, 280, 150, _song.arrowSkin != null ? _song.arrowSkin : '', 8);
 		blockPressWhileTypingOn.push(noteSkinInputText);
@@ -1415,6 +1431,11 @@ class ChartingState extends MusicBeatState
 		tab_group_data.add(check_disableNoteRGB);
 		
 		tab_group_data.add(reloadNotesButton);
+
+		tab_group_data.add(playerArrowSkinInputText);
+		tab_group_data.add(opponentArrowSkinInputText);
+		tab_group_data.add(reloadNotesButton);
+
 		tab_group_data.add(noteSkinInputText);
 		tab_group_data.add(noteSplashesInputText);
 
@@ -1422,6 +1443,9 @@ class ChartingState extends MusicBeatState
 		tab_group_data.add(new FlxText(gameOverSoundInputText.x, gameOverSoundInputText.y - 15, 0, 'Game Over Death Sound (sounds/):'));
 		tab_group_data.add(new FlxText(gameOverLoopInputText.x, gameOverLoopInputText.y - 15, 0, 'Game Over Loop Music (music/):'));
 		tab_group_data.add(new FlxText(gameOverEndInputText.x, gameOverEndInputText.y - 15, 0, 'Game Over Retry Music (music/):'));
+
+		tab_group_data.add(new FlxText(playerArrowSkinInputText.x, playerArrowSkinInputText.y - 15, 0, 'Player (Boyfriend) Arrow Skin:'));
+		tab_group_data.add(new FlxText(opponentArrowSkinInputText.x, opponentArrowSkinInputText.y - 15, 0, 'Opponent (Dad) Arrow Skin:'));
 
 		tab_group_data.add(new FlxText(noteSkinInputText.x, noteSkinInputText.y - 15, 0, 'Note Texture:'));
 		tab_group_data.add(new FlxText(noteSplashesInputText.x, noteSplashesInputText.y - 15, 0, 'Note Splashes Texture:'));
