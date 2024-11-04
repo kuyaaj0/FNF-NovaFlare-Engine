@@ -64,10 +64,12 @@ import states.TitleState;
 	//Game UI
 	//Visble s
 	public var hideHud:Bool = false;	
+	public var showComboPopup:Bool = true;
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;	
 	public var opponentStrums:Bool = true;
 	public var judgementCounter:Bool = false;
+	public var judgementZoom:Bool = true;
 	public var keyboardDisplay:Bool = true;
 	// TimeBar s
 	public var timeBarType:String = 'Time Left';
@@ -87,6 +89,15 @@ import states.TitleState;
 	//Camera s
 	public var camZooms:Bool = true;
 	public var scoreZoom:Bool = true;
+	//Tweens s
+	public var tweenableTimeTxt:Bool = false;
+	public var tweenableScoreTxt:Bool = false;
+	
+	//Smooth Option
+	//Smooth thingy s
+	public var smoothHealth:Bool = false;
+	public var smoothScore:Bool = false;
+	public var commaSeparated:Bool = true;
 	
 	//Skin
 	public var noteSkin:String = 'Default';

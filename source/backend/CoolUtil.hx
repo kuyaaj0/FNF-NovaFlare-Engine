@@ -65,6 +65,22 @@ class CoolUtil
 		return newValue / tempMult;
 	}
 
+    public static function formatNumberWithCommas(value:Float, commaSeparated:Bool):String {
+		if (!commaSeparated) return Std.string(Std.int(value));
+		var num:String = Std.string(Std.int(value));
+		var formatted:String = "";
+
+		while (num.length > 3) {
+			formatted = "," + num.substr(num.length - 3, 3) + formatted;
+			num = num.substr(0, num.length - 3);
+			
+		}
+
+		formatted = num + formatted;
+		return formatted;
+		
+	}
+
 	inline public static function dominantColor(sprite:flixel.FlxSprite):Int
 	{
 		var countByColor:Map<Int, Int> = [];
