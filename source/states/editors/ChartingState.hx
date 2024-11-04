@@ -75,7 +75,9 @@ class ChartingState extends MusicBeatState
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
 		['Set Property', "Value 1: Variable name\nValue 2: New value"],
-		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"]
+		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"],
+		['Play Video', "Plays a video,\nValue 1: Video name (e.g., your video cutscene)\nValue 2: 'true' to play, 'false' to not play."],
+		['Play Background Video', "Plays a background video,\nValue 1: Video name (e.g., your video background cutscene)\nValue 2: 'true' to play, 'false' to not play."]
 	];
 
 	var _file:FileReference;
