@@ -84,16 +84,16 @@ class PlayState extends MusicBeatState
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['You Suck!', 0.2], //From 0% to 19%
-		['Shit', 0.4], //From 20% to 39%
-		['Bad', 0.5], //From 40% to 49%
-		['Bruh', 0.6], //From 50% to 59%
-		['Meh', 0.69], //From 60% to 68%
-		['Nice', 0.7], //69%
-		['Good', 0.8], //From 70% to 79%
-		['Great', 0.9], //From 80% to 89%
-		['Sick!', 1], //From 90% to 99%
-		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
+		['alr im out', 0.2], //From 0% to 19%
+		['Fuck you', 0.4], //From 20% to 39%
+		['F-rank', 0.5], //From 40% to 49%
+		['E-rank', 0.6], //From 50% to 59%
+		['D-rank', 0.69], //From 60% to 68%
+		['C-rank', 0.7], //69%
+		['B-rank', 0.8], //From 70% to 79%
+		['A-rank', 0.9], //From 80% to 89%
+		['S-rank', 1], //From 90% to 99%
+		['Overpowered mc', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 
 	//event variables
@@ -185,6 +185,7 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
+    public var smoothHealth:Float = 1;
 	public var combo:Int = 0;	
 	public var highestCombo:Int = 0;
 	
@@ -251,13 +252,17 @@ class PlayState extends MusicBeatState
 	public var camPause:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
+    public var commaSeparated:Bool = true;
+	public var smoothScore:Float = 0;
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	public var judgementCounter_S:JudgementCounter; //add _S is make sure nobody make a new one broken this
+	var judgementCounterTween:FlxTween;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
+	var timeTxtTween:FlxTween;
 	
 	public var pauseButton_menu:FlxSprite;
 
@@ -561,7 +566,7 @@ class PlayState extends MusicBeatState
 		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
 		
-		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return health, 0, 2, ClientPrefs.data.oldHealthBarVersion);
+		healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() { return (ClientPrefs.data.smoothHealth || ClientPrefs.data.oldHealthBarVersion) ? smoothHealth : health; }, 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = ClientPrefs.data.playOpponent;
 		healthBar.scrollFactor.set();
@@ -1945,6 +1950,16 @@ class PlayState extends MusicBeatState
 		else FlxG.camera.followLerp = 0;
 		callOnScripts('onUpdate', [elapsed]);
 
+	// Smooth health update
+    if (ClientPrefs.data.smoothHealth) {
+        smoothHealth = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 32)) * playbackRate);
+    } else {
+        smoothHealth = health;
+    }
+
+		var scoreMult:Float = FlxMath.lerp(smoothScore, songScore, 0.510);
+		smoothScore = scoreMult;
+		updateScore();
 		super.update(elapsed);
 
 		setOnScripts('curDecStep', curDecStep);
@@ -2203,7 +2218,7 @@ class PlayState extends MusicBeatState
 		        if (ClientPrefs.data.playOpponent ? !cpuControlled_opponent : !cpuControlled)
 		        {
 		        scoreTxt.text += " | "
-                		     + "Score: " + songScore
+                		     + "Score: " + CoolUtil.formatNumberWithCommas(Std.int(smoothScore), commaSeparated)
                 		     + " | Misses: " + songMisses
                 		     + " | Accuracy: " + Math.ceil(ratingPercent * 10000) / 100 + '%'
                 		     + " | ";
@@ -2638,6 +2653,22 @@ class PlayState extends MusicBeatState
 			case 'Play Sound':
 				if(flValue2 == null) flValue2 = 1;
 				FlxG.sound.play(Paths.sound(value1), flValue2);
+
+				case 'Play Video':
+				var video:VideoSprite = this.startVideo(value1);
+				if (video == null) {
+				    FunkinLua.luaTrace('Play Video: Could not start video: ' + value1, false, false, FlxColor.RED);
+				    
+				}
+
+            case 'Play Background Video':
+            // Convert flValue2 to Bool
+            var loop:Bool = (Std.string(flValue2) == "true"); // Convert string to Bool
+
+            if (!this.bgVideo(value1, loop)) {
+                FunkinLua.luaTrace('Play Background Video: Could not start background video: ' + value1, false, false, FlxColor.RED);
+                
+            }
 		}
 
 		stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
@@ -2864,7 +2895,7 @@ class PlayState extends MusicBeatState
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0.0;
 
-	public var showCombo:Bool = false;
+	public var showCombo:Bool = ClientPrefs.data.showComboPopup;
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
     
@@ -3035,6 +3066,19 @@ class PlayState extends MusicBeatState
 		
 		//---------------------------------
 		
+		
+		if (ClientPrefs.data.judgementZoom && !cpuControlled) {
+		    if (judgementCounterTween != null) {
+		        judgementCounterTween.cancel(); // Cancel the existing tween
+		        }
+	
+		        // Create a tween for judgementCounter_S.scale without easing
+		        judgementCounterTween = FlxTween.tween(judgementCounter_S.scale, {x: 1, y: 1}, 0.2, {
+		            onComplete: function(twn:FlxTween) {
+		                judgementCounterTween = null; // Clear the tween after completion
+        }
+    });
+}
 		
 		if (!ClientPrefs.data.showComboNum && !ClientPrefs.data.showRating)
 		return;
@@ -3905,11 +3949,53 @@ class PlayState extends MusicBeatState
 			setOnScripts('altAnim', SONG.notes[curSection].altAnim);
 			setOnScripts('gfSection', SONG.notes[curSection].gfSection);
 		}
+
+		if (ClientPrefs.data.tweenableTimeTxt) {
+			if (curBeat % gfSpeed == 0) animateTimeTxtTween();
+		}
+
+		if (ClientPrefs.data.tweenableScoreTxt) {
+			if (curBeat % gfSpeed == 0) animateScoreTxtTween();
+		}
 		super.sectionHit();
 
 		setOnScripts('curSection', curSection);
 		callOnScripts('onSectionHit');
 	}
+
+	dynamic public function animateTimeTxtTween() {
+	    if (timeTxtTween != null) {
+        timeTxtTween.cancel();
+	        
+	    }
+	    timeTxt.scale.x = 1.075;
+	    timeTxt.scale.y = 1.075;
+	    timeTxtTween = FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, Conductor.crochet / 1250 / 1.5 / playbackRate * gfSpeed, {
+	        onComplete: function(twn:FlxTween) {
+	            timeTxtTween = null;
+	            
+	        }
+	        
+	    });
+	    
+	}
+
+    public function animateScoreTxtTween() {
+        if (scoreTxtTween != null) {
+        scoreTxtTween.cancel();
+            
+        }
+        scoreTxt.scale.x = 1.075;
+        scoreTxt.scale.y = 1.075;
+        scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, Conductor.crochet / 1250 / 1.5 / playbackRate * gfSpeed, {
+            onComplete: function(twn:FlxTween) {
+                scoreTxtTween = null;
+                
+            }
+            
+        });
+        
+    }
 
 	#if LUA_ALLOWED
 	public function startLuasNamed(luaFile:String)
