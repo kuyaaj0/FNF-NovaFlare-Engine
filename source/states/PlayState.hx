@@ -1004,6 +1004,31 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 
+    public function bgVideo(videoName:String, loop:Bool = false):Bool {
+        #if VIDEOS_ALLOWED
+        // Check if a video is already playing
+        if (videoCutscene != null) {
+            // Optionally, you can stop the current video if needed
+            videoCutscene.destroy(); // Assuming destroy stops the video and cleans up
+            videoCutscene = null;
+            
+        }
+
+        // Create a new VideoSprite instance for the background video
+        videoCutscene = new VideoSprite(videoName, false, true, loop);
+
+        // Add the VideoSprite to the PlayState
+        add(videoCutscene);
+
+        // Start playing the background video
+        videoCutscene.videoSprite.play();
+        return true; // Indicate success
+        #else
+        return false; // Indicate failure if videos are not allowed
+        #end
+        
+    }
+
 	function startAndEnd()
 	{
 		if(endingSong)
