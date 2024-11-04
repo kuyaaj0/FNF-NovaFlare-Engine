@@ -1350,6 +1350,57 @@ class FunkinLua {
 			return true;
 			#end
 		});
+		set("bgVideo", function(videoFile:String, ?canSkip:Bool = true) {
+		    #if VIDEOS_ALLOWED
+		    if(FileSystem.exists(Paths.video(videoFile))) {
+		        if(game.videoCutscene != null) {
+		            game.remove(game.videoCutscene);
+		            game.videoCutscene.destroy();
+		            
+		        }
+
+		        // Start video in the background
+		        game.videoCutscene = game.startVideo(videoFile, false, canSkip);
+
+		        // Instead of using set_cameras (which is private), you can assign the camera directly
+		        if (Reflect.hasField(game.videoCutscene, "cameras")) {
+		            Reflect.setField(game.videoCutscene, "cameras", [game.camOther]);
+		            
+		        }
+
+		        game.videoCutscene.scrollFactor.set(0, 0); // Static background
+
+		        // Ensure all notes stay on camHUD (foreground layer)
+		        for (strum in game.strumLineNotes.members) {
+		            if (Reflect.hasField(strum, "cameras")) {
+		                Reflect.setField(strum, "cameras", [game.camHUD]);
+		                
+		            }
+		            
+		        }
+
+		        return true;
+		        
+		    } else {
+		        luaTrace('bgVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
+		        
+		    }
+		    return false;
+
+		    #else
+		    PlayState.instance.inCutscene = true;
+		    new FlxTimer().start(0.1, function(tmr:FlxTimer) {
+		        PlayState.instance.inCutscene = false;
+		        if(game.endingSong)
+		        game.endSong();
+		        else
+		        game.startCountdown();
+		        
+		    });
+		    return true;
+		    #end
+		    
+		});
 
 		set("playMusic", function(sound:String, volume:Float = 1, loop:Bool = false) {
 			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
