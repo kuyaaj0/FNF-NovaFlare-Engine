@@ -44,6 +44,12 @@ import haxe.Json;
 
 import mobile.psychlua.Functions;
 
+#if CUSTOM_SHADERS_ALLOWED
+import shaders.openfl.filters.ShaderFilter as CustomShaderFilter;
+import openfl.filters.BitmapFilter;
+import shaders.CustomShaders;
+#end
+
 class FunkinLua {
 	public var lua:State = null;
 	public var camTarget:FlxCamera;
@@ -69,6 +75,8 @@ class FunkinLua {
 		//trace("LuaJIT version: " + Lua.versionJIT());
 
 		//LuaL.dostring(lua, CLENSE);
+
+		var luaWiggles = new Map<String, WiggleEffect>();
 
 		this.scriptName = scriptName.trim();
 		var game:PlayState = PlayState.instance;
@@ -725,8 +733,8 @@ class FunkinLua {
 set("setNoteWiggle", function(wiggleId:String) {
     Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId:String) {
         var wiggle = luaWiggles.get(wiggleId);
-        // Apply shader filter to all notes using the wiggle shader
-        PlayState.instance.camNotes.setFilters([new ShaderFilter(wiggle.shader)]);
+        // Apply custom shader filter to all notes using the wiggle shader
+        PlayState.instance.getNotes().setFilters([new CustomShaderFilter(wiggle.shader)]);
     });
 });
 
@@ -734,8 +742,8 @@ set("setNoteWiggle", function(wiggleId:String) {
 set("setSustainWiggle", function(wiggleId:String) {
     Lua_helper.add_callback(lua, "setSustainWiggle", function(wiggleId:String) {
         var wiggle = luaWiggles.get(wiggleId);
-        // Apply shader filter to all sustain notes using the wiggle shader
-        PlayState.instance.camSustains.setFilters([new ShaderFilter(wiggle.shader)]);
+        // Apply custom shader filter to all sustain notes
+        PlayState.instance.getSustainNotes().setFilters([new CustomShaderFilter(wiggle.shader)]);
     });
 });
 
@@ -747,10 +755,10 @@ set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
         wiggle.waveSpeed = speed;          // Set the speed for the wiggle
         wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
 
-        // Assuming WiggleEffect class has a shader property, if not modify the class accordingly
-        var shader = wiggle.shader;  // Access the shader property from the WiggleEffect instance
+        // Assuming WiggleEffect class has a shader property
+        var shader = wiggle.shader;  // Access the shader from the WiggleEffect instance
 
-        wiggle.shader = shader;  // Assign the shader to the wiggle effect (this is redundant if already set in the class)
+        wiggle.shader = shader;  // This is redundant if already set in the class
 
         var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
         luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
