@@ -721,6 +721,59 @@ class FunkinLua {
 			}
 		});
 
+// Set up wiggle effect for all notes
+set("setNoteWiggle", function(wiggleId:String) {
+    Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId:String) {
+        var wiggle = luaWiggles.get(wiggleId);
+        // Apply shader filter to all notes using the wiggle shader
+        PlayState.instance.camNotes.setFilters([new ShaderFilter(wiggle.shader)]);
+    });
+});
+
+// Set up wiggle effect for all sustain notes
+set("setSustainWiggle", function(wiggleId:String) {
+    Lua_helper.add_callback(lua, "setSustainWiggle", function(wiggleId:String) {
+        var wiggle = luaWiggles.get(wiggleId);
+        // Apply shader filter to all sustain notes using the wiggle shader
+        PlayState.instance.camSustains.setFilters([new ShaderFilter(wiggle.shader)]);
+    });
+});
+
+// Create a wiggle effect and store it
+set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
+    Lua_helper.add_callback(lua, "createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
+        var wiggle = new WiggleEffect();  // Instantiate the WiggleEffect class
+        wiggle.waveAmplitude = amplitude;  // Set the amplitude for the wiggle
+        wiggle.waveSpeed = speed;          // Set the speed for the wiggle
+        wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
+
+        // Assuming WiggleEffect class has a shader property, if not modify the class accordingly
+        var shader = wiggle.shader;  // Access the shader property from the WiggleEffect instance
+
+        wiggle.shader = shader;  // Assign the shader to the wiggle effect (this is redundant if already set in the class)
+
+        var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
+        luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
+        return id;  // Return the wiggle ID for later use
+    });
+});
+
+// Set wiggle time for a specific wiggle
+set("setWiggleTime", function(wiggleId:String, time:Float) {
+    Lua_helper.add_callback(lua, "setWiggleTime", function(wiggleId:String, time:Float) {
+        var wiggle = luaWiggles.get(wiggleId);
+        wiggle.shader.uTime.value = [time];  // Update the time for the wiggle effect shader
+    });
+});
+
+// Set wiggle amplitude for a specific wiggle
+set("setWiggleAmplitude", function(wiggleId:String, amp:Float) {
+    Lua_helper.add_callback(lua, "setWiggleAmplitude", function(wiggleId:String, amp:Float) {
+        var wiggle = luaWiggles.get(wiggleId);
+        wiggle.waveAmplitude = amp;  // Update the amplitude for the wiggle effect
+    });
+});
+
 		set("cancelTween", LuaUtils.cancelTween);
 		set("runTimer", function(tag:String, time:Float = 1, loops:Int = 1) {
 			LuaUtils.cancelTimer(tag);
