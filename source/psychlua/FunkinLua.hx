@@ -739,10 +739,9 @@ set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
         wiggle.waveSpeed = speed;          // Set the speed for the wiggle
         wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
 
-        // Directly access and assign the shader
-        var shader = wiggle.shader;  // Access the shader from the WiggleEffect instance
+        // Ensure wiggle.shader is compatible with FlxShader
+        var shader:FlxShader = cast(wiggle.shader, FlxShader);
 
-        // Create a unique ID and store the wiggle effect
         var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
         luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
         return id;  // Return the wiggle ID for later use
@@ -755,20 +754,22 @@ set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
         var wiggle = luaWiggles.get(wiggleId); // Get the wiggle effect from luaWiggles map
 
         // Apply the wiggle effect to the player's note (indices 4, 7)
-        if (noteId == 4 || noteId == 7) {
-            var playerNote = PlayState.instance.playerStrums.getAt(noteId); // Access using getAt() method
+        if (noteId >= 4 && noteId <= 7) {
+            var playerNote = PlayState.instance.playerStrums.members[noteId]; // Access using members[noteId]
             if (playerNote != null) {
-                // Apply the wiggle shader to the player's note
-                playerNote.setFilters([new CustomShaderFilter(wiggle.shader)]);
+                // Ensure wiggle.shader is compatible with FlxShader
+                var shader:FlxShader = cast(wiggle.shader, FlxShader);
+                playerNote.setFilters([new CustomShaderFilter(shader)]);
             }
         }
 
         // Apply the wiggle effect to the opponent's note (indices 0, 3)
-        if (noteId == 0 || noteId == 3) {
-            var opponentNote = PlayState.instance.opponentStrums.getAt(noteId); // Access using getAt() for opponent notes
+        if (noteId >= 0 && noteId <= 3) {
+            var opponentNote = PlayState.instance.opponentStrums.members[noteId]; // Access using members[noteId]
             if (opponentNote != null) {
-                // Apply the wiggle shader to the opponent's note
-                opponentNote.setFilters([new CustomShaderFilter(wiggle.shader)]);
+                // Ensure wiggle.shader is compatible with FlxShader
+                var shader:FlxShader = cast(wiggle.shader, FlxShader);
+                opponentNote.setFilters([new CustomShaderFilter(shader)]);
             }
         }
     });
