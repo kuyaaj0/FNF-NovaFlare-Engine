@@ -739,26 +739,25 @@ class FunkinLua {
 		        wiggle.waveSpeed = speed;          // Set the speed for the wiggle
 		        wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
 
-		        var shader = wiggle.shader;  // Access the shader from the WiggleEffect instance
+		        // Ensure wiggle.shader is properly set via a setter if direct assignment is not allowed
+		        var shader = wiggle.getShader(); // Get the shader if necessary
+		        wiggle.setShader(shader); // Apply the shader (use setter)
 
 		        var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
-		
-		        wiggle.shader = shader;  // Applying the shader to the wiggle effect
-
 		        luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
 		        return id;  // Return the wiggle ID for later use
 		        });
 		    
 		});
 
-		// Set up wiggle effect for specific notes (e.g., player and opponent notes
+		// Set up wiggle effect for specific notes (e.g., player and opponent notes)
 		set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
 		    Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId:String, noteId:Int) {
 		        var wiggle = luaWiggles.get(wiggleId); // Get the wiggle effect from luaWiggles map
 
 		        // Apply the wiggle effect to the player's note (indices 4, 7)
 		        if (noteId == 4 || noteId == 7) {
-		            var playerNote = PlayState.instance.playerStrums[noteId]; // Get the player's strum based on noteId
+		            var playerNote = PlayState.instance.playerStrums.get(noteId); // Use get() to access the note
 		            if (playerNote != null) {
 		                playerNote.setFilters([new CustomShaderFilter(wiggle.shader)]); // Apply wiggle shader to the player's note
 		                }
@@ -767,7 +766,7 @@ class FunkinLua {
 
 		        // Apply the wiggle effect to the opponent's note (indices 0, 3)
 		        if (noteId == 0 || noteId == 3) {
-		            var opponentNote = PlayState.instance.opponentStrums[noteId]; // Get the opponent's strum based on noteId
+		            var opponentNote = PlayState.instance.opponentStrums.get(noteId); // Use get() for opponent's notes
 		            if (opponentNote != null) {
 		                opponentNote.setFilters([new CustomShaderFilter(wiggle.shader)]); // Apply wiggle shader to the opponent's note
 		                }
