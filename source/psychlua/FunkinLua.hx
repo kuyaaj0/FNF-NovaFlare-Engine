@@ -45,13 +45,9 @@ import haxe.Json;
 import mobile.psychlua.Functions;
 
 #if CUSTOM_SHADERS_ALLOWED
-import shaders.openfl.filters.ShaderFilter as CustomShaderFilter;
-import openfl.filters.BitmapFilter;
-import shaders.CustomShaders;
-import openfl.display.Shader;
+import flixel.system.FlxShader;
+import shaders.WiggleEffect; // Import WiggleEffect class
 #end
-
-import shaders.WiggleEffect; // Make sure this is included to access the WiggleEffect class
 
 class FunkinLua {
 	public var lua:State = null;
@@ -741,8 +737,6 @@ set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
         wiggle.waveSpeed = speed;          // Set the speed for the wiggle
         wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
 
-        var shader:Shader = wiggle.shader; // Use OpenFL's Shader class
-
         var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
         luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
         return id;  // Return the wiggle ID for later use
@@ -754,21 +748,19 @@ set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
     Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId:String, noteId:Int) {
         var wiggle = luaWiggles.get(wiggleId); // Get the wiggle effect from luaWiggles map
 
-        // Apply the wiggle effect to the player's note (indices 4, 7)
+        // Apply the wiggle effect to the player's note (indices 4 to 7)
         if (noteId >= 4 && noteId <= 7) {
-            var playerNote = PlayState.instance.playerStrums.members[noteId]; // Access using members[noteId]
+            var playerNote = PlayState.instance.playerStrums.members[noteId]; // Access player strum note
             if (playerNote != null) {
-                var shader:Shader = wiggle.shader; // Ensure the shader is compatible
-                playerNote.shader = shader; // Apply the shader to the player's note
+                playerNote.shader = wiggle.shader; // Apply the wiggle shader to the player's note
             }
         }
 
-        // Apply the wiggle effect to the opponent's note (indices 0, 3)
+        // Apply the wiggle effect to the opponent's note (indices 0 to 3)
         if (noteId >= 0 && noteId <= 3) {
-            var opponentNote = PlayState.instance.opponentStrums.members[noteId]; // Access using members[noteId]
+            var opponentNote = PlayState.instance.opponentStrums.members[noteId]; // Access opponent strum note
             if (opponentNote != null) {
-                var shader:Shader = wiggle.shader; // Ensure the shader is compatible
-                opponentNote.shader = shader; // Apply the shader to the opponent's note
+                opponentNote.shader = wiggle.shader; // Apply the wiggle shader to the opponent's note
             }
         }
     });
