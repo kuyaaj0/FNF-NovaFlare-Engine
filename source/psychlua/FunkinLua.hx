@@ -48,8 +48,10 @@ import mobile.psychlua.Functions;
 import shaders.openfl.filters.ShaderFilter as CustomShaderFilter;
 import openfl.filters.BitmapFilter;
 import shaders.CustomShaders;
-import shaders.WiggleEffect; // Make sure this is included to access the WiggleEffect class
+import openfl.display.Shader;
 #end
+
+import shaders.WiggleEffect; // Make sure this is included to access the WiggleEffect class
 
 class FunkinLua {
 	public var lua:State = null;
@@ -739,8 +741,7 @@ set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
         wiggle.waveSpeed = speed;          // Set the speed for the wiggle
         wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
 
-        // Ensure wiggle.shader is compatible with FlxShader
-        var shader:FlxShader = cast(wiggle.shader, FlxShader);
+        var shader:Shader = wiggle.shader; // Use OpenFL's Shader class
 
         var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
         luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
@@ -757,9 +758,8 @@ set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
         if (noteId >= 4 && noteId <= 7) {
             var playerNote = PlayState.instance.playerStrums.members[noteId]; // Access using members[noteId]
             if (playerNote != null) {
-                // Ensure wiggle.shader is compatible with FlxShader
-                var shader:FlxShader = cast(wiggle.shader, FlxShader);
-                playerNote.setFilters([new CustomShaderFilter(shader)]);
+                var shader:Shader = wiggle.shader; // Ensure the shader is compatible
+                playerNote.shader = shader; // Apply the shader to the player's note
             }
         }
 
@@ -767,9 +767,8 @@ set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
         if (noteId >= 0 && noteId <= 3) {
             var opponentNote = PlayState.instance.opponentStrums.members[noteId]; // Access using members[noteId]
             if (opponentNote != null) {
-                // Ensure wiggle.shader is compatible with FlxShader
-                var shader:FlxShader = cast(wiggle.shader, FlxShader);
-                opponentNote.setFilters([new CustomShaderFilter(shader)]);
+                var shader:Shader = wiggle.shader; // Ensure the shader is compatible
+                opponentNote.shader = shader; // Apply the shader to the opponent's note
             }
         }
     });
