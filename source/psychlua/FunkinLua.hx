@@ -45,7 +45,8 @@ import haxe.Json;
 import mobile.psychlua.Functions;
 
 #if CUSTOM_SHADERS_ALLOWED
-import flixel.system.FlxShader;
+import shaders.openfl.filters.ShaderFilter as CustomShaderFilter;
+import openfl.filters.BitmapFilter;
 import shaders.WiggleEffect; // Import WiggleEffect class
 #end
 
