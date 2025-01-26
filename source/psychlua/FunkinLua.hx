@@ -743,7 +743,7 @@ set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
     });
 });
 
-// Set up wiggle effect for specific notes (e.g., player and opponent notes)
+// Set up wiggle effect for specific notes
 set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
     Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId:String, noteId:Int) {
         var wiggle = luaWiggles.get(wiggleId); // Get the wiggle effect from luaWiggles map
@@ -752,7 +752,7 @@ set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
         if (noteId >= 4 && noteId <= 7) {
             var playerNote = PlayState.instance.playerStrums.members[noteId]; // Access player strum note
             if (playerNote != null) {
-                playerNote.shader = wiggle.shader; // Apply the wiggle shader to the player's note
+                playerNote.shader = wiggle.shader; // Apply OpenFL shader to the player's note
             }
         }
 
@@ -760,7 +760,7 @@ set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
         if (noteId >= 0 && noteId <= 3) {
             var opponentNote = PlayState.instance.opponentStrums.members[noteId]; // Access opponent strum note
             if (opponentNote != null) {
-                opponentNote.shader = wiggle.shader; // Apply the wiggle shader to the opponent's note
+                opponentNote.shader = wiggle.shader; // Apply OpenFL shader to the opponent's note
             }
         }
     });
