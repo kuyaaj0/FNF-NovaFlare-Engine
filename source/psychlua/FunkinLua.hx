@@ -730,70 +730,65 @@ class FunkinLua {
 			}
 		});
 
-		// Create a wiggle effect and store it
-		set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
-		    Lua_helper.add_callback(lua, "createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
-		        var wiggle = new WiggleEffect();  // Instantiate the WiggleEffect class
-		
-		        wiggle.waveAmplitude = amplitude;  // Set the amplitude for the wiggle
-		        wiggle.waveSpeed = speed;          // Set the speed for the wiggle
-		        wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
+// Create a wiggle effect and store it
+set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
+    Lua_helper.add_callback(lua, "createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
+        var wiggle = new WiggleEffect();  // Instantiate the WiggleEffect class
+        
+        wiggle.waveAmplitude = amplitude;  // Set the amplitude for the wiggle
+        wiggle.waveSpeed = speed;          // Set the speed for the wiggle
+        wiggle.waveFrequency = freq;       // Set the frequency for the wiggle
 
-		        // Ensure wiggle.shader is properly set via a setter if direct assignment is not allowed
-		        var shader = wiggle.getShader(); // Get the shader if necessary
-		        wiggle.setShader(shader); // Apply the shader (use setter)
+        // Directly access and assign the shader
+        var shader = wiggle.shader;  // Access the shader from the WiggleEffect instance
 
-		        var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
-		        luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
-		        return id;  // Return the wiggle ID for later use
-		        });
-		    
-		});
+        // Create a unique ID and store the wiggle effect
+        var id = Lambda.count(luaWiggles) + 1 + "";  // Generate a unique ID
+        luaWiggles.set(id, wiggle);  // Store the wiggle effect with its ID
+        return id;  // Return the wiggle ID for later use
+    });
+});
 
-		// Set up wiggle effect for specific notes (e.g., player and opponent notes)
-		set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
-		    Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId:String, noteId:Int) {
-		        var wiggle = luaWiggles.get(wiggleId); // Get the wiggle effect from luaWiggles map
+// Set up wiggle effect for specific notes (e.g., player and opponent notes)
+set("setNoteWiggle", function(wiggleId:String, noteId:Int) {
+    Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId:String, noteId:Int) {
+        var wiggle = luaWiggles.get(wiggleId); // Get the wiggle effect from luaWiggles map
 
-		        // Apply the wiggle effect to the player's note (indices 4, 7)
-		        if (noteId == 4 || noteId == 7) {
-		            var playerNote = PlayState.instance.playerStrums.get(noteId); // Use get() to access the note
-		            if (playerNote != null) {
-		                playerNote.setFilters([new CustomShaderFilter(wiggle.shader)]); // Apply wiggle shader to the player's note
-		                }
-		            
-		        }
+        // Apply the wiggle effect to the player's note (indices 4, 7)
+        if (noteId == 4 || noteId == 7) {
+            var playerNote = PlayState.instance.playerStrums.getAt(noteId); // Access using getAt() method
+            if (playerNote != null) {
+                // Apply the wiggle shader to the player's note
+                playerNote.setFilters([new CustomShaderFilter(wiggle.shader)]);
+            }
+        }
 
-		        // Apply the wiggle effect to the opponent's note (indices 0, 3)
-		        if (noteId == 0 || noteId == 3) {
-		            var opponentNote = PlayState.instance.opponentStrums.get(noteId); // Use get() for opponent's notes
-		            if (opponentNote != null) {
-		                opponentNote.setFilters([new CustomShaderFilter(wiggle.shader)]); // Apply wiggle shader to the opponent's note
-		                }
-		            
-		        }
-		        
-		    });
-		    
-		});
+        // Apply the wiggle effect to the opponent's note (indices 0, 3)
+        if (noteId == 0 || noteId == 3) {
+            var opponentNote = PlayState.instance.opponentStrums.getAt(noteId); // Access using getAt() for opponent notes
+            if (opponentNote != null) {
+                // Apply the wiggle shader to the opponent's note
+                opponentNote.setFilters([new CustomShaderFilter(wiggle.shader)]);
+            }
+        }
+    });
+});
 
-		// Set wiggle time for a specific wiggle
-		set("setWiggleTime", function(wiggleId:String, time:Float) {
-		    Lua_helper.add_callback(lua, "setWiggleTime", function(wiggleId:String, time:Float) {
-		        var wiggle = luaWiggles.get(wiggleId);
-		        wiggle.shader.uTime.value = [time];  // Update the time for the wiggle effect shader
-		        });
-		    
-		});
+// Set wiggle time for a specific wiggle
+set("setWiggleTime", function(wiggleId:String, time:Float) {
+    Lua_helper.add_callback(lua, "setWiggleTime", function(wiggleId:String, time:Float) {
+        var wiggle = luaWiggles.get(wiggleId);
+        wiggle.shader.uTime.value = [time];  // Update the time for the wiggle effect shader
+    });
+});
 
-		// Set wiggle amplitude for a specific wiggle
-		set("setWiggleAmplitude", function(wiggleId:String, amp:Float) {
-		    Lua_helper.add_callback(lua, "setWiggleAmplitude", function(wiggleId:String, amp:Float) {
-		        var wiggle = luaWiggles.get(wiggleId);
-		        wiggle.waveAmplitude = amp;  // Update the amplitude for the wiggle effect
-		        });
-		    
-		});
+// Set wiggle amplitude for a specific wiggle
+set("setWiggleAmplitude", function(wiggleId:String, amp:Float) {
+    Lua_helper.add_callback(lua, "setWiggleAmplitude", function(wiggleId:String, amp:Float) {
+        var wiggle = luaWiggles.get(wiggleId);
+        wiggle.waveAmplitude = amp;  // Update the amplitude for the wiggle effect
+    });
+});
 
 		set("cancelTween", LuaUtils.cancelTween);
 		set("runTimer", function(tag:String, time:Float = 1, loops:Int = 1) {
