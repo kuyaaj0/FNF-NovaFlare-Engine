@@ -10,8 +10,8 @@ import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 // Import FlxTween for movement
-import flixel.tweens.FlxTween;
-import flixel.tweens.motion.QuadMotion;
+import flixel.addons.ui.QuadMotion;
+import flixel.FlxObject;
 
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
@@ -732,17 +732,17 @@ class FunkinLua {
 			}
 		});
 
+// Set up the Lua callback for quadMotion
 set("quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
-    Lua_helper.add_callback(lua, "quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
-        var note = PlayState.instance.notes.members[noteId];
-        if (note != null) {
-            var tween = new QuadMotion(function(motion:QuadMotion) {
-                note.x = motion.x;
-                note.y = motion.y;
-            }, duration, startX, startY, endX, endY);
-            FlxTween.tweens.add(tween); // Add to tween system
-        }
-    });
+    // Get the note from PlayState using noteId
+    var note = PlayState.instance.notes.members[noteId];
+    if (note != null) {
+        // Create a new QuadMotion for the note
+        var motion = new QuadMotion(note, startX, startY, endX, endY, duration);
+        
+        // Optionally, track the motion if needed
+        // motions.push(motion);  // You can keep a list of motions if needed
+    }
 });
 
 // Create a wiggle effect and store it
