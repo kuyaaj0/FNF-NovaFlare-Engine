@@ -9,6 +9,9 @@ import openfl.utils.Assets;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
+// Import FlxTween for movement
+import flixel.tweens.FlxTween;
+import flixel.tweens.motion.QuadMotion;
 
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
@@ -728,6 +731,19 @@ class FunkinLua {
 				}));
 			}
 		});
+
+set("quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
+    Lua_helper.add_callback(lua, "quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
+        var note = PlayState.instance.notes.members[noteId];
+        if (note != null) {
+            var tween = new QuadMotion(function(motion:QuadMotion) {
+                note.x = motion.x;
+                note.y = motion.y;
+            }, duration, startX, startY, endX, endY);
+            FlxTween.tweens.add(tween); // Add to tween system
+        }
+    });
+});
 
 // Create a wiggle effect and store it
 set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
