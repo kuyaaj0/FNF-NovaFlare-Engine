@@ -732,15 +732,46 @@ class FunkinLua {
 			}
 		});
 
-set("quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
-    // Get the note from PlayState using noteId
-    var note = PlayState.instance.notes.members[noteId];
-    if (note != null) {
-        // Apply the tween with quadratic easing
-        FlxTween.tween(note, {x: endX, y: endY}, duration, {ease: FlxEase.quadOut});
-    }
-});
+		// Linear Motion
+		set("linearMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
+		    var note = PlayState.instance.notes.members[noteId];
+		    if (note != null) {
+		        FlxTween.linearMotion(note, startX, startY, endX, endY, duration);
+		        
+		    }
+		    
+		});
 
+		set("quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
+		    // Get the note from PlayState using noteId
+		    var note = PlayState.instance.notes.members[noteId];
+		    if (note != null) {
+		        // Apply the tween with quadratic easing
+		        FlxTween.tween(note, {x: endX, y: endY}, duration, {ease: FlxEase.quadOut});
+		        
+		    }
+		    
+		});
+
+		// Cubic Motion
+		set("cubicMotion", function(noteId:Int, startX:Float, startY:Float, controlAX:Float, controlAY:Float, controlBX:Float, controlBY:Float, endX:Float, endY:Float, duration:Float) {
+		    var note = PlayState.instance.notes.members[noteId];
+		    if (note != null) {
+		        FlxTween.cubicMotion(note, startX, startY, controlAX, controlAY, controlBX, controlBY, endX, endY, duration);
+		        
+		    }
+		    
+		});
+
+		// Circular Motion
+		set("circularMotion", function(noteId:Int, centerX:Float, centerY:Float, radius:Float, angle:Float, clockwise:Bool, duration:Float) {
+		    var note = PlayState.instance.notes.members[noteId];
+		    if (note != null) {
+		        FlxTween.circularMotion(note, centerX, centerY, radius, angle, clockwise, duration);
+		        
+		    }
+		    
+		});
 
 // Create a wiggle effect and store it
 set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
