@@ -10,7 +10,9 @@ import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 // Import FlxTween for movement
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
+import flixel.tweens.motion.*;
 import flixel.FlxObject;
 
 #if (!flash && sys)
