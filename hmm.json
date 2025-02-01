@@ -25,6 +25,11 @@
       "version": "4.5.0"
     },
     {
+      "name": "flixel-tween-type",
+      "type": "haxelib",
+      "version": "4.5.0"
+    },
+    {
       "name": "flixel-addons",
       "type": "haxelib",
       "version": "3.2.2"
