@@ -10,7 +10,7 @@ import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 // Import FlxTween for movement
-import flixel.addons.ui.QuadMotion;
+import flixel.tweens.FlxTween;
 import flixel.FlxObject;
 
 #if (!flash && sys)
@@ -734,16 +734,13 @@ class FunkinLua {
 
 // Set up the Lua callback for quadMotion
 set("quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
-    // Get the note from PlayState using noteId
     var note = PlayState.instance.notes.members[noteId];
     if (note != null) {
-        // Create a new QuadMotion for the note
-        var motion = new QuadMotion(note, startX, startY, endX, endY, duration);
-        
-        // Optionally, track the motion if needed
-        // motions.push(motion);  // You can keep a list of motions if needed
+        // Apply quadratic tween to move note smoothly
+        FlxTween.quad(note, duration, {x: endX, y: endY}, {ease: FlxEase.quadOut});
     }
 });
+
 
 // Create a wiggle effect and store it
 set("createWiggle", function(freq:Float, amplitude:Float, speed:Float) {
