@@ -20,11 +20,6 @@
       "url": "https://github.com/beihu235/flixel"
     },
     {
-      "name": "flixel-tweens",
-      "type": "haxelib",
-      "version": null
-    },
-    {
       "name": "flixel-addons",
       "type": "haxelib",
       "version": "3.2.2"
