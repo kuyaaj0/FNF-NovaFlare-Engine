@@ -732,12 +732,12 @@ class FunkinLua {
 			}
 		});
 
-// Set up the Lua callback for quadMotion
 set("quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
+    // Get the note from PlayState using noteId
     var note = PlayState.instance.notes.members[noteId];
     if (note != null) {
-        // Apply quadratic tween to move note smoothly
-        FlxTween.quad(note, duration, {x: endX, y: endY}, {ease: FlxEase.quadOut});
+        // Apply the tween with quadratic easing
+        FlxTween.tween(note, {x: endX, y: endY}, duration, {ease: FlxEase.quadOut});
     }
 });
 
