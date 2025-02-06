@@ -1,4 +1,4 @@
-package funkin.objects.shaders;
+package shaders;
 
 class LoadShader extends FlxShader {
 	@:isVar
