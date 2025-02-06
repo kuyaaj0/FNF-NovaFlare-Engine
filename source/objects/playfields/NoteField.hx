@@ -102,7 +102,7 @@ class NoteField extends FieldBase
 	/**
 	 * Used by preDraw to store RenderObjects to be drawn
 	*/
-	@:allow(funkin.objects.proxies.ProxyField)
+	@:allow(objects.proxies.ProxyField)
 	private var drawQueue:Array<RenderObject> = [];
 	/**
 	 * How zoomed this NoteField is without taking modifiers into account. 2 is 2x zoomed, 0.5 is half zoomed.
