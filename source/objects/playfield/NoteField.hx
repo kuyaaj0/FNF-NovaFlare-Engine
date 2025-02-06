@@ -1,4 +1,4 @@
-package funkin.objects.playfields;
+package objects.playfields;
 
 import funkin.modchart.Modifier;
 import flixel.math.FlxMath;
