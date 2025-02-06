@@ -6,7 +6,7 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import psychlua.ModManager;
 import states.PlayState;
-import states.MusicBeatState;
+import backend.MusicBeatState;
 
 using StringTools;
 

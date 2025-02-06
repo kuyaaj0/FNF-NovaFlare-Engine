@@ -1,4 +1,4 @@
-package funkin.objects.playfields;
+package objects.playfields;
 
 class NotefieldManager extends FlxBasic {
 	public var members:Array<FieldBase> = [];

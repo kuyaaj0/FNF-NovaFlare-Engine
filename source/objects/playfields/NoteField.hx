@@ -1,6 +1,6 @@
-package funkin.objects.playfields;
+package objects.playfields;
 
-import funkin.modchart.Modifier;
+import psychlua.Modifier;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
@@ -14,11 +14,11 @@ import math.Vector3;
 import math.VectorHelpers;
 import openfl.Vector;
 import openfl.geom.ColorTransform;
-import funkin.modchart.ModManager;
-import funkin.modchart.Modifier.RenderInfo;
+import psychlua.ModManager;
+import psychlua.Modifier.RenderInfo;
 import funkin.objects.shaders.NoteColorSwap;
-import funkin.states.PlayState;
-import funkin.states.MusicBeatState;
+import states.PlayState;
+import backend.MusicBeatState;
 import haxe.ds.Vector as FastVector;
 
 using StringTools;
