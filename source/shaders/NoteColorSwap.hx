@@ -1,6 +1,6 @@
-package funkin.objects.shaders;
+package shaders;
 
-import funkin.objects.shaders.ColorSwap;
+import shaders.ColorSwap;
 
 class NoteColorSwap {
     public static final shader:NoteColorSwapShader = new NoteColorSwapShader();
