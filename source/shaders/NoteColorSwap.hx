@@ -5,7 +5,7 @@ import flixel.system.FlxAssets.FlxShader;
 import objects.Note;
 
 class NoteColorSwap {
-    public static final shader:NoteColorSwap = new NoteColorSwap();
+    public static final shader:NoteColorSwapShader = new NoteColorSwapShader();
     public var hue:Float = 0;
 	public var saturation:Float = 0;
 	public var brightness:Float = 0;
@@ -56,7 +56,7 @@ class NoteColorSwap {
 	}
 }
 
-class NoteColorSwap extends FlxShader
+class NoteColorSwapShader extends FlxShader
 {
     @:glVertexSource('
         #pragma header
