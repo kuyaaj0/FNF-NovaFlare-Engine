@@ -1,8 +1,8 @@
-package funkin.modchart;
+package psychlua;
 // @author Nebula_Zorua
 
 
-import funkin.objects.playfields.NoteField;
+import objects.playfields.NoteField;
 import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 import math.Vector3;
