@@ -1,12 +1,12 @@
-package funkin.objects.proxies;
+package objects.proxies;
 
 import openfl.geom.ColorTransform;
 import openfl.Vector;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
-import funkin.objects.playfields.FieldBase;
-import funkin.objects.playfields.NoteField;
-import funkin.states.PlayState;
+import objects.playfields.FieldBase;
+import objects.playfields.NoteField;
+import states.PlayState;
 
 /* 
 	I'm gonna have to do some changes to NoteField to allow this to happen, but
