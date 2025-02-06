@@ -1,6 +1,7 @@
 package shaders;
 
 import shaders.NoteColorSwap;
+import flixel.system.FlxAssets.FlxShader;
 
 class ColorSwap
 {
