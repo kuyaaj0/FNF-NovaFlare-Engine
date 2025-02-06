@@ -1,6 +1,6 @@
-package funkin.objects.shaders;
+package shaders;
 
-import funkin.objects.shaders.NoteColorSwap;
+import shaders.NoteColorSwap;
 
 class ColorSwap
 {
