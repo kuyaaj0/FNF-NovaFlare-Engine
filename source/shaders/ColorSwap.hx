@@ -124,7 +124,7 @@ class ColorSwap
 	}
 }
 
-class ColorSwapShader extends FlxShader
+class ColorSwap extends FlxShader
 {
 	@:glFragmentHeader('
 		const float offset = 1.0 / 128.0;
