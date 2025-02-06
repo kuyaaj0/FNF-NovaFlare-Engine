@@ -60,14 +60,20 @@ class Note extends FlxSprite
 
 	public var spawned:Bool = false;
 
+//i forgot this one is sustain note
 	public var tail:Array<Note> = []; // for sustains
+	public var unhitTail:Array<Note> = [];
 	public var parent:Note;
 	public var blockHit:Bool = false; // only works for player
 
 	public var sustainLength:Float = 0;
 	public var canHold:Bool = false;
 	public var isSustainNote:Bool = false;
+	public var isSustainEnd:Bool = false;
+	public var isRoll:Bool = false;
+	public var isHeld:Bool = false;
 	public var noteType(default, set):String = null;
+//end with the sustain note code
 
 	public var eventName:String = '';
 	public var eventLength:Int = 0;
@@ -144,7 +150,7 @@ class Note extends FlxSprite
 
 	public function resizeByRatio(ratio:Float) //haha funny twitter shit
 	{
-		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('end'))
+		if(isSustainNote && isSustainEnd && animation.curAnim != null && !animation.curAnim.name.endsWith('end'))
 		{
 			scale.y *= ratio;
 			updateHitbox();
@@ -246,7 +252,7 @@ class Note extends FlxSprite
 			if(PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB)) rgbShader.enabled = false;
 
 			x += swagWidth * (noteData);
-			if(!isSustainNote && noteData < colArray.length) { //Doing this 'if' check to fix the warnings on Senpai songs
+			if(!isSustainNote && isSustainEnd && noteData < colArray.length) { //Doing this 'if' check to fix the warnings on Senpai songs
 				var animToPlay:String = '';
 				animToPlay = colArray[noteData % colArray.length];
 				animation.play(animToPlay + 'Scroll');
@@ -258,7 +264,7 @@ class Note extends FlxSprite
 		if(prevNote != null)
 			prevNote.nextNote = this;
 
-		if (isSustainNote && prevNote != null)
+		if (isSustainNote && isSustainEnd && prevNote != null)
 		{
 			alpha = 0.6;
 			multAlpha = 0.6;
@@ -517,7 +523,7 @@ class Note extends FlxSprite
 		if(copyY)
 		{
 			y = strumY + offsetY + correctionOffset + Math.sin(angleDir) * distance;
-			if(myStrum.downScroll && isSustainNote)
+			if(myStrum.downScroll && isSustainNote && isSustainEnd)
 			{
 				if(PlayState.isPixelStage)
 				{
@@ -531,7 +537,7 @@ class Note extends FlxSprite
 	public function clipToStrumNote(myStrum:StrumNote)
 	{
 		var center:Float = myStrum.y + offsetY + Note.swagWidth / 2;
-		if(  (isSustainNote && (mustPress || !ignoreNote) &&
+		if(  (isSustainNote && isSustainEnd && (mustPress || !ignoreNote) &&
 			(!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))
 			&& !ClientPrefs.data.playOpponent)
 			|| 
