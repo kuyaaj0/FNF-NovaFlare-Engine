@@ -56,7 +56,7 @@ class NoteColorSwap {
 	}
 }
 
-class NoteColorSwap extends ColorSwap
+class NoteColorSwap extends FlxShader
 {
     @:glVertexSource('
         #pragma header
