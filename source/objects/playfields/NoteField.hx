@@ -328,7 +328,6 @@ class NoteField extends FieldBase
 				var indices = object.indices;
 				var colorSwap = object.colorSwap;
 				var transforms:Array<ColorTransform> = []; // todo use fastvector
-				var multAlpha = this.alpha * ClientPrefs.noteOpacity;
 				for (n in 0... Std.int(vertices.length / 2)){
 					var glow = glows[n];
 					var transfarm:ColorTransform = new ColorTransform();
@@ -339,7 +338,7 @@ class NoteField extends FieldBase
 					transfarm.greenOffset = glowG * glow * 255;
 					transfarm.blueOffset = glowB * glow * 255;
 
-					transfarm.alphaMultiplier = alphas[n] * multAlpha;
+					transfarm.alphaMultiplier = alphas[n];
 					transforms.push(transfarm);
 				}
 
@@ -359,7 +358,7 @@ class NoteField extends FieldBase
 							drawItem.addTrianglesColorArray(vertices, indices, uvData, null, point, camera._bounds, transforms, colorSwap);
 						}
 						for (n in 0...transforms.length)
-							transforms[n].alphaMultiplier = alphas[n] * multAlpha;
+							transforms[n].alphaMultiplier = alphas[n];
 					}
 				}
 			}
@@ -463,8 +462,8 @@ class NoteField extends FieldBase
 		if (simpleDraw)
 			basePos.z = 0;
 		
-		var strumDiff = (Conductor.songPosition - hold.strumTime);
-		var visualDiff = (Conductor.visualPosition - hold.visualTime); // TODO: get the start and end visualDiff and interpolate so that changing speeds mid-hold will look better
+		var strumDiff = (backend.Conductor.songPosition - hold.strumTime);
+		var visualDiff = (backend.Conductor.visualPosition - hold.visualTime); // TODO: get the start and end visualDiff and interpolate so that changing speeds mid-hold will look better
 		var zIndex:Float = basePos.z + hold.zIndex;
 		var sv = PlayState.instance.getSV(hold.strumTime).speed;
 
@@ -653,8 +652,8 @@ class NoteField extends FieldBase
 		var visPos:Float = 0;
 		if(isNote) {
 			var speed = modManager.getNoteSpeed(note, modNumber, songSpeed);
-			diff = Conductor.songPosition - note.strumTime;
-			visPos = -((Conductor.visualPosition - note.visualTime) * speed);
+			diff = backend.Conductor.songPosition - note.strumTime;
+			visPos = -((backend.Conductor.visualPosition - note.visualTime) * speed);
 		}
 
 		var info:RenderInfo = {
