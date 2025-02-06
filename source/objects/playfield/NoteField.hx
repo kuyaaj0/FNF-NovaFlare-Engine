@@ -14,11 +14,11 @@ import math.Vector3;
 import math.VectorHelpers;
 import openfl.Vector;
 import openfl.geom.ColorTransform;
-import funkin.modchart.ModManager;
-import funkin.modchart.Modifier.RenderInfo;
-import funkin.objects.shaders.NoteColorSwap;
-import funkin.states.PlayState;
-import funkin.states.MusicBeatState;
+import psychlua.ModManager;
+import psychlua.Modifier.RenderInfo;
+import shaders.NoteColorSwap;
+import states.PlayState;
+import states.MusicBeatState;
 import haxe.ds.Vector as FastVector;
 
 using StringTools;
