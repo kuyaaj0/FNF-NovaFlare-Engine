@@ -5,11 +5,11 @@ import flixel.util.FlxSort;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import lime.app.Event;
-import funkin.modchart.ModManager;
+import psychlua.ModManager;
 import funkin.data.JudgmentManager;
 import funkin.data.JudgmentManager.Wife3;
-import funkin.states.PlayState;
-import funkin.states.MusicBeatState;
+import states.PlayState;
+import states.MusicBeatState;
 
 using StringTools;
 
