@@ -6,8 +6,6 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import lime.app.Event;
 import psychlua.ModManager;
-import funkin.data.JudgmentManager;
-import funkin.data.JudgmentManager.Wife3;
 import states.PlayState;
 import states.MusicBeatState;
 
@@ -80,7 +78,6 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public var singAnimations:Array<String> = ["singLEFT", "singDOWN", "singUP", "singRIGHT"]; // default character animations to play for each column
 	
 	public var noteField:NoteField; // renderer
-	public var judgeManager(get, default):JudgmentManager; // for deriving judgements for input reasons
 	public var modManager:ModManager; // the mod manager. will be set automatically by playstate so dw bout this
 	public var modNumber:Int = 0; // used for the mod manager. can be set to a different number to give it a different set of modifiers. can be set to 0 to sync the modifiers w/ bf's, and 1 to sync w/ the opponent's
 	public var isPlayer:Bool = false; // if this playfield takes input from the player
@@ -90,9 +87,6 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 
 	public var x:Float = 0;
 	public var y:Float = 0;
-
-	function get_judgeManager() 
-		return judgeManager == null ? PlayState.instance.judgeManager : judgeManager;
 	
 	function set_keyCount(cnt:Int){
 		if (cnt < 0)
@@ -337,12 +331,6 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 			else{
 				if (note.wasGoodHit)
 					continue;
-				var judge:Judgment = judgeManager.judgeNote(note);
-				if (judge != UNJUDGED){
-					note.hitResult.judgment = judge;
-					note.hitResult.hitDiff = note.strumTime - Conductor.songPosition;
-					noteHitCallback(note, this);
-					return note;
 				}
 			}
 		}
@@ -513,7 +501,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 							
 							daNote.tripProgress = 1.0;
 						}else
-							daNote.tripProgress -= elapsed / (daNote.maxReleaseTime * judgeManager.judgeTimescale);
+							daNote.tripProgress -= elapsed / (daNote.maxReleaseTime);
 
 						if(daNote.isRoll && autoPlayed && daNote.tripProgress <= 0.5)
 							holdPressCallback(daNote, this); // would set tripProgress back to 1 but idk maybe the roll script wants to do its own shit
@@ -572,7 +560,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 					daNote.isSustainNote && daNote.strumTime - Conductor.songPosition < -350 ||
 					!daNote.isSustainNote
 					&& (daNote.sustainLength == 0 || daNote.tooLate)
-					&& daNote.strumTime - Conductor.songPosition < -(200 + judgeManager.getWindow(TIER1) + daNote.sustainLength)) && (daNote.tooLate || daNote.wasGoodHit))
+					&& daNote.strumTime - Conductor.songPosition < -(200 + daNote.sustainLength)) && (daNote.tooLate || daNote.wasGoodHit))
 				{
 					daNote.garbage = true;
 					garbage.push(daNote);
@@ -590,8 +578,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 				for (daNote in getTapNotes(i, (note:Note) -> !note.wasGoodHit && !note.ignoreNote && !note.hitCausesMiss)){
 					var hitDiff = Conductor.songPosition - daNote.strumTime;
 					daNote.tooLate = false;
-					if (isPlayer && (hitDiff + ClientPrefs.ratingOffset) >= (-5 * (Wife3.timeScale>1 ? 1 : Wife3.timeScale)) || hitDiff >= 0){
-						daNote.hitResult.judgment = judgeManager.useEpics ? TIER5 : TIER4;
+					if (isPlayer && (hitDiff + ClientPrefs.ratingOffset) >= (-5 * (timeScale>1 ? 1 : timeScale)) || hitDiff >= 0){
 						daNote.hitResult.hitDiff = (hitDiff > -5) ? -5 : hitDiff; 
 						if (noteHitCallback!=null) noteHitCallback(daNote, this);
 					}
@@ -613,14 +600,6 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 					while (noteList.length > 0)
 					{
 						var note:Note = noteList.pop();
-						var judge:Judgment = judgeManager.judgeNote(note);
-						if (judge != UNJUDGED)
-						{
-							note.hitResult.judgment = judge;
-							note.hitResult.hitDiff = note.strumTime - Conductor.songPosition;
-							noteHitCallback(note, this);
-						}
-						
 					}
 				}
 			}
