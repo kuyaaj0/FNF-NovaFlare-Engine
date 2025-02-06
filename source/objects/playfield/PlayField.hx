@@ -1,4 +1,4 @@
-package funkin.objects.playfields;
+package objects.playfields;
 
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSort;
