@@ -4,7 +4,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSort;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import lime.app.Event;
 import psychlua.ModManager;
 import states.PlayState;
 import states.MusicBeatState;
