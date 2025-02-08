@@ -1150,7 +1150,7 @@ class PlayState extends MusicBeatState
 		Paths.sound('introGo' + introSoundsSuffix);
 	}
 
-	public function startCountdown()
+	inline public function startCountdown()
 	{
 		if (ClientPrefs.data.pauseButton)
 		pauseButton_menu.visible = true;
