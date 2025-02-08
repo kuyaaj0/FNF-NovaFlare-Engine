@@ -223,6 +223,30 @@ class FunkinLua {
 				set(name, func);
 		}
 
+		set("queueSet", function(step:Float, modName:String, target:Float, player:Int = -1) {
+		    if (PlayState.instance.modManager != null) {
+        PlayState.instance.modManager.queueSet(step, modName, target, player);
+        
+    }
+		    
+		});
+
+		set("queueSetP", function(step:Float, modName:String, perc:Float, player:Int = -1) {
+		    if (PlayState.instance.modManager != null) {
+        PlayState.instance.modManager.queueSetP(step, modName, perc, player);
+		        
+		    }
+		    
+		});
+
+		set("queueEase", function(step:Float, endStep:Float, modName:String, percent:Float, style:String = "linear", player:Int = -1, ?startVal:Float) {
+		    if (PlayState.instance.modManager != null) {
+		        PlayState.instance.modManager.queueEase(step, endStep, modName, percent, style, player, startVal);
+		        
+		    }
+		    
+		});
+
 		//
 		set("getRunningScripts", function(){
 			var runningScripts:Array<String> = [];
@@ -744,12 +768,14 @@ class FunkinLua {
 		    
 		});
 
-		set("quadMotion", function(noteId:Int, startX:Float, startY:Float, endX:Float, endY:Float, duration:Float) {
-		    // Get the note from PlayState using noteId
+		set("quadMotion", function(noteId:Int, startX:Float, startY:Float, controlX:Float, controlY:Float, endX:Float, endY:Float, duration:Float) {
 		    var note = PlayState.instance.notes.members[noteId];
 		    if (note != null) {
-		        // Apply the tween with quadratic easing
-		        FlxTween.tween(note, {x: endX, y: endY}, duration, {ease: FlxEase.quadOut});
+		        trace("quadMotion triggered for Note ID: " + noteId);
+		        note.copyX = true;
+		        note.copyY = true;
+
+		        FlxTween.quadMotion(note, startX, startY, controlX, controlY, endX, endY, duration);
 		        
 		    }
 		    
