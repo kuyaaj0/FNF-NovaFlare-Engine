@@ -63,6 +63,20 @@
     "filesCheck": "检查游戏是否丢失文件",
 
 
+    "VideoDrawOption": "影片繪製選項",
+    "VideoDrawOptionTitle": "影片繪製選項",
+    
+    "drawDistanceModifier": "繪製距離修改器，用於 modchart 機制 0 至 1",
+    "holdSubdivs": "我不知道這是什麼意思，但一公里到底是什麼鬼。順便說一下，用這個到 0 到 6 然後測試你想要的",
+
+
+    "SmoothOption": "平滑選項",
+    "SmoothOptionTitle": "平滑選項",
+    "smoothHealth": "提前平穩健康選項另外你可以切換到你想要的打開或關閉如果你想打開你的健康欄開始平穩增加如果你不想要這個選項請關閉",
+    "smoothScore": "這個選項和我在平滑健康選項上說的一樣，所以你也可以根據需要打開或關閉 ",
+    "commaSeperated": "這個選項關不掉，我試過關掉，但結果逗號的程式碼壞了",
+
+
     
     "GameUI": "游戏界面设置",
     "GameUITitle": "游戏界面设置",
