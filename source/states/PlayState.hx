@@ -1257,7 +1257,7 @@ class PlayState extends MusicBeatState
 	}
 
 	// This function should be placed at the correct location, not inside another function
-	inline private function createCountdownSprite(image:String, antialias:Bool):FlxSprite
+	private function createCountdownSprite(image:String, antialias:Bool):FlxSprite
 {
     var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(image));
     spr.cameras = [camHUD];
