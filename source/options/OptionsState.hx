@@ -36,7 +36,7 @@ class OptionsState extends MusicBeatState
 				Language.get('Gameplay'), 
 				Language.get('Backend'), 
 				Language.get('GameUITitle'), 
-				Language.get('VideoDrawTitle') 
+				Language.get('VideoDrawTitle'), 
 				Language.get('SmoothOptionTitle'), 
 				Language.get('Skin'), 
 				Language.get('Input'), 
