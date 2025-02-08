@@ -1197,8 +1197,14 @@ class PlayState extends MusicBeatState
 			moveCameraSection();
 			generateStrums();
 
-			if (callOnScripts('onModifierRegister') != Globals.Function_Stop) {
-			modManager.registerDefaultModifiers();
+			if (callOnScripts('onModifierRegister') != null) {
+			    modManager.registerDefaultModifiers();
+
+			    // Dispatch modifier signals
+			    if (onModifierRegister != null) onModifierRegister.dispatch();
+			    if (onModifierRegisterPost != null) onModifierRegisterPost.dispatch();
+			    
+			}
 
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, function(tmr:FlxTimer)
 			{
