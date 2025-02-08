@@ -1484,191 +1484,195 @@ class PlayState extends MusicBeatState
 	private var noteTypes:Array<String> = [];
 	private var eventsPushed:Array<String> = [];
 	private function generateSong(dataPath:String):Void
-	{
-		// FlxG.log.add(ChartParser.parse());
-		songSpeed = PlayState.SONG.speed;
-		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype');
-		switch(songSpeedType)
-		{
-			case "multiplicative":
-				songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
-			case "constant":
-				songSpeed = ClientPrefs.getGameplaySetting('scrollspeed');
-		}
+{
+    songSpeed = PlayState.SONG.speed;
+    songSpeedType = ClientPrefs.getGameplaySetting('scrolltype');
 
-		var songData = SONG;
-		Conductor.bpm = songData.bpm;
+    switch(songSpeedType)
+    {
+        case "multiplicative":
+            songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
+        case "constant":
+            songSpeed = ClientPrefs.getGameplaySetting('scrollspeed');
+    }
 
-		curSong = songData.song;
+    var songData = SONG;
+    Conductor.bpm = songData.bpm;
+    curSong = songData.song;
 
-		vocals = new FlxSound();
-		opponentVocals = new FlxSound();
-		try
-		{
-			if (songData.needsVoices)
-			{
-				var playerVocals = Paths.voices(songData.song, (boyfriend.vocalsFile == null || boyfriend.vocalsFile.length < 1) ? 'Player' : boyfriend.vocalsFile);
-				vocals.loadEmbedded(playerVocals != null ? playerVocals : Paths.voices(songData.song));
-				
-				var oppVocals = Paths.voices(songData.song, (dad.vocalsFile == null || dad.vocalsFile.length < 1) ? 'Opponent' : dad.vocalsFile);
-				if(oppVocals != null){
-					opponentVocals.loadEmbedded(oppVocals);
-					splitVocals = true;
-				}
-			}
-		}
-		catch(e:Dynamic) {}
+    vocals = new FlxSound();
+    opponentVocals = new FlxSound();
+    try
+    {
+        if (songData.needsVoices)
+        {
+            var playerVocals = Paths.voices(songData.song, (boyfriend.vocalsFile == null || boyfriend.vocalsFile.length < 1) ? 'Player' : boyfriend.vocalsFile);
+            vocals.loadEmbedded(playerVocals != null ? playerVocals : Paths.voices(songData.song));
 
-		#if FLX_PITCH
-		vocals.pitch = playbackRate;
-		opponentVocals.pitch = playbackRate;
-		#end
-		FlxG.sound.list.add(vocals);
-		FlxG.sound.list.add(opponentVocals);
-
-		inst = new FlxSound();
-		try {
-			inst.loadEmbedded(Paths.inst(songData.song));
-		}
-		catch(e:Dynamic) {}
-		FlxG.sound.list.add(inst);
-
-		notes = new FlxTypedGroup<Note>();
-		noteGroup.add(notes);
-
-		var noteData:Array<SwagSection>;
-
-		// NEW SHIT
-		noteData = songData.notes;
-
-		var file:String = Paths.json(songName + '/events');
-		#if MODS_ALLOWED
-		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file))
-		#else
-		if (Assets.exists(file))
-		#end
-		{
-			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
-			for (event in eventsData) //Event Notes
-				for (i in 0...event[1].length)
-					makeEvent(event, i);
-		}
-
-		Note.checkSkin();
-		
-		if (playfields == null)
-    playfields = this.playfields.members;
-    
-    if (notes == null)
-    notes = this.allNotes;
-
-    for (section in noteData) {
-    for (songNotes in section.sectionNotes) {
-        var daStrumTime:Float = songNotes[0];
-        var daNoteData:Int = Std.int(songNotes[1]);
-        var gottaHitNote:Bool = section.mustHitSection ? (daNoteData < keyCount) : (daNoteData >= keyCount);
-        var daColumn:Int = daNoteData % keyCount;
-        var susLength = Math.round(songNotes[2] / Conductor.stepCrochet) - 1;
-        var prevNote:Note = (notes.length > 0) ? notes[notes.length - 1] : null;
-        var daType:String = songNotes[3];
-
-        var swagNote:Note = new Note(daStrumTime, daColumn, prevNote, gottaHitNote, false);
-        swagNote.sustainLength = songNotes[2]; // Keep the original sustain length format
-        swagNote.ID = notes.length;
-        modchartObjects.set('note${swagNote.ID}', swagNote);
-
-        if (section.altAnim) {
-            swagNote.characterHitAnimSuffix = '-alt';
-            swagNote.characterMissAnimSuffix = '-alt';
-        }
-        swagNote.gfNote = section.gfSection && daNoteData < keyCount;
-        swagNote.noteType = daType;
-
-        var playfield:PlayField = swagNote.field;
-        if (playfield == null && playfields.length > 0) {
-            if (swagNote.fieldIndex == -1)
-                swagNote.fieldIndex = swagNote.mustPress ? 0 : 1;
-
-            if (playfields[swagNote.fieldIndex] != null) {
-                playfield = playfields[swagNote.fieldIndex];
-                swagNote.field = playfield;
-            }
-        }
-
-        if (callScripts)
-            callOnScripts("onGeneratedNote", [swagNote, section]);
-
-        playfield = swagNote.field;
-        swagNote.fieldIndex = playfield.modNumber;
-        notes.push(swagNote);
-
-        if (addToFields && playfield != null)
-            playfield.queue(swagNote);
-
-        if (callScripts)
-            callOnScripts("onGeneratedNotePost", [swagNote, section]);
-
-        prevNote = swagNote;
-
-        // Handle Sustain Notes in NF Engine Format
-        if (susLength > 0) {
-            for (susNote in 0...susLength) {
-                var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * (susNote + 1)), daColumn, prevNote, gottaHitNote, true);
-                sustainNote.ID = notes.length;
-                modchartObjects.set('note${sustainNote.ID}', sustainNote);
-
-                sustainNote.characterHitAnimSuffix = swagNote.characterHitAnimSuffix;
-                sustainNote.characterMissAnimSuffix = swagNote.characterMissAnimSuffix;
-                sustainNote.gfNote = swagNote.gfNote;
-                sustainNote.noteType = daType;
-
-                if (callScripts) 
-                    callOnScripts("onGeneratedHold", [sustainNote, section]);
-
-                swagNote.tail.push(sustainNote);
-                swagNote.unhitTail.push(sustainNote);
-                sustainNote.parent = swagNote;
-                sustainNote.fieldIndex = swagNote.fieldIndex;
-                sustainNote.field = swagNote.field;
-
-                if (addToFields && playfield != null)
-                    playfield.queue(sustainNote);
-
-                notes.push(sustainNote);
-
-                if (callScripts) 
-                    callOnScripts("onGeneratedHoldPost", [swagNote, section]);
-
-                prevNote = sustainNote;
+            var oppVocals = Paths.voices(songData.song, (dad.vocalsFile == null || dad.vocalsFile.length < 1) ? 'Opponent' : dad.vocalsFile);
+            if (oppVocals != null) {
+                opponentVocals.loadEmbedded(oppVocals);
+                splitVocals = true;
             }
         }
     }
+    catch(e:Dynamic) {}
+
+    #if FLX_PITCH
+    vocals.pitch = playbackRate;
+    opponentVocals.pitch = playbackRate;
+    #end
+    FlxG.sound.list.add(vocals);
+    FlxG.sound.list.add(opponentVocals);
+
+    inst = new FlxSound();
+    try {
+        inst.loadEmbedded(Paths.inst(songData.song));
+    }
+    catch(e:Dynamic) {}
+    FlxG.sound.list.add(inst);
+
+    notes = new FlxTypedGroup<Note>();
+    noteGroup.add(notes);
+
+    var noteData:Array<SwagSection> = songData.notes;
+
+    var file:String = Paths.json(songName + '/events');
+    #if MODS_ALLOWED
+    if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file))
+    #else
+    if (Assets.exists(file))
+    #end
+    {
+        var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
+        for (event in eventsData) { // Event Notes
+            for (i in 0...event[1].length) {
+                makeEvent(event, i);
+            }
+        }
+    }
+
+    Note.checkSkin();
+
+    if (playfields == null) {
+        playfields = this.playfields.members;
+    }
+    if (notes == null) {
+        notes = this.allNotes;
+    }
+
+    for (section in noteData) {
+        for (songNotes in section.sectionNotes) {
+            var daStrumTime:Float = songNotes[0];
+            var daNoteData:Int = Std.int(songNotes[1]);
+            var gottaHitNote:Bool = section.mustHitSection ? (daNoteData < keyCount) : (daNoteData >= keyCount);
+            var daColumn:Int = daNoteData % keyCount;
+            var susLength = Math.round(songNotes[2] / Conductor.stepCrochet) - 1;
+            var prevNote:Note = (notes.length > 0) ? notes[notes.length - 1] : null;
+            var daType:String = songNotes[3];
+
+            var swagNote:Note = new Note(daStrumTime, daColumn, prevNote, gottaHitNote, false);
+            swagNote.sustainLength = songNotes[2];
+            swagNote.ID = notes.length;
+            modchartObjects.set('note${swagNote.ID}', swagNote);
+
+            if (section.altAnim) {
+                swagNote.characterHitAnimSuffix = '-alt';
+                swagNote.characterMissAnimSuffix = '-alt';
+            }
+            swagNote.gfNote = section.gfSection && daNoteData < keyCount;
+            swagNote.noteType = daType;
+
+            var playfield:PlayField = swagNote.field;
+            if (playfield == null && playfields.length > 0) {
+                if (swagNote.fieldIndex == -1)
+                    swagNote.fieldIndex = swagNote.mustPress ? 0 : 1;
+
+                if (playfields[swagNote.fieldIndex] != null) {
+                    playfield = playfields[swagNote.fieldIndex];
+                    swagNote.field = playfield;
+                }
+            }
+
+            if (callScripts)
+                callOnScripts("onGeneratedNote", [swagNote, section]);
+
+            playfield = swagNote.field;
+            swagNote.fieldIndex = playfield.modNumber;
+            notes.push(swagNote);
+
+            if (addToFields && playfield != null)
+                playfield.queue(swagNote);
+
+            if (callScripts)
+                callOnScripts("onGeneratedNotePost", [swagNote, section]);
+
+            prevNote = swagNote;
+
+            // Handle Sustain Notes
+            if (susLength > 0) {
+                for (susNote in 0...susLength) {
+                    var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * (susNote + 1)), daColumn, prevNote, gottaHitNote, true);
+                    sustainNote.ID = notes.length;
+                    modchartObjects.set('note${sustainNote.ID}', sustainNote);
+
+                    sustainNote.characterHitAnimSuffix = swagNote.characterHitAnimSuffix;
+                    sustainNote.characterMissAnimSuffix = swagNote.characterMissAnimSuffix;
+                    sustainNote.gfNote = swagNote.gfNote;
+                    sustainNote.noteType = daType;
+
+                    if (callScripts) 
+                        callOnScripts("onGeneratedHold", [sustainNote, section]);
+
+                    swagNote.tail.push(sustainNote);
+                    swagNote.unhitTail.push(sustainNote);
+                    sustainNote.parent = swagNote;
+                    sustainNote.fieldIndex = swagNote.fieldIndex;
+                    sustainNote.field = swagNote.field;
+
+                    if (addToFields && playfield != null)
+                        playfield.queue(sustainNote);
+
+                    notes.push(sustainNote);
+
+                    if (callScripts) 
+                        callOnScripts("onGeneratedHoldPost", [swagNote, section]);
+
+                    prevNote = sustainNote;
+                }
+            }
+        }
+    }
+
+    Note.defaultNoteSkin = 'noteSkins/NOTE_assets';
+
+    if (extraEvents.length > 0) {
+        for (event in 0...extraEvents.length) {
+            for (data in 0...extraEvents[event][1].length) {
+                makeEvent(extraEvents[event], data);
+            }
+        }
+    }
+
+    if (ClientPrefs.data.loadingScreen) {
+        for (num in 0...unspawnNotes.length) {
+            unspawnNotes[num].updateHitbox();
+        }
+    }
+
+    allNotes.sort(sortByNotes);
+
+    for (note in allNotes) {
+        unspawnNotes.push(note);
+    }
+
+    for (field in playfields.members) {
+        field.clearStackedNotes();
+    }
+
+    checkEventNote();
+    generatedMusic = true;
 }
-return notes;
-		}
-
-		Note.defaultNoteSkin = 'noteSkins/NOTE_assets';
-		
-		if (extraEvents.length > 0)
-		    for (event in 0...extraEvents.length)
-    			for (data in 0...extraEvents[event][1].length)
-    				makeEvent(extraEvents[event], data);
-
-		if (ClientPrefs.data.loadingScreen)
-			for (num in 0...unspawnNotes.length)
-				unspawnNotes[num].updateHitbox();
-    				
-    	allNotes.sort(sortByNotes);
-
-    	for (note in allNotes)
-    	unspawnNotes.push(note);
-
-    	for (field in playfields.members)
-    	field.clearStackedNotes();
-
-    	checkEventNote();
-		generatedMusic = true;
-	}
 
 	// called only once per different event (Used for precaching)
 	function eventPushed(event:EventNote) {
