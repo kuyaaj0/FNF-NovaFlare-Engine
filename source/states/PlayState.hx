@@ -1258,27 +1258,30 @@ class PlayState extends MusicBeatState
 
 	inline private function createCountdownSprite(image:String, antialias:Bool):FlxSprite
 	{
-		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(image));
-		spr.cameras = [camHUD];
-		spr.scrollFactor.set();
-		spr.updateHitbox();
+	    var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(image));
+	    spr.cameras = [camHUD];
+	    spr.scrollFactor.set();
+	    spr.updateHitbox();
 
-		if (PlayState.isPixelStage)
-			spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
+	    if (PlayState.isPixelStage)
+	    spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
 
-		spr.screenCenter();
-		spr.antialiasing = antialias;
-		insert(members.indexOf(noteGroup), spr);
-		FlxTween.tween(spr, {/*y: spr.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
-			ease: FlxEase.cubeInOut,
-			onComplete: function(twn:FlxTween)
-			{
-				remove(spr);
-				spr.destroy();
-			}
-		});
-		return spr;
-	}
+	    spr.screenCenter();
+	    spr.antialiasing = antialias;
+	    insert(members.indexOf(noteGroup), spr);
+
+	    // Tween the sprite and remove it after completion
+	    FlxTween.tween(spr, {alpha: 0}, Conductor.crochet / 1000, {
+	        ease: FlxEase.cubeInOut,
+	        onComplete: function(twn:FlxTween)
+        {
+            remove(spr);
+            spr.destroy();
+        }
+    });
+
+    return spr;
+}
 
 	public function addBehindGF(obj:FlxBasic)
 	{
