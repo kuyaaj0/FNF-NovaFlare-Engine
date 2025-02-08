@@ -53,8 +53,6 @@ import states.TitleState;
 	public var safeFrames:Float = 10;			
 	public var marvelousRating:Bool = true;	
 	public var marvelousSprite:Bool = true;	
-	public var drawDistanceModifier:Float = 1.0;
-	public var holdSubdivs:Int = 6;
 	//App backend s
 	public var discordRPC:Bool = true;
 	public var checkForUpdates:Bool = true;
@@ -94,6 +92,11 @@ import states.TitleState;
 	//Tweens s
 	public var tweenableTimeTxt:Bool = false;
 	public var tweenableScoreTxt:Bool = false;
+	
+	//Video Draw Option
+	//Video Draw shit s
+	public var drawDistanceModifier:Float = 1;
+	public var holdSubdivs:Int = 6;
 	
 	//Smooth Option
 	//Smooth thingy s
