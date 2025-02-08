@@ -1256,7 +1256,7 @@ class PlayState extends MusicBeatState
 		return true;
 	}
 
-	private function createCountdownSprite(image:String, antialias:Bool):FlxSprite
+	inline private function createCountdownSprite(image:String, antialias:Bool):FlxSprite
 	{
 	    var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(image));
 	    spr.cameras = [camHUD];
@@ -1281,7 +1281,8 @@ class PlayState extends MusicBeatState
     });
 
     return spr;
-}
+	    
+	}
 
 	public function addBehindGF(obj:FlxBasic)
 	{
