@@ -53,6 +53,8 @@ import states.TitleState;
 	public var safeFrames:Float = 10;			
 	public var marvelousRating:Bool = true;	
 	public var marvelousSprite:Bool = true;	
+	public var drawDistanceModifier:Float = 1.0;
+	public var holdSubdivs:Int = 6;
 	//App backend s
 	public var discordRPC:Bool = true;
 	public var checkForUpdates:Bool = true;
