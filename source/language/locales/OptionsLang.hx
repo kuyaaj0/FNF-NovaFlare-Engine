@@ -64,6 +64,23 @@ typedef OptionData =
     screensaver:String, 
     filesCheck:String,
 
+    //==Video Draw Option==\
+    VideoDrawOption:String,
+    VideoDrawOptionTitle:String,
+    drawDistanceModifier:String,
+    ////////
+    holdSubdivs:String,
+
+    //==Smooth Option==\
+    SmoothOption:String,
+    SmoothOptionTitle:String,
+    ////////
+    smoothHealth:String,
+    ////////
+    smoothScore:String,
+    ////////
+    commaSeperated:String,
+
     //==Game UI==\\
     GameUI:String, 
     GameUITitle:String, 
