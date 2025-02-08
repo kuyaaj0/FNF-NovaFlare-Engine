@@ -25,6 +25,8 @@ import haxe.Json;
 import cutscenes.CutsceneHandler;
 import cutscenes.DialogueBoxPsych;
 
+import options.Group.VideoDrawGroup;
+
 import states.StoryMenuState;
 import states.FreeplayState;
 import states.FreeplayStatePsych;
@@ -114,6 +116,8 @@ class PlayState extends MusicBeatState
 	public var hscriptArray:Array<HScript> = [];
 	public var instancesExclude:Array<String> = [];
 	#end
+
+	public var signals = new PlayStateSignals();
 
 	#if LUA_ALLOWED
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
@@ -333,9 +337,10 @@ class PlayState extends MusicBeatState
 	    if (preloadEvents != null) extraEvents = preloadEvents;
 	}
 	
-	override public function create(){
+	override public function create()
+	{
 		   
-		modManager = new ModManager();
+		modManager = new ModManager(this);
 		   
 		//trace('Playback Rate: ' + playbackRate);
 		if (!ClientPrefs.data.loadingScreen) Paths.clearStoredMemory();
@@ -1200,9 +1205,7 @@ class PlayState extends MusicBeatState
 			if (callOnScripts('onModifierRegister') != null) {
 			    modManager.registerDefaultModifiers();
 
-			    // Dispatch modifier signals
-			    if (onModifierRegister != null) onModifierRegister.dispatch();
-			    if (onModifierRegisterPost != null) onModifierRegisterPost.dispatch();
+			    signals.onModifierRegister.dispatch();
 			    
 			}
 
@@ -1897,10 +1900,14 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	public function newOptions(VideoDrawGroup:String) {
 			for (field in playfields) {
-			    field.noteField.drawDistMod = ClientPrefs.drawDistanceModifier;
-			    field.noteField.holdSubdivisions = Std.int(ClientPrefs.holdSubdivs) + 1;
-}
+			    field.noteField.drawDistMod = ClientPrefs.data.drawDistanceModifier;
+			    field.noteField.holdSubdivisions = Std.int(ClientPrefs.data.holdSubdivs) + 1;
+			    
+			}
+	    
+	}
 
 	function sortByZIndex(Obj1:{zIndex:Float}, Obj2:{zIndex:Float}):Int
 	{
