@@ -63,6 +63,21 @@
     "filesCheck": "Check game whether miss files",
 
 
+    "VideoDrawOption": "Video Rendering Option",
+    "VideoDrawOptionTitle": "Video Rendering Option",
+    
+    "drawDistanceModifier": "Draw distance modifier, used for modchart mechanics, range from 0 to 1",
+    "holdSubdivs": "I don't know what this means, but what the heck is a kilometer? By the way, set this between 0 and 6 and test it what you wanted.",
+
+
+    "SmoothOption": "Smooth Option",
+    "SmoothOptionTitle": "Smooth Option",
+    
+    "smoothHealth": "Pre-advance smooth health option. Additionally, you can toggle this on or off as you wish. If enabled, your health bar will start increasing smoothly. If you don't want this option, turn it off.",
+    "smoothScore": "This option works the same way as the smooth health option, so you can toggle it on or off as needed.",
+    "commaSeperated": "This option cannot be turned off. I tried disabling it, but the result was that the comma-seperated code is broke."
+
+
     
     "GameUI": "GameUI",
     "GameUITitle": "Game UI",
