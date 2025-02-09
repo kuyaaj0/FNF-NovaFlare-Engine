@@ -1,4 +1,4 @@
-package objects.proxies;
+package funkin.objects.proxies;
 
 import openfl.geom.ColorTransform;
 import openfl.Vector;
@@ -79,7 +79,7 @@ class ProxyField extends FieldBase {
 					transfarm.redOffset = glowR * glow * 255;
 					transfarm.greenOffset = glowG * glow * 255;
 					transfarm.blueOffset = glowB * glow * 255;
-					transfarm.alphaMultiplier = alphas[n] * this.alpha * ClientPrefs.noteOpacity;
+					transfarm.alphaMultiplier = alphas[n] * this.alpha * ClientPrefs.data.noteOpacity;
 					transforms.push(transfarm);
 				}
 
