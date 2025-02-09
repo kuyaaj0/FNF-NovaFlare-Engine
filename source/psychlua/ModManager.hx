@@ -45,8 +45,6 @@ class ModManager {
 
 	private var state:PlayState;
 
-	public var timeline:EventTimeline = new EventTimeline();
-
 	var notemodRegister:Map<String, Modifier> = [];
 	var miscmodRegister:Map<String, Modifier> = [];
 
