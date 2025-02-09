@@ -151,7 +151,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public var noteMissed:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
 	public var noteRemoved:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
 	public var noteSpawned:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
-	public var holdDropped:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>(); called every time a hold is dropped
+	public var holdDropped:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>(); //called every time a hold is dropped
 	public var holdFinished:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
 	public var holdUpdated:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
 	
