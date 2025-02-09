@@ -1900,7 +1900,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function newOptions(VideoDrawGroup:String) {
+	public function newOptions(Group:Array<String>) {
 			for (field in playfields) {
 			    field.noteField.drawDistMod = ClientPrefs.data.drawDistanceModifier;
 			    field.noteField.holdSubdivisions = Std.int(ClientPrefs.data.holdSubdivs) + 1;
