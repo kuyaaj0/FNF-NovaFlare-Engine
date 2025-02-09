@@ -184,7 +184,7 @@ class HScript extends SScript
             if (color == null) color = FlxColor.WHITE;
             PlayState.instance.addTextToDebug(text, color);
         });
-    }
+
 		set('getModSetting', function(saveTag:String, ?modName:String = null) {
     if (modName == null) {
         if (this.modFolder == null) {
@@ -195,6 +195,7 @@ class HScript extends SScript
     }
     return LuaUtils.getModSetting(saveTag, modName);
 });
+}
 
 		// Keyboard & Gamepads
 		set('keyboardJustPressed', function(name:String){
