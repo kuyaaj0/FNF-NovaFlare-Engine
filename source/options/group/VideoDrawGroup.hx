@@ -46,5 +46,22 @@ class VideoDrawGroup
             6
         );
         follow.addOption(option);
+
+        ///////////////////////////////
+
+        var option:Option = new Option(
+            Language.get('Note_Opacity'),
+            TEXT
+        );
+        follow.addOption(option);
+
+        var option:Option = new Option(
+            Language.get('noteOpacity'),
+            'noteOpacity',
+            INT,
+            0,
+            100
+        );
+        follow.addOption(option);
     }
 }
