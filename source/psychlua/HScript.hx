@@ -92,6 +92,7 @@ class HScript extends SScript
 
     public var modFolder:String;
     public var parentLua:FunkinLua;
+    public var origin:String;
 
     public static function initHaxeModule(parent:FunkinLua)
     {
@@ -468,7 +469,6 @@ class HScript extends SScript
     }
 }
 
-        public var origin:String;
     override public function new(?parent:Dynamic, ?file:String, ?varsToBring:Any = null)
     {
         if (file == null)
