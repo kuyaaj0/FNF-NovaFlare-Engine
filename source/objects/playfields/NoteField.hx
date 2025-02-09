@@ -16,7 +16,7 @@ import openfl.Vector;
 import openfl.geom.ColorTransform;
 import psychlua.ModManager;
 import psychlua.Modifier.RenderInfo;
-import funkin.objects.shaders.NoteColorSwap;
+import shaders.NoteColorSwap;
 import states.PlayState;
 import backend.MusicBeatState;
 import haxe.ds.Vector as FastVector;
@@ -58,7 +58,7 @@ class NoteField extends FieldBase
 		super(0, 0);
 		this.field = field;
 		this.modManager = modManager;
-		this.holdSubdivisions = Std.int(ClientPrefs.holdSubdivs) + 1;
+		this.holdSubdivisions = Std.int(ClientPrefs.data.holdSubdivs) + 1;
 	}
 
 	/**
@@ -67,7 +67,7 @@ class NoteField extends FieldBase
 	 * Set to ClientPrefs.drawDistanceModifier by default, which is an option to let you change the draw distance.
 	 * Best not to touch this, as you can set the drawDistance modifier to set the draw distance of a notefield.
 	 */
-	public var drawDistMod:Float = ClientPrefs.drawDistanceModifier;
+	public var drawDistMod:Float = ClientPrefs.data.drawDistanceModifier;
 
 	/**
 	 * The ID used to determine how you apply modifiers to the notes
@@ -136,12 +136,12 @@ class NoteField extends FieldBase
 		else
 		{
 			var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
-			var shit = ((Conductor.songPosition - ClientPrefs.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+			var shit = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
 			curDecStep = lastChange.stepTime + shit;
 		}
 		curDecBeat = curDecStep / 4;
 
-		zoom = modManager.getFieldZoom(baseZoom, curDecBeat, (Conductor.songPosition - ClientPrefs.noteOffset), modNumber, this);
+		zoom = modManager.getFieldZoom(baseZoom, curDecBeat, (Conductor.songPosition - ClientPrefs.data.noteOffset), modNumber, this);
 		var notePos:Map<Note, Vector3> = [];
 		var taps:Array<Note> = [];
 		var holds:Array<Note> = [];
@@ -328,6 +328,7 @@ class NoteField extends FieldBase
 				var indices = object.indices;
 				var colorSwap = object.colorSwap;
 				var transforms:Array<ColorTransform> = []; // todo use fastvector
+				var multAlpha = this.alpha * ClientPrefs.data.noteOpacity;
 				for (n in 0... Std.int(vertices.length / 2)){
 					var glow = glows[n];
 					var transfarm:ColorTransform = new ColorTransform();
@@ -338,7 +339,7 @@ class NoteField extends FieldBase
 					transfarm.greenOffset = glowG * glow * 255;
 					transfarm.blueOffset = glowB * glow * 255;
 
-					transfarm.alphaMultiplier = alphas[n];
+					transfarm.alphaMultiplier = alphas[n] * multAlpha;
 					transforms.push(transfarm);
 				}
 
@@ -358,7 +359,7 @@ class NoteField extends FieldBase
 							drawItem.addTrianglesColorArray(vertices, indices, uvData, null, point, camera._bounds, transforms, colorSwap);
 						}
 						for (n in 0...transforms.length)
-							transforms[n].alphaMultiplier = alphas[n];
+							transforms[n].alphaMultiplier = alphas[n] * multAlpha;
 					}
 				}
 			}
@@ -462,8 +463,8 @@ class NoteField extends FieldBase
 		if (simpleDraw)
 			basePos.z = 0;
 		
-		var strumDiff = (backend.Conductor.songPosition - hold.strumTime);
-		var visualDiff = (backend.Conductor.visualPosition - hold.visualTime); // TODO: get the start and end visualDiff and interpolate so that changing speeds mid-hold will look better
+		var strumDiff = (Conductor.songPosition - hold.strumTime);
+		var visualDiff = (Conductor.visualPosition - hold.visualTime); // TODO: get the start and end visualDiff and interpolate so that changing speeds mid-hold will look better
 		var zIndex:Float = basePos.z + hold.zIndex;
 		var sv = PlayState.instance.getSV(hold.strumTime).speed;
 
@@ -652,8 +653,8 @@ class NoteField extends FieldBase
 		var visPos:Float = 0;
 		if(isNote) {
 			var speed = modManager.getNoteSpeed(note, modNumber, songSpeed);
-			diff = backend.Conductor.songPosition - note.strumTime;
-			visPos = -((backend.Conductor.visualPosition - note.visualTime) * speed);
+			diff = Conductor.songPosition - note.strumTime;
+			visPos = -((Conductor.visualPosition - note.visualTime) * speed);
 		}
 
 		var info:RenderInfo = {
