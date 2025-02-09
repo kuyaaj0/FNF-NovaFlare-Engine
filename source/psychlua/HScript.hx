@@ -115,30 +115,6 @@ class HScript extends SScript
         }
     }
 
-        public var origin:String;
-    override public function new(?parent:Dynamic, ?file:String, ?varsToBring:Any = null)
-    {
-        if (file == null)
-            file = '';
-
-        this.varsToBring = varsToBring;
-        super(file, false, false);
-
-        if (parent != null)
-        {
-            this.origin = parent.scriptName;
-            this.modFolder = parent.modFolder;
-        }
-
-        if (scriptFile != null && scriptFile.length > 0)
-        {
-            this.origin = scriptFile;
-        }
-
-        preset();
-        execute();
-    }
-
 	var varsToBring:Any = null;
     override function preset()
     {
@@ -492,8 +468,33 @@ class HScript extends SScript
     }
 }
 
+        public var origin:String;
+    override public function new(?parent:Dynamic, ?file:String, ?varsToBring:Any = null)
+    {
+        if (file == null)
+            file = '';
+
+        this.varsToBring = varsToBring;
+        super(file, false, false);
+
+        if (parent != null)
+        {
+            this.origin = parent.scriptName;
+            this.modFolder = parent.modFolder;
+        }
+
+        if (scriptFile != null && scriptFile.length > 0)
+        {
+            this.origin = scriptFile;
+        }
+
+        preset();
+        execute();
+    }
+
+
 	#if LUA_ALLOWED
-static function implement(funk:FunkinLua) {
+public static function implement(funk:FunkinLua) {
 	    if (!ClientPrefs.data.oldHscriptVersion){
     		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
     			#if SScript
