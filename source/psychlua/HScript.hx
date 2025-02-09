@@ -116,7 +116,6 @@ class HScript extends SScript
     }
 
         public var origin:String;
-
     override public function new(?parent:Dynamic, ?file:String, ?varsToBring:Any = null)
     {
         if (file == null)
@@ -494,7 +493,7 @@ class HScript extends SScript
 }
 
 	#if LUA_ALLOWED
-public static function implement(funk:FunkinLua) {
+static function implement(funk:FunkinLua) {
 	    if (!ClientPrefs.data.oldHscriptVersion){
     		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
     			#if SScript
