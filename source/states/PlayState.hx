@@ -17,7 +17,7 @@ import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 import flixel.animation.FlxAnimationController;
 import flixel.input.touch.FlxTouch;
-import flixel.util.FlxTypedSignal;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import openfl.utils.Assets;
 import openfl.events.KeyboardEvent;
 import haxe.Json;
@@ -25,7 +25,7 @@ import haxe.Json;
 import cutscenes.CutsceneHandler;
 import cutscenes.DialogueBoxPsych;
 
-import options.Group.VideoDrawGroup;
+import options.group.VideoDrawGroup;
 
 import states.StoryMenuState;
 import states.FreeplayState;
