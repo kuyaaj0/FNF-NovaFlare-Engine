@@ -310,7 +310,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	
 	// sends an input to the playfield
 	public function input(data:Int):Null<Note> {
-		if (data < 0 || data > keyCount) 
+		if (data < 0 || data > keyCount) {
 			return null;
 
 		var noteList = getTapNotes(data, (note:Note) -> !note.isSustainNote && note.requiresTap && !note.tooLate);
@@ -341,7 +341,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public function generateStrums(){
 		for(i in 0...keyCount){
 			var babyArrow:StrumNote = new StrumNote(0, 0, i, this, (FlxG.state == PlayState.instance) ? PlayState.instance.hudSkin : 'default');
-			babyArrow.downScroll = ClientPrefs.downScroll;
+			babyArrow.downScroll = ClientPrefs.data.downScroll;
 			babyArrow.alpha = 0;
 			insert(0, babyArrow);
 			babyArrow.x = modManager.getBaseX(i, playerId, keyCount);
@@ -426,7 +426,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 		else
 		{
 			var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
-			var shit = ((Conductor.songPosition - ClientPrefs.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+			var shit = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
 			curDecStep = lastChange.stepTime + shit;
 		}
 		var curDecBeat = curDecStep / 4;
@@ -587,7 +587,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 		}else{
 			for(data in 0...keyCount){
 				if (keysPressed[data]){
-					var noteList = getTapNotesWithEnd(data, Conductor.songPosition + ClientPrefs.hitWindow, (note:Note) -> !note.isSustainNote && !note.requiresTap);
+					var noteList = getTapNotesWithEnd(data, Conductor.songPosition + ClientPrefs.data.goodWindow, (note:Note) -> !note.isSustainNote && !note.requiresTap);
 					
 					#if PE_MOD_COMPATIBILITY
 					// so lowPriority actually works (even though i hate it lol!)
