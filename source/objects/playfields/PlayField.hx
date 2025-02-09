@@ -149,7 +149,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public var strumAttachments:FlxTypedGroup<NoteObject>; // things that get "attached" to the receptors. custom splashes, etc.
 
 	public var noteMissed:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
-	public var noteRemoved:Event<NoteCallback> = new Event<NoteCallback>(); // event that gets called every time a note is removed.
+	public var noteRemoved:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
 	public var noteSpawned:Event<NoteCallback> = new Event<NoteCallback>(); // event that gets called every time a note is spawned.
 	public var holdDropped:Event<NoteCallback> = new Event<NoteCallback>(); // event that gets called every time a hold is dropped
 	public var holdFinished:Event<NoteCallback> = new Event<NoteCallback>(); // event that gets called every time a hold is finished
