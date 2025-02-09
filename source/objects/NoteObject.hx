@@ -4,7 +4,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import math.Vector3;
 
-import objects.shaders.NoteColorSwap;
+import shaders.NoteColorSwap;
 
 enum abstract ObjectType(#if cpp cpp.UInt8 #else Int #end)
 {
