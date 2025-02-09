@@ -493,7 +493,7 @@ class HScript extends SScript
 }
 
 	#if LUA_ALLOWED
-	static function implement(funk:FunkinLua) {
+static function implement(funk:FunkinLua) {
         if (!ClientPrefs.data.oldHscriptVersion) {
             funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
                 #if SScript
@@ -536,40 +536,6 @@ class HScript extends SScript
             });
         }
     }
-    		// This function is unnecessary because import already exists in SScript as a native feature
-    		funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
-    			var str:String = '';
-    			if(libPackage.length > 0)
-    				str = libPackage + '.';
-    			else if(libName == null)
-    				libName = '';
-    
-    			var c:Dynamic = Type.resolveClass(str + libName);
-    			if (c == null)
-    				c = Type.resolveEnum(str + libName);
-    
-    			#if SScript
-    			if (c != null)
-    				SScript.globalVariables[libName] = c;
-    			#end
-    
-    			#if SScript
-    			if (funk.hscript != null)
-    			{
-    				try {
-    					if (c != null)
-    						funk.hscript.set(libName, c);
-    				}
-    				catch (e:Dynamic) {
-    					FunkinLua.luaTrace(funk.hscript.origin + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
-    				}
-    			}
-    			#else
-    			FunkinLua.luaTrace("addHaxeLibrary: HScript isn't supported on this platform!", false, false, FlxColor.RED);
-    			#end
-    		});		
-		}
-	}
 	#end
 
 	override public function destroy()
