@@ -494,47 +494,48 @@ class HScript extends SScript
 
 	#if LUA_ALLOWED
 	public static function implement(funk:FunkinLua) {
-	    if (!ClientPrefs.data.oldHscriptVersion){
-    		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
-    			#if SScript
-    			initHaxeModuleCode(funk, codeToRun, varsToBring);
-    			final retVal:TeaCall = funk.hscript.executeCode(funcToRun, funcArgs);
-    			if (retVal != null) {
-    				if(retVal.succeeded)
-    					return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
+        if (!ClientPrefs.data.oldHscriptVersion) {
+            funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
+                #if SScript
+                initHaxeModuleCode(funk, codeToRun, varsToBring);
+                final retVal:TeaCall = funk.hscript.executeCode(funcToRun, funcArgs);
+                if (retVal != null) {
+                    if(retVal.succeeded)
+                        return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
     
-    				final e = retVal.exceptions[0];
-    				final calledFunc:String = if(funk.hscript.origin == funk.lastCalledFunction) funcToRun else funk.lastCalledFunction;
-    				if (e != null)
-    					FunkinLua.luaTrace(funk.hscript.origin + ":" + calledFunc + " - " + e, false, false, FlxColor.RED);
-    				return null;
-    			}
-    			else if (funk.hscript.returnValue != null)
-    			{
-    				return funk.hscript.returnValue;
-    			}
-    			#else
-    			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
-    			#end
-    			return null;
-    		});
-    		
-    		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
-    			#if SScript
-    			var callValue = funk.hscript.executeFunction(funcToRun, funcArgs);
-    			if (!callValue.succeeded)
-    			{
-    				var e = callValue.exceptions[0];
-    				if (e != null)
-    					FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: ${callValue.calledFunction}) - ' + e.message.substr(0, e.message.indexOf('\n')), false, false, FlxColor.RED);
-    				return null;
-    			}
-    			else
-    				return callValue.returnValue;
-    			#else
-    			FunkinLua.luaTrace("runHaxeFunction: HScript isn't supported on this platform!", false, false, FlxColor.RED);
-    			#end
-    		});
+                    final e = retVal.exceptions[0];
+                    final calledFunc:String = if(funk.hscript.origin == funk.lastCalledFunction) funcToRun else funk.lastCalledFunction;
+                    if (e != null)
+                        FunkinLua.luaTrace(funk.hscript.origin + ":" + calledFunc + " - " + e, false, false, FlxColor.RED);
+                    return null;
+                }
+                else if (funk.hscript.returnValue != null) {
+                    return funk.hscript.returnValue;
+                }
+                #else
+                FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
+                #end
+                return null;
+            });
+
+            funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
+                #if SScript
+                var callValue = funk.hscript.executeFunction(funcToRun, funcArgs);
+                if (!callValue.succeeded)
+                {
+                    var e = callValue.exceptions[0];
+                    if (e != null)
+                        FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: ${callValue.calledFunction}) - ' + e.message.substr(0, e.message.indexOf('\n')), false, false, FlxColor.RED);
+                    return null;
+                }
+                else
+                    return callValue.returnValue;
+                #else
+                FunkinLua.luaTrace("runHaxeFunction: HScript isn't supported on this platform!", false, false, FlxColor.RED);
+                #end
+            });
+        }
+    }
     		// This function is unnecessary because import already exists in SScript as a native feature
     		funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
     			var str:String = '';
