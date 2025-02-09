@@ -150,10 +150,10 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 
 	public var noteMissed:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
 	public var noteRemoved:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
-	public var noteSpawned:Event<NoteCallback> = new Event<NoteCallback>(); // event that gets called every time a note is spawned.
-	public var holdDropped:Event<NoteCallback> = new Event<NoteCallback>(); // event that gets called every time a hold is dropped
-	public var holdFinished:Event<NoteCallback> = new Event<NoteCallback>(); // event that gets called every time a hold is finished
-	public var holdUpdated:Event<(Note, PlayField, Float) -> Void> = new Event<(Note, PlayField, Float) -> Void>(); // event that gets called every time a hold is updated
+	public var noteSpawned:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
+	public var holdDropped:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>(); called every time a hold is dropped
+	public var holdFinished:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
+	public var holdUpdated:FlxTypedSignal<Note -> PlayField -> Void> = new FlxTypedSignal<Note -> PlayField -> Void>();
 	
 	public var keysPressed:Array<Bool> = [false,false,false,false]; // what keys are pressed rn
 	public var isHolding:Array<Bool> = [false,false,false,false];
