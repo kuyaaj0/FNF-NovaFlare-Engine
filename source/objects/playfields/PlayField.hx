@@ -577,7 +577,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 				for (daNote in getTapNotes(i, (note:Note) -> !note.wasGoodHit && !note.ignoreNote && !note.hitCausesMiss)){
 					var hitDiff = Conductor.songPosition - daNote.strumTime;
 					daNote.tooLate = false;
-					if (isPlayer && (hitDiff + ClientPrefs.ratingOffset) >= (-5 * (timeScale>1 ? 1 : timeScale)) || hitDiff >= 0){
+					if (isPlayer && (hitDiff + ClientPrefs.data.ratingOffset) >= (-5 * (timeScale>1 ? 1 : timeScale)) || hitDiff >= 0){
 						daNote.hitResult.hitDiff = (hitDiff > -5) ? -5 : hitDiff; 
 						if (noteHitCallback!=null) noteHitCallback(daNote, this);
 					}
@@ -587,7 +587,13 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 		}else{
 			for(data in 0...keyCount){
 				if (keysPressed[data]){
-					var noteList = getTapNotesWithEnd(data, Conductor.songPosition + ClientPrefs.data.goodWindow, (note:Note) -> !note.isSustainNote && !note.requiresTap);
+					var noteList = getTapNotesWithEnd
+					(data, 
+					Conductor.songPosition + ClientPrefs.data.sickWindow,  // Best timing
+					Conductor.songPosition + ClientPrefs.data.goodWindow,  // Normal hit
+					Conductor.songPosition + ClientPrefs.data.badWindow,   // Worst timing
+					(note:Note) -> !note.isSustainNote && !note.requiresTap
+);
 					
 					#if PE_MOD_COMPATIBILITY
 					// so lowPriority actually works (even though i hate it lol!)
