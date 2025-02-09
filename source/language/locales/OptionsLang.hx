@@ -70,6 +70,8 @@ typedef OptionData =
     drawDistanceModifier:String,
     ////////
     holdSubdivs:String,
+    ////////
+    noteOpacity:String,
 
     //==Smooth Option==\
     SmoothOption:String,
