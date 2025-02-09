@@ -195,7 +195,7 @@ class HScript extends SScript
     }
     return LuaUtils.getModSetting(saveTag, modName);
 });
-}
+
 
 		// Keyboard & Gamepads
 		set('keyboardJustPressed', function(name:String){
