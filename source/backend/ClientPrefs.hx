@@ -97,6 +97,7 @@ import states.TitleState;
 	//Video Draw shit s
 	public var drawDistanceModifier:Float = 1;
 	public var holdSubdivs:Int = 6;
+	public var noteOpacity:Int = 0;
 	
 	//Smooth Option
 	//Smooth thingy s
