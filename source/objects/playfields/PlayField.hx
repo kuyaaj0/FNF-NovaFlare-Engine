@@ -4,6 +4,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSort;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.FlxBasic;
 import psychlua.ModManager;
 import states.PlayState;
 import backend.MusicBeatState;
@@ -314,11 +315,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 			return null;
 
 		var noteList = getTapNotes(data, (note:Note) -> !note.isSustainNote && note.requiresTap && !note.tooLate);
-		#if PE_MOD_COMPATIBILITY
-		noteList.sort((a, b) -> Std.int((b.strumTime + (b.lowPriority ? 10000 : 0)) - (a.strumTime + (a.lowPriority ? 10000 : 0)))); // so lowPriority actually works (even though i hate it lol!)
-		#else
-		noteList.sort((a, b) -> Std.int(b.strumTime - a.strumTime)); // so lowPriority actually works (even though i hate it lol!)
-		#end
+
 		var recentHold:Null<Note> = null;
 
 		while (noteList.length > 0)
