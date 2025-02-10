@@ -31,7 +31,7 @@ class RenderInfo {
 
 class Modifier {
 	public var modMgr:ModManager;
-	@:allow(modchart.ModManager)
+	@:allow(psychlua.ModManager)
 	var target_percents:Array<Float> = [0, 0];
 	public var percents:Array<Float> = [0, 0];
 
