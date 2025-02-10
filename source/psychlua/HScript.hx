@@ -469,7 +469,7 @@ class HScript extends SScript
     }
 }
 
-    public function new(?parent:Dynamic, ?file:String, ?varsToBring:Any = null)
+    override public function new(?parent:Dynamic, ?file:String, ?varsToBring:Any = null)
     {
         if (file == null)
             file = '';
