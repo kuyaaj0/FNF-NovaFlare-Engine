@@ -4,6 +4,7 @@ package psychlua.events;
 
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import psychlua.ModManager;
 
 class ModEaseEvent extends ModEvent {
 	public var endStep:Float = 0;
