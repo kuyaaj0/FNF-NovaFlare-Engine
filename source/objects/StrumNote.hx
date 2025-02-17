@@ -5,13 +5,17 @@ import backend.animation.PsychAnimationController;
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
 
-class StrumNote extends FlxSprite
+import objects.playfields.PlayField;
+import psychlua.HScript;
+
+class StrumNote extends NoteObject
 {
 	public var rgbShader:RGBShaderReference;
 	public var resetAnim:Float = 0;
 	private var noteData:Int = 0;
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
+	public var defScale:FlxPoint = FlxPoint.get(); // for modcharts to keep the scaling
 	public var sustainReduce:Bool = true;
 	private var player:Int;
 	
@@ -24,18 +28,25 @@ class StrumNote extends FlxSprite
 		return value;
 	}
 
+	////
+	public var z:Float = 0;
+	public var zIndex:Float = 0;
+	public var desiredZIndex:Float = 0;
+
+	private var field:PlayField;
+
 	public var useRGBShader:Bool = true;
-	public function new(x:Float, y:Float, leData:Int, player:Int) {
+	public function new(x:Float, y:Float, leColumn:Int, ?playField:PlayField, player:Int) {
 		animation = new PsychAnimationController(this);
 
-		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(leData));
+		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(leColumn));
 		rgbShader.enabled = false;
 		if(PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB)) useRGBShader = false;
 		
-		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGB[leData];
-		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixel[leData];
+		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGB[leColumn];
+		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixel[leColumn];
 		
-		if(leData <= arr.length)
+		if(leColumn <= arr.length)
 		{
 			@:bypassAccessor
 			{
@@ -45,9 +56,13 @@ class StrumNote extends FlxSprite
 			}
 		}
 
-		noteData = leData;
+		objType = STRUM;
+		noteData = leColumn;
+		field = playField;
 		this.player = player;
-		this.noteData = leData;
+		this.objType = STRUM
+		this.noteData = leColumn;
+		this.field = playField;
 		super(x, y);
 
 		var skin:String = null;
@@ -65,6 +80,25 @@ class StrumNote extends FlxSprite
 
 		texture = skin; //Load texture and anims
 		scrollFactor.set();
+	}
+	
+	override function toString()
+		return '(column: $column)';
+
+	public function getZIndex(?daZ:Float)
+	{
+		if (daZ==null) daZ = z;
+		
+		var animZOffset:Float = 0;
+		if (animation.name == 'confirm')
+			animZOffset += 1;
+
+		return z + desiredZIndex + animZOffset;
+	}
+
+	function updateZIndex()
+	{
+		zIndex = getZIndex();
 	}
 
 	public function reloadNote()
@@ -164,12 +198,13 @@ class StrumNote extends FlxSprite
 		super.update(elapsed);
 	}
 
-	public function playAnim(anim:String, ?force:Bool = false) {
+	public function playAnim(anim:String, ?force:Bool = false ?note:Note) {
 		animation.play(anim, force);
 		if(animation.curAnim != null)
 		{
 			centerOffsets();
 			centerOrigin();
+			updateZIndex();
 		}
 		if(useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
 	}

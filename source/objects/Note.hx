@@ -9,8 +9,10 @@ import shaders.RGBPalette.RGBShaderReference;
 import states.editors.EditorPlayState;
 
 import objects.StrumNote;
+import objects.playfields.*;
 
 import flixel.math.FlxRect;
+import math.Vector3;
 
 using StringTools;
 
@@ -38,12 +40,26 @@ typedef NoteSplashData = {
  * 
  * If you want to make a custom note type, you should search for: "function set_noteType"
 **/
-class Note extends FlxSprite
+class Note extends NoteObject
 {
+    public var vec3Cache:Vector3 = new Vector3(); // for vector3 operations in modchart code
+    public var noteScript:HScript;
+    public var genScript:HScript; // note generator script (used for shit like pixel notes or skin mods) ((script provided by the HUD skin))
+    
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	public var strumTime:Float = 0;
-	public var noteData:Int = 0;
+
+	public var zIndex:Float = 0;
+	public var z:Float = 0;
+    public var realColumn:Int;
+
+	@:isVar
+	public var noteData(get, set):Int;
+    inline function get_noteData()
+        return realColumn;
+    inline function set_noteData(v:Int)
+        return realColumn = v;
 
 	public var mustPress:Bool = false;
 	public var canBeHit:Bool = false;
@@ -83,6 +99,7 @@ class Note extends FlxSprite
 	public var rgbShader:RGBShaderReference;
 	public static var globalRgbShaders:Array<RGBPalette> = [];
 	public var inEditor:Bool = false;
+	public var desiredZIndex:Float = 0;
 
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
@@ -107,6 +124,10 @@ class Note extends FlxSprite
 		a: ClientPrefs.data.splashAlpha
 	};
 
+	// mod manager
+	public var garbage:Bool = false; // if this is true, the note will be removed in the next update cycle
+	public var alphaMod:Float = 1;
+	public var alphaMod2:Float = 1; // TODO: unhardcode this shit lmao
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
 	public var offsetAngle:Float = 0;
@@ -166,10 +187,10 @@ class Note extends FlxSprite
 
 	public function defaultRGB()
 	{
-		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGB[noteData];
-		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixel[noteData];
+		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGB[column];
+		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixel[column];
 
-		if (noteData > -1 && noteData <= arr.length)
+		if (column > -1 && column <= arr.length)
 		{
 			rgbShader.r = arr[0];
 			rgbShader.g = arr[1];
@@ -181,7 +202,7 @@ class Note extends FlxSprite
 		noteSplashData.texture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		defaultRGB();
 
-		if(noteData > -1 && noteType != value) {
+		if(column > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
 					ignoreNote = mustPress;
@@ -219,7 +240,12 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null)
+	override function toString()
+	{
+		return '(column: $column)';
+	}
+
+	public function new(strumTime:Float, column:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null)
 	{
 		super();
 
@@ -244,17 +270,17 @@ class Note extends FlxSprite
 		this.strumTime = strumTime;
 		if(!inEditor) this.strumTime += ClientPrefs.data.noteOffset;
 
-		this.noteData = noteData;
+		this.column = column;
 
-		if(noteData > -1) {
+		if(column > -1) {
 			texture = '';
-			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
+			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(column));
 			if(PlayState.SONG != null && (PlayState.SONG.disableNoteRGB || !ClientPrefs.data.noteRGB)) rgbShader.enabled = false;
 
-			x += swagWidth * (noteData);
-			if(!isSustainNote && isSustainEnd && noteData < colArray.length) { //Doing this 'if' check to fix the warnings on Senpai songs
+			x += swagWidth * (column);
+			if(!isSustainNote && isSustainEnd && column < colArray.length) { //Doing this 'if' check to fix the warnings on Senpai songs
 				var animToPlay:String = '';
-				animToPlay = colArray[noteData % colArray.length];
+				animToPlay = colArray[column % colArray.length];
 				animation.play(animToPlay + 'Scroll');
 			}
 		}
@@ -274,7 +300,7 @@ class Note extends FlxSprite
 			offsetX += width / 2;
 			copyAngle = false;
 
-			animation.play(colArray[noteData % colArray.length] + 'holdend');
+			animation.play(colArray[column % colArray.length] + 'holdend');
 
 			updateHitbox();
 
@@ -285,7 +311,7 @@ class Note extends FlxSprite
 
 			if (prevNote.isSustainNote)
 			{
-				prevNote.animation.play(colArray[prevNote.noteData % colArray.length] + 'hold');
+				prevNote.animation.play(colArray[prevNote.column % colArray.length] + 'hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
 				if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
@@ -313,22 +339,22 @@ class Note extends FlxSprite
 		x += offsetX;
 	}
 
-	public static function initializeGlobalRGBShader(noteData:Int)
+	public static function initializeGlobalRGBShader(column:Int)
 	{
-		if(globalRgbShaders[noteData] == null)
+		if(globalRgbShaders[column] == null)
 		{
 			var newRGB:RGBPalette = new RGBPalette();
-			globalRgbShaders[noteData] = newRGB;
+			globalRgbShaders[column] = newRGB;
 
-			var arr:Array<FlxColor> = (!PlayState.isPixelStage) ? ClientPrefs.data.arrowRGB[noteData] : ClientPrefs.data.arrowRGBPixel[noteData];
-			if (noteData > -1 && noteData <= arr.length)
+			var arr:Array<FlxColor> = (!PlayState.isPixelStage) ? ClientPrefs.data.arrowRGB[column] : ClientPrefs.data.arrowRGBPixel[column];
+			if (column > -1 && column <= arr.length)
 			{
 				newRGB.r = arr[0];
 				newRGB.g = arr[1];
 				newRGB.b = arr[2];
 			}
 		}
-		return globalRgbShaders[noteData];
+		return globalRgbShaders[column];
 	}
 
 	var _lastNoteOffX:Float = 0;	
@@ -426,10 +452,10 @@ class Note extends FlxSprite
 		if (isSustainNote)
 		{
 			attemptToAddAnimationByPrefix('purpleholdend', 'pruple end hold', 24, true); // this fixes some retarded typo from the original note .FLA
-			animation.addByPrefix(colArray[noteData] + 'holdend', colArray[noteData] + ' hold end', 24, true);
-			animation.addByPrefix(colArray[noteData] + 'hold', colArray[noteData] + ' hold piece', 24, true);
+			animation.addByPrefix(colArray[column] + 'holdend', colArray[column] + ' hold end', 24, true);
+			animation.addByPrefix(colArray[column] + 'hold', colArray[column] + ' hold piece', 24, true);
 		}
-		else animation.addByPrefix(colArray[noteData] + 'Scroll', colArray[noteData] + '0');
+		else animation.addByPrefix(colArray[column] + 'Scroll', colArray[column] + '0');
 
 		setGraphicSize(Std.int(width * 0.7));
 		updateHitbox();
@@ -438,9 +464,9 @@ class Note extends FlxSprite
 	function loadPixelNoteAnims() {
 		if(isSustainNote)
 		{
-			animation.add(colArray[noteData] + 'holdend', [noteData + 4], 24, true);
-			animation.add(colArray[noteData] + 'hold', [noteData], 24, true);
-		} else animation.add(colArray[noteData] + 'Scroll', [noteData + 4], 24, true);
+			animation.add(colArray[column] + 'holdend', [column + 4], 24, true);
+			animation.add(colArray[column] + 'hold', [column], 24, true);
+		} else animation.add(colArray[column] + 'Scroll', [column + 4], 24, true);
 	}
 
 	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true)
@@ -456,6 +482,16 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		
+		if(!inEditor){
+			if (noteScript != null){
+				noteScript.executeFunc("noteUpdate", [elapsed], this);
+			}
+
+			if (genScript != null){
+				genScript.executeFunc("noteUpdate", [elapsed], this);
+            }
+		}
 		
 		if (mustPress)
 		{
