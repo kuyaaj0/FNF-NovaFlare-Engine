@@ -1,4 +1,4 @@
-package funkin.modchart;
+package psychlua;
 
 import psychlua.events.ModEvent;
 import psychlua.events.BaseEvent;
