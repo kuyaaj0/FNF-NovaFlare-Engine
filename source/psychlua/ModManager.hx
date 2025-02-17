@@ -3,6 +3,7 @@ package psychlua;
 
 import objects.playfields.NoteField;
 import objects.Note;
+import objects.NoteObject;
 import psychlua.Modifier;
 import psychlua.modifiers.*;
 import psychlua.events.*;
