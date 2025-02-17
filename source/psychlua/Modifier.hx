@@ -4,6 +4,7 @@ package psychlua;
 
 import objects.playfields.NoteField;
 import objects.StrumNote;
+import objects.Note;
 import objects.NoteObject;
 import flixel.math.FlxPoint;
 import flixel.FlxSprite;
