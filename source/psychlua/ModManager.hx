@@ -2,6 +2,7 @@ package psychlua;
 // @author Nebula_Zorua
 
 import objects.playfields.NoteField;
+import objects.Note;
 import psychlua.Modifier;
 import psychlua.modifiers.*;
 import psychlua.events.*;
@@ -537,8 +538,8 @@ class ModManager {
 				obj.centerOrigin();
 				obj.centerOffsets();
 			}
-			cum.offset.x += cum.typeOffsetX;
-			cum.offset.y += cum.typeOffsetY;
+			cum.offset.x += cum.OffsetX;
+			cum.offset.y += cum.OffsetY;
 		}else{
 			obj.centerOrigin();
 			obj.centerOffsets();
