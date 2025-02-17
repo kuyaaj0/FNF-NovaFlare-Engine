@@ -3,6 +3,8 @@ package psychlua;
 
 
 import objects.playfields.NoteField;
+import objects.StrumNote;
+import objects.NoteObject;
 import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 import math.Vector3;
