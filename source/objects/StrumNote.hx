@@ -60,7 +60,7 @@ class StrumNote extends NoteObject
 		noteData = leColumn;
 		field = playField;
 		this.player = player;
-		this.objType = STRUM
+		this.objType = STRUM;
 		this.noteData = leColumn;
 		this.field = playField;
 		super(x, y);
