@@ -12,10 +12,9 @@ class StrumNote extends NoteObject
 {
 	public var rgbShader:RGBShaderReference;
 	public var resetAnim:Float = 0;
-	private var noteData:Int = 0;
+	private var leColumn:Int = 0;
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
-	public var defScale:FlxPoint = FlxPoint.get(); // for modcharts to keep the scaling
 	public var sustainReduce:Bool = true;
 	private var player:Int;
 	
@@ -60,7 +59,7 @@ class StrumNote extends NoteObject
 		noteData = leColumn;
 		field = playField;
 		this.player = player;
-		this.objType = STRUM;
+		this.objType = STRUM
 		this.noteData = leColumn;
 		this.field = playField;
 		super(x, y);
@@ -120,7 +119,7 @@ class StrumNote extends NoteObject
 			animation.add('red', [7]);
 			animation.add('blue', [5]);
 			animation.add('purple', [4]);
-			switch (Math.abs(noteData) % 4)
+			switch (Math.abs(leColumn) % 4)
 			{
 				case 0:
 					animation.add('static', [0]);
@@ -151,7 +150,7 @@ class StrumNote extends NoteObject
 			antialiasing = ClientPrefs.data.antialiasing;
 			setGraphicSize(Std.int(width * 0.7));
 
-			switch (Math.abs(noteData) % 4)
+			switch (Math.abs(leColumn) % 4)
 			{
 				case 0:
 					animation.addByPrefix('static', 'arrowLEFT');
@@ -181,10 +180,10 @@ class StrumNote extends NoteObject
 
 	public function postAddedToGroup() {
 		playAnim('static');
-		x += Note.swagWidth * noteData;
+		x += Note.swagWidth * leColumn;
 		x += 50;
 		x += ((FlxG.width / 2) * player);
-		ID = noteData;
+		ID = leColumn;
 	}
 
 	override function update(elapsed:Float) {

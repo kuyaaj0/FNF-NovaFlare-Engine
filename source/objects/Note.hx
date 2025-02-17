@@ -43,23 +43,23 @@ typedef NoteSplashData = {
 **/
 class Note extends NoteObject
 {
-    override public var vec3Cache:Vector3;
     public var noteScript:HScript;
     public var genScript:HScript; // note generator script (used for shit like pixel notes or skin mods) ((script provided by the HUD skin))
     
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	public var strumTime:Float = 0;
+	public var visualTime:Float = 0;
 
 	public var zIndex:Float = 0;
 	public var z:Float = 0;
     public var realColumn:Int;
 
 	@:isVar
-	public var noteData(get, set):Int;
-    inline function get_noteData()
+	public var realNoteData(get, set):Int;
+    inline function get_realNoteData()
         return realColumn;
-    inline function set_noteData(v:Int)
+    inline function set_realNoteData(v:Int)
         return realColumn = v;
 
 	public var mustPress:Bool = false;
@@ -129,8 +129,8 @@ class Note extends NoteObject
 	public var garbage:Bool = false; // if this is true, the note will be removed in the next update cycle
 	public var alphaMod:Float = 1;
 	public var alphaMod2:Float = 1; // TODO: unhardcode this shit lmao
-	public var offsetX:Float = 0;
-	public var offsetY:Float = 0;
+	public var typeOffsetX:Float = 0; // used to offset notes, mainly for note types. use in place of offset.x and offset.y when offsetting notetypes
+	public var typeOffsetY:Float = 0;
 	public var offsetAngle:Float = 0;
 	public var multAlpha:Float = 1;
 	public var multSpeed(default, set):Float = 1;
