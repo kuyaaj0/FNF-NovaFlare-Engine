@@ -1,6 +1,6 @@
 package psychlua.events;
 // @author Nebula_Zorua
-
+import psychlua.ModManager;
 
 class StepCallbackEvent extends CallbackEvent {
 	public var endStep:Float = 0;
