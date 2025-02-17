@@ -1,6 +1,6 @@
 package psychlua.events;
 // @author Nebula_Zorua
-
+import psychlua.ModManager;
 
 class ModEvent extends BaseEvent {
 	public var modName:String = '';
