@@ -2,6 +2,7 @@ package psychlua.events;
 // @author Nebula_Zorua
 
 import flixel.tweens.FlxEase.EaseFunction;
+import psychlua.ModManager;
 
 class EaseEvent extends BaseEvent
 {
