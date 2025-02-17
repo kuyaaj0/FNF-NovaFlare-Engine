@@ -1,4 +1,5 @@
 package psychlua.events;
+import psychlua.modManager;
 
 class BaseEvent {
 	public var manager:ModManager;
