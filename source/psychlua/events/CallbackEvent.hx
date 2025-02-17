@@ -1,4 +1,5 @@
 package psychlua.events;
+import psychlua.ModManager;
 
 class CallbackEvent extends BaseEvent {
 	public var callback:(CallbackEvent, Float)->Void;
