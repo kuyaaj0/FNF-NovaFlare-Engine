@@ -4,14 +4,13 @@ import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import math.Vector3;
 
-import shaders.NoteColorSwap;
+import objects.shaders.NoteColorSwap;
 
 enum abstract ObjectType(#if cpp cpp.UInt8 #else Int #end)
 {
 	var UNKNOWN = -1;
 	var NOTE;
 	var STRUM;
-	var SPLASH;
 }
 
 class NoteObject extends FlxSprite {
@@ -34,7 +33,7 @@ class NoteObject extends FlxSprite {
 	
 	override function toString()
 	{
-		return '(column: $column | visible: $visible)';
+		return '(column: $column)';
 	}
 
 	override function draw()
