@@ -13,6 +13,7 @@ import objects.playfields.*;
 
 import flixel.math.FlxRect;
 import math.Vector3;
+import psychlua.HScript;
 
 using StringTools;
 
@@ -42,7 +43,7 @@ typedef NoteSplashData = {
 **/
 class Note extends NoteObject
 {
-    public var vec3Cache:Vector3 = new Vector3(); // for vector3 operations in modchart code
+    override public var vec3Cache:Vector3;
     public var noteScript:HScript;
     public var genScript:HScript; // note generator script (used for shit like pixel notes or skin mods) ((script provided by the HUD skin))
     
