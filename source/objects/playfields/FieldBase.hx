@@ -1,5 +1,6 @@
 package objects.playfields;
 
+import flixel.FlxObject;
 import haxe.exceptions.NotImplementedException;
 
 class FieldBase extends FlxObject {
