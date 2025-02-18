@@ -1,6 +1,8 @@
 package psychlua;
 
 import objects.playfields.NoteField;
+import objects.Note;
+import psychlua.ModManager;
 import psychlua.HScript; // Use HScript instead of FunkinHScript
 import psychlua.Modifier;
 import math.Vector3;
