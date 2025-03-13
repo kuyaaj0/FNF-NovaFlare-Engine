@@ -1,4 +1,5 @@
 package objects.playfields;
+import flixel.FlxBasic;
 
 class NotefieldManager extends FlxBasic {
 	public var members:Array<FieldBase> = [];
