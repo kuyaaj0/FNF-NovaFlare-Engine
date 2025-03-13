@@ -486,11 +486,11 @@ class Note extends NoteObject
 		
 		if(!inEditor){
 			if (noteScript != null){
-				noteScript.call("noteUpdate", [elapsed], this);
+				noteScript.call("noteUpdate", [elapsed]);
 			}
 
 			if (genScript != null){
-				genScript.call("noteUpdate", [elapsed], this);
+				genScript.call("noteUpdate", [elapsed]);
             }
 		}
 		
