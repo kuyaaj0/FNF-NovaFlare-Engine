@@ -153,7 +153,9 @@ class HScript extends SScript
 		set('CustomSubstate', CustomSubstate);
 
 		// Shader and Assets
-		set("newShader", Paths.getShader);
+		set("newShader", function(shaderName:String) {
+			return Paths.getPath('shaders/' + shaderName + '.frag', TEXT);
+		});
 
 		#if (!flash && sys)
 		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
