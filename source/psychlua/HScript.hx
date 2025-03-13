@@ -4,6 +4,12 @@ import flixel.FlxBasic;
 import objects.Character;
 import psychlua.LuaUtils;
 import psychlua.CustomSubstate;
+import psychlua.NoteModifier;
+import psychlua.events.StepCallbackEvent;
+import psychlua.events.CallbackEvent;
+import psychlua.events.ModEvent;
+import psychlua.events.EaseEvent;
+import psychlua.events.SetEvent;
 
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
