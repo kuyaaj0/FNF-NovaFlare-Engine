@@ -10,6 +10,10 @@ import psychlua.events.CallbackEvent;
 import psychlua.events.ModEvent;
 import psychlua.events.EaseEvent;
 import psychlua.events.SetEvent;
+import objects.playfields.ProxyField;
+import objects.proxies.ProxySprite;
+import substates.GameOverSubstance;
+import backend.Song;
 
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
