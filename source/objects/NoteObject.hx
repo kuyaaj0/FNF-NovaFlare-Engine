@@ -47,10 +47,19 @@ class NoteObject extends FlxSprite {
 		super(x, y);
 	}
 
+
+       function prepareMatrix(camera:FlxCamera) {
+        _matrix.identity();
+        _matrix.translate(-origin.x, -origin.y);
+        _matrix.scale(scale.x, scale.y);
+        _matrix.rotate(angle * (Math.PI / 180));
+        _matrix.translate(x + origin.x, y + origin.y);
+}
+
 	override function drawComplex(camera:FlxCamera):Void
 	{
 		prepareMatrix(camera);
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader, colorSwap);
+		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
 	}
 
 	override function destroy()
