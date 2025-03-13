@@ -1,8 +1,8 @@
 // @author Nebula_Zorua
 
-package modchart;
+package psychlua;
 
-import modchart.Modifier.ModifierType;
+import psychlua.Modifier.ModifierType;
 
 class NoteModifier extends Modifier {
 	override function getModType()
