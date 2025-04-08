@@ -1,4 +1,4 @@
-package funkin.objects.proxies;
+package objects.proxies;
 
 import openfl.geom.ColorTransform;
 import openfl.Vector;
