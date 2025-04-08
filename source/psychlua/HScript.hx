@@ -10,8 +10,7 @@ import psychlua.events.CallbackEvent;
 import psychlua.events.ModEvent;
 import psychlua.events.EaseEvent;
 import psychlua.events.SetEvent;
-import objects.playfields.ProxyField;
-import objects.proxies.ProxySprite;
+import objects.proxies.ProxyField;
 import substates.GameOverSubstance;
 import backend.Song;
 
