@@ -693,7 +693,7 @@ class NoteField extends FieldBase
 			var angle = sprite.angle;
 
 			if(isNote)
-				angle += note.typeOffsetAngle;
+				angle += note.offsetAngle;
 			
 			var vert = VectorHelpers.rotateV3(quad, 0, 0, FlxAngle.TO_RAD * angle, quad);
 			vert.x = vert.x + sprite.offsetX;
