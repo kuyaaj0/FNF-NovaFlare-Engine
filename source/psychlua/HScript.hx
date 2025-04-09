@@ -11,7 +11,7 @@ import psychlua.events.ModEvent;
 import psychlua.events.EaseEvent;
 import psychlua.events.SetEvent;
 import objects.proxies.ProxyField;
-import substates.GameOverSubstance;
+import substates.GameOverSubstate;
 import backend.Song;
 
 #if LUA_ALLOWED
