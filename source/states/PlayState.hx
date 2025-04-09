@@ -1538,8 +1538,7 @@ class PlayState extends MusicBeatState
     }
     catch(e:Dynamic) {}
     FlxG.sound.list.add(inst);
-}
-
+    
     notes = new FlxTypedGroup<Note>();
     noteGroup.add(notes);
 
@@ -1561,6 +1560,7 @@ class PlayState extends MusicBeatState
     }
 
     Note.checkSkin();
+}
 
 	public function generateNotes(noteData:Array<SwagSection>, callScripts:Bool = true, addToFields:Bool = true, ?keyCount:Int, ?playfields:Array<PlayField>, ?notes:Array<Note>) 
 	{
