@@ -245,6 +245,8 @@ class PlayState extends MusicBeatState
 	public static var changedDifficulty:Bool = false;
 	public static var chartingMode:Bool = false;
 
+	public static var keyCount:Int = 4;
+
 	//Gameplay settings
 	public var healthGain:Float = 1;
 	public var healthLoss:Float = 1;
@@ -420,6 +422,7 @@ class PlayState extends MusicBeatState
 		if(SONG.stage == null || SONG.stage.length < 1) {
 			SONG.stage = StageData.vanillaSongStage(songName);
 		}
+		PlayState.keyCount = SONG.keyCount;
 		curStage = SONG.stage;
 
 		var stageData:StageFile = StageData.getStageFile(curStage);
@@ -1558,12 +1561,18 @@ class PlayState extends MusicBeatState
 
     Note.checkSkin();
 
+	public function generateNotes(noteData:Array<SwagSection>, callScripts:Bool = true, addToFields:Bool = true, ?keyCount:Int, ?playfields:Array<PlayField>, ?notes:Array<Note>) 
+	{
     if (playfields == null) {
         playfields = this.playfields.members;
     }
     if (notes == null) {
         notes = this.allNotes;
     }
+
+	if(keyCount == null) {
+			keyCount = PlayState.keyCount;
+	}
 
     for (section in noteData) {
         for (songNotes in section.sectionNotes) {
@@ -1676,6 +1685,8 @@ class PlayState extends MusicBeatState
 
     checkEventNote();
     generatedMusic = true;
+    generateNotes = true;
+}
 }
 
 	// called only once per different event (Used for precaching)
@@ -2489,6 +2500,12 @@ public function initPlayfield(field:PlayField){
                 iconP2.animation.curAnim.curFrame = iconP2.numFrames > 2 ? 2 : 0;
             }
         }
+        else if (healthBar.percent > 70) //making look like reimagined overhaul, lol
+        {
+            iconP1.animation.curAnim.curFrame = 0;
+            iconP2.animation.curAnim.curFrame = 0;
+            }
+        }
         else if (healthBar.percent > 80) // winning
         {
             if(!ClientPrefs.data.playOpponent){
@@ -2499,6 +2516,7 @@ public function initPlayfield(field:PlayField){
                 iconP2.animation.curAnim.curFrame = iconP2.numFrames > 2 ? 2 : 0;
             }
         }
+        
         else // neutral
         {
             iconP1.animation.curAnim.curFrame = 0;
