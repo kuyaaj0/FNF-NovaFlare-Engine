@@ -50,7 +50,7 @@ class NoteField extends FieldBase
 	var HOLD_INDICES:Vector<Int> = new Vector<Int>(0, false);
 
 	public var holdSubdivisions(default, set):Int;
-	public var optimizeHolds = ClientPrefs.optimizeHolds;
+	public var optimizeHolds = ClientPrefs.data.optimizeHolds;
 	public var defaultShader:FlxShader = new FlxShader();
 
 	public function new(field:PlayField, modManager:ModManager)
