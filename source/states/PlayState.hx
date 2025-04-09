@@ -2503,7 +2503,6 @@ public function initPlayfield(field:PlayField){
         {
             iconP1.animation.curAnim.curFrame = 0;
             iconP2.animation.curAnim.curFrame = 0;
-            }
         }
         else if (healthBar.percent > 80) // winning
         {
