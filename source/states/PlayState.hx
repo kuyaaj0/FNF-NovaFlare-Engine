@@ -1538,6 +1538,7 @@ class PlayState extends MusicBeatState
     }
     catch(e:Dynamic) {}
     FlxG.sound.list.add(inst);
+}
 
     notes = new FlxTypedGroup<Note>();
     noteGroup.add(notes);
@@ -1684,9 +1685,7 @@ class PlayState extends MusicBeatState
     }
 
     checkEventNote();
-    generatedMusic = true;
     generateNotes = true;
-}
 }
 
 	// called only once per different event (Used for precaching)
