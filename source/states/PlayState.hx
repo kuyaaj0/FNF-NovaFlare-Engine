@@ -1620,6 +1620,8 @@ public function toggleGenerateNotes():Void {
                     swagNote.field = playfield;
                 }
             }
+                
+            }
 
             if (callScripts)
                 callOnScripts("onGeneratedNote", [swagNote, section]);
