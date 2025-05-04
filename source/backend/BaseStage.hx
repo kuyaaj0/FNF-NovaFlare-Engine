@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSubState;
 import objects.Note.EventNote;
 import objects.Character;
-import path.to.EventNote;
 
 enum Countdown
 {
