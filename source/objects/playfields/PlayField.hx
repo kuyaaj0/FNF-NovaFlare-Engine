@@ -41,7 +41,7 @@ The system is seperated into 3 classes:
 	If you can make it work in other engines then epic but its best to just use this engine tbh
  */
 
-typedef NoteCallback = (Note, PlayField) -> Void;
+typedef NoteCallback = (NoteData, PlayField) -> Void;
 
 class PlayField extends FlxTypedGroup<FlxBasic>
 {
