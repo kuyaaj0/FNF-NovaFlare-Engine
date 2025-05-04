@@ -574,7 +574,6 @@ class PlayState extends MusicBeatState
 		for (i in 0...modManager.playerAmount)
 		newPlayfield(); // Creates playfields for each player
 
-}
 		// Assign player and opponent playfields
 		playerField = playfields.members[0];
 		if (playerField != null) {
