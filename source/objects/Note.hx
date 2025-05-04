@@ -24,6 +24,13 @@ typedef EventNote = {
 	value2:String
 }
 
+typedef Note = {
+    var field:Dynamic; // Add this field
+    var fieldIndex:Int; // Add this field
+    var characterHitAnimSuffix:String; // Add this field
+    var characterMissAnimSuffix:String; // Add this field
+};
+
 typedef NoteSplashData = {
 	disabled:Bool,
 	texture:String,
@@ -43,13 +50,6 @@ typedef NoteSplashData = {
 **/
 class Note extends NoteObject
 {
-typedef Note = {
-    var field:Dynamic; // Add this field
-    var fieldIndex:Int; // Add this field
-    var characterHitAnimSuffix:String; // Add this field
-    var characterMissAnimSuffix:String; // Add this field
-};
-
     public var noteScript:HScript;
     public var genScript:HScript; // note generator script (used for shit like pixel notes or skin mods) ((script provided by the HUD skin))
     
