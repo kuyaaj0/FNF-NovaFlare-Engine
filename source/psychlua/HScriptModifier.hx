@@ -1,22 +1,20 @@
 package psychlua;
+// @author Riconuts
+
 
 import objects.playfields.NoteField;
-import objects.Note;
-import objects.NoteObject;
-import objects.StrumNote;
-import psychlua.ModManager;
-import psychlua.HScript; // Use HScript instead of FunkinHScript
+import psychlua.HScript;
 import psychlua.Modifier;
 import math.Vector3;
 
 class HScriptModifier extends Modifier
 {
-	public var psychlua:HScript; // Correct reference
+	public var script:FunkinHScript;
 	public var name:String = "unknown";
 
-	public function new(modMgr:ModManager, ?parent:Modifier, psychlua:HScript) 
+	public function new(modMgr:ModManager, ?parent:Modifier, script:FunkinHScript) 
 	{
-		this.psychlua = psychlua; // Fix initialization
+		this.psychlua = psychlua;
 		this.modMgr = modMgr;
 		this.parent = parent;
 
@@ -43,6 +41,7 @@ class HScriptModifier extends Modifier
 	private static final _scriptEnums:Map<String, Dynamic> = [
 		"NOTE_MOD" => NOTE_MOD,
 		"MISC_MOD" => MISC_MOD,
+
 		"FIRST" => FIRST,
 		"PRE_REVERSE" => PRE_REVERSE,
 		"REVERSE" => REVERSE,
@@ -71,11 +70,15 @@ class HScriptModifier extends Modifier
 		var mod = new HScriptModifier(
 			modMgr, 
 			parent, 
-			HScript.fromFile(filePath, filePath, _scriptEnums, false)
+			FunkinHScript.fromFile(filePath, filePath, _scriptEnums, false)
 		);
-		mod.name = psychluaName; // Fix scriptName issue
+		mod.name = psychluaName;
 		return mod;
+
 	}
+
+	//// this is where a macro could have helped me, if i weren't so stupid.
+	// lol i'll probably rewrite this to use a macro dont worry bb
 
 	override public function getModType()
 		return psychlua.exists("getModType") ? psychlua.executeFunc("getModType") : super.getModType();
@@ -114,10 +117,14 @@ class HScriptModifier extends Modifier
 		return psychlua.exists("getPos") ? psychlua.executeFunc("getPos", [diff, tDiff, beat, pos, data, player, obj, field]) : super.getPos(diff, tDiff, beat, pos, data, player, obj, field);
 
 	override public function modifyVert(beat:Float, vert:Vector3, idx:Int, obj:NoteObject, pos:Vector3, player:Int, data:Int, field:NoteField):Vector3 
-		return psychlua.exists("modifyVert") ? psychlua.executeFunc("modifyVert", [beat, vert, idx, obj, pos, player, data, field]) : super.modifyVert(beat, vert, idx, obj, pos, player, data, field);
+		return psychlua.exists("modifyVert") ? psychlua.executeFunc("modifyVert",
+			[beat, vert, idx, obj, pos, player, data, field]) : super.modifyVert(beat, vert, idx, obj, pos, player, data, field);
 
 	override public function getExtraInfo(diff:Float, tDiff:Float, beat:Float, info:RenderInfo, obj:NoteObject, player:Int, data:Int):RenderInfo
-		return psychlua.exists("getExtraInfo") ? psychlua.executeFunc("getExtraInfo", [diff, tDiff, beat, info, obj, player, data]) : super.getExtraInfo(diff, tDiff, beat, info, obj, player, data);
+	{
+		return psychlua.exists("getExtraInfo") ? psychlua.executeFunc("getExtraInfo",
+			[diff, tDiff, beat, info, obj, player, data]) : super.getExtraInfo(diff, tDiff, beat, info, obj, player, data);
+	}
 
 	override public function update(elapsed:Float, beat:Float) 
 		return psychlua.exists("update") ? psychlua.executeFunc("update", [elapsed, beat]) : super.update(elapsed, beat);
