@@ -191,6 +191,7 @@ class PlayState extends MusicBeatState
     private var playfields:Array<Dynamic> = []; // Initialize playfields
 	private var playerField:Dynamic;
 	private var dadField:Dynamic;
+	private var generateNotesFlag:Bool = false; // Use a separate flag
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -1567,10 +1568,23 @@ class PlayState extends MusicBeatState
     Note.checkSkin();
 }
 
-private var generateNotesFlag:Bool = false; // Use a separate flag
 public function toggleGenerateNotes():Void {
     generateNotesFlag = true;
 }
+
+            public function initializePlayfields():Void {
+                if (playfields != null && playfields.length > 0) {
+        // Access playfields logic specific to PlayState
+                if (swagNote.fieldIndex == -1)
+                    swagNote.fieldIndex = swagNote.mustPress ? 0 : 1;
+
+                if (playfields[swagNote.fieldIndex] != null) {
+                    playfield = playfields[swagNote.fieldIndex];
+                    swagNote.field = playfield;
+                }
+            }
+                
+            }
 
 	public function generateNotes(noteData:Array<SwagSection>, callScripts:Bool = true, addToFields:Bool = true, ?keyCount:Int, ?playfields:Array<PlayField>, ?notes:Array<Note>) 
 	{
@@ -1608,20 +1622,6 @@ public function toggleGenerateNotes():Void {
             swagNote.noteType = daType;
 
             var playfield:PlayField = swagNote.field;
-
-            public function initializePlayfields():Void {
-                if (playfields != null && playfields.length > 0) {
-        // Access playfields logic specific to PlayState
-                if (swagNote.fieldIndex == -1)
-                    swagNote.fieldIndex = swagNote.mustPress ? 0 : 1;
-
-                if (playfields[swagNote.fieldIndex] != null) {
-                    playfield = playfields[swagNote.fieldIndex];
-                    swagNote.field = playfield;
-                }
-            }
-                
-            }
 
             if (callScripts)
                 callOnScripts("onGeneratedNote", [swagNote, section]);
