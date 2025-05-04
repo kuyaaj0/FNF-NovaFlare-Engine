@@ -120,6 +120,7 @@ class PlayState extends MusicBeatState
 	public var signals = new PlayStateSignals();
 
 	#if LUA_ALLOWED
+	private var modchartObjects:Map<String, Dynamic>;
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
@@ -181,12 +182,15 @@ class PlayState extends MusicBeatState
 	public var eventNotes:Array<EventNote> = [];
     public var extraEvents:Array<Array<Dynamic>> = [];
     
+	private var cameraPoints:Array<Dynamic>;
 	public var camFollow:FlxObject;
 	private static var prevCamFollow:FlxObject;
 
     public var modManager:ModManager;
     public var notefields = new NotefieldManager();
-    public var playfields = new FlxTypedGroup<PlayField>();
+    private var playfields:Array<Dynamic> = []; // Initialize playfields
+	private var playerField:Dynamic;
+	private var dadField:Dynamic;
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -570,6 +574,7 @@ class PlayState extends MusicBeatState
 		for (i in 0...modManager.playerAmount)
 		newPlayfield(); // Creates playfields for each player
 
+}
 		// Assign player and opponent playfields
 		playerField = playfields.members[0];
 		if (playerField != null) {
@@ -1342,9 +1347,10 @@ class PlayState extends MusicBeatState
 		        modchartObjects.remove('note${daNote.ID}');
 
 		        // ✅ Remove from playfields (Troll Engine feature)
-		        for (field in playfields)
+		        for (field in playfields) {
 		        field.removeNote(daNote);
-
+		            
+		        }
 		        // ✅ Camera zoom effect when missing notes (Troll Engine feature)
 		        camZooming = true;
 		        invalidateNote(daNote);
@@ -1562,6 +1568,11 @@ class PlayState extends MusicBeatState
     Note.checkSkin();
 }
 
+private var generateNotesFlag:Bool = false; // Use a separate flag
+public function toggleGenerateNotes():Void {
+    generateNotesFlag = true;
+}
+
 	public function generateNotes(noteData:Array<SwagSection>, callScripts:Bool = true, addToFields:Bool = true, ?keyCount:Int, ?playfields:Array<PlayField>, ?notes:Array<Note>) 
 	{
     if (playfields == null) {
@@ -1598,7 +1609,10 @@ class PlayState extends MusicBeatState
             swagNote.noteType = daType;
 
             var playfield:PlayField = swagNote.field;
-            if (playfield == null && playfields.length > 0) {
+
+            public function initializePlayfields():Void {
+                if (playfields != null && playfields.length > 0) {
+        // Access playfields logic specific to PlayState
                 if (swagNote.fieldIndex == -1)
                     swagNote.fieldIndex = swagNote.mustPress ? 0 : 1;
 
@@ -2905,7 +2919,7 @@ public function initPlayfield(field:PlayField){
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
-	function moveCameraSection(?sec:Null<Int>):Void {
+	function moveCameraSection(section:Null<Int>):Void {
 		if(sec == null) sec = curSection;
 		if(sec < 0) sec = 0;
 
