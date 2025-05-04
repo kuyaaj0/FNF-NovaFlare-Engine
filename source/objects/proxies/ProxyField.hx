@@ -6,6 +6,7 @@ import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
 import objects.playfields.FieldBase;
 import objects.playfields.NoteField;
+import objects.playfields.NotefieldRenderer;
 import states.PlayState;
 
 /* 
@@ -21,7 +22,7 @@ import states.PlayState;
 */
 
 class ProxyField extends FieldBase {
-	@:allow(funkin.objects.playfields.NotefieldRenderer)
+	@:allow(objects.playfields.NotefieldRenderer)
 	var proxiedField:NoteField;
 
 	public function new(field:NoteField){
