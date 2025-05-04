@@ -32,6 +32,7 @@ class BeatModifier extends NoteModifier {
 		beat -= Math.floor(beat);
 		beat += 1;
 		beat -= Math.floor(beat);
+		
 		if (beat >= totalTime)
 			return;
 
@@ -46,6 +47,7 @@ class BeatModifier extends NoteModifier {
 			amount = CoolUtil.scale(beat, accelTime, totalTime, 1, 0);
 			amount = 1 - (1 - amount) * (1 - amount);
 		}
+
 		if (evenBeat)
 			amount *= -1;
 
