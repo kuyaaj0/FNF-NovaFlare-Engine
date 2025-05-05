@@ -500,9 +500,10 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 							if (Std.is(daNote, NoteData))
 							{
 							(cast daNote:NoteData).tripProgress = 1.0;
-						}else
+						}else{
 							daNote.tripProgress -= elapsed / (daNote.maxReleaseTime);
-
+						    
+						}
 						if(daNote.isRoll && autoPlayed && daNote.tripProgress <= 0.5)
 							holdPressCallback(daNote, this); // would set tripProgress back to 1 but idk maybe the roll script wants to do its own shit
 
@@ -527,6 +528,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 									noteHitCallback(tail, this);
 								}
 							}
+						}
 
 							if (daNote.holdingTime >= daNote.sustainLength)
 							{
