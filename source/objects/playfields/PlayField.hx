@@ -68,6 +68,10 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public var tracks:Array<FlxSound> = []; // tracks managed by this field
 	public var playerId:Int = 0; // used to calculate the base position of the strums
 
+	// If holdingTime is meant to track the duration a note is held:
+	public var holdingTime:Float;
+	public var tripProgress:Float;
+
 	public var spawnTime:Float = 1750; // spawn time for notes
 	public var spawnedNotes:Array<Note> = []; // spawned notes
 	
@@ -84,6 +88,9 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public var modNumber:Int = 0; // used for the mod manager. can be set to a different number to give it a different set of modifiers. can be set to 0 to sync the modifiers w/ bf's, and 1 to sync w/ the opponent's
 	public var isPlayer:Bool = false; // if this playfield takes input from the player
 	public var inControl:Bool = true; // if this playfield will take input at all
+	
+	public var causedMiss:Bool; // Add this field if it's missing
+	
 	public var keyCount(default, set):Int = PlayState.keyCount; // How many lanes are in this field
 	public var autoPlayed(default, set):Bool = false; // if this playfield should be played automatically (botplay, opponent, etc)
 
@@ -315,6 +322,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public function input(data:Int):Null<Note> {
 		if (data < 0 || data > keyCount) {
 			return null;
+		}
 
 		var noteList = getTapNotes(data, (note:Note) -> !note.isSustainNote && note.requiresTap && !note.tooLate);
 
@@ -481,7 +489,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 						}
 
 						var receptor = strumNotes[daNote.column];
-						var oldSteps:Int = Math.floor(daNote.holdingTime / Conductor.stepCrotchet);
+						var oldSteps:Int = Math.floor(daNote.holdingTime / Conductor.stepCrochet);
 						var lastTime:Float = daNote.holdingTime;
 						daNote.holdingTime = Conductor.songPosition - daNote.strumTime;
 						if (daNote.holdingTime > daNote.sustainLength)
@@ -489,7 +497,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 						var currentSteps:Int = Math.floor(daNote.holdingTime / Conductor.stepCrotchet);
 						if(oldSteps < currentSteps)
 							if(holdStepCallback != null)
-								holdStepCallback(daNote, this);
+						holdStepCallback(cast(daNote, NoteData), this);
 						holdUpdated.dispatch(daNote, this, daNote.holdingTime - lastTime);
 
 						if(isHeld && !daNote.isRoll){
