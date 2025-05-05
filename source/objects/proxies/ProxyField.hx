@@ -23,13 +23,14 @@ import states.PlayState;
 class ProxyField extends FieldBase {
 	@:allow(objects.playfields.NotefieldRenderer)
 	var proxiedField:NoteField;
+	public var drawQueue:Array<Dynamic>; // Add this field if it's required
 
 	public function new(field:NoteField){
 		super(0,0);
 		proxiedField = field;
 	}
 
-	override public function getNotefield():NoteField {
+	public function getNotefield():NoteField {
 	    return proxiedField;
 	}
 
