@@ -5,6 +5,7 @@ package psychlua;
 import objects.playfields.NoteField;
 import psychlua.HScript;
 import psychlua.Modifier;
+import objects.StrumNote;
 import math.Vector3;
 
 class HScriptModifier extends Modifier
