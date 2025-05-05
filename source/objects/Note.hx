@@ -17,13 +17,6 @@ import psychlua.HScript;
 
 using StringTools;
 
-typedef EventNote = {
-	strumTime:Float,
-	event:String,
-	value1:String,
-	value2:String
-}
-
 typedef NoteData = {
     var field:Dynamic; // Add this field
     var fieldIndex:Int; // Add this field
@@ -31,6 +24,15 @@ typedef NoteData = {
     var characterMissAnimSuffix:String; // Add this field
 };
 
+
+typedef EventNote = {
+	strumTime:Float,
+	event:String,
+	value1:String,
+	value2:String
+}
+
+	
 typedef NoteSplashData = {
 	disabled:Bool,
 	texture:String,
