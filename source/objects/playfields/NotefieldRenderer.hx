@@ -92,7 +92,7 @@ class NotefieldRenderer extends FlxBasic {
 				realField.modNumber), realField.modManager.getValue("flashG", realField.modNumber),
 				realField.modManager.getValue("flashB", realField.modNumber));
 
-			var queue:Array<RenderObject> = field.drawQueue;
+			var queue:Array<RenderObject> = field.renderQueue;
 			for (object in queue){
 				finalDrawQueue.push({
 					graphic: object.graphic,
@@ -102,10 +102,10 @@ class NotefieldRenderer extends FlxBasic {
 					uvData: object.uvData,
 					vertices: object.vertices,
 					indices: object.indices,
-					zIndex: object.zIndex + field.zIndexMod,
+					zIndex: object.zIndex + field.zIndexModifier,
 					colorSwap: object.colorSwap,
 					objectType: object.objectType,
-					antialiasing: object.antialiasing,
+					antialiasing: object.hasAntialiasing,
 					sourceField: field,
 					glowColour: glowColour,  // Maybe this should be part of the regular RenderObject?
 					cameras: field.cameras

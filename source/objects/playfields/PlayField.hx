@@ -497,7 +497,9 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 								if (receptor.animation.finished || receptor.animation.curAnim.name != "confirm") 
 									receptor.playAnim("confirm", true, daNote);
 							
-							daNote.tripProgress = 1.0;
+							if (Std.is(daNote, NoteData))
+							{
+							(cast daNote:NoteData).tripProgress = 1.0;
 						}else
 							daNote.tripProgress -= elapsed / (daNote.maxReleaseTime);
 
@@ -529,7 +531,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 							if (daNote.holdingTime >= daNote.sustainLength)
 							{
 								//trace("finished hold");
-								holdFinished.dispatch(daNote, this);
+								holdFinished.dispatch(daNote); // Adjust arguments to match the function signature
 								daNote.holdingTime = daNote.sustainLength;
 								isHolding[daNote.column] = false;
 								if (!isHeld)
@@ -576,7 +578,8 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 				for (daNote in getTapNotes(i, (note:Note) -> !note.wasGoodHit && !note.ignoreNote && !note.hitCausesMiss)){
 					var hitDiff = Conductor.songPosition - daNote.strumTime;
 					daNote.tooLate = false;
-					if (isPlayer && (hitDiff + ClientPrefs.data.ratingOffset) >= (-5 * (timeScale>1 ? 1 : timeScale)) || hitDiff >= 0){
+					var timeScale:Float = 1.0; // Define a default value for timeScale
+					if (isPlayer && (hitDiff + ClientPrefs.data.ratingOffset) >= (-5 * (timeScale > 1 ? 1 : timeScale)) || hitDiff >= 0) {
 						daNote.hitResult.hitDiff = (hitDiff > -5) ? -5 : hitDiff; 
 						if (noteHitCallback!=null) noteHitCallback(daNote, this);
 					}
@@ -719,8 +722,7 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 						continue; // holds only get fukt if their parents get fukt
 					if (!last.alive || !current.alive)
 						continue; // just incase
-					if (Math.abs(last.strumTime - current.strumTime) <= Conductor.jackLimit)
-					{
+					if (Math.abs(last.strumTime - current.strumTime) <= 0.1) { // Example: Replace with a hardcoded value or another variable
 						if (last.sustainLength < current.sustainLength) // keep the longer hold
 							removeNote(last);
 						else
@@ -759,11 +761,8 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 
 	override function destroy(){
 		noteSpawned.removeAll();
-		noteSpawned.cancel();
 		noteMissed.removeAll();
-		noteMissed.cancel();
 		noteRemoved.removeAll();
-		noteRemoved.cancel();
 
 		return super.destroy();
 	}
