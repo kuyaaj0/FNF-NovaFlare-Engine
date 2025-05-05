@@ -24,7 +24,7 @@ typedef EventNote = {
 	value2:String
 }
 
-typedef Note = {
+typedef NoteData = {
     var field:Dynamic; // Add this field
     var fieldIndex:Int; // Add this field
     var characterHitAnimSuffix:String; // Add this field
