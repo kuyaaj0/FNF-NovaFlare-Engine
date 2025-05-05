@@ -12,7 +12,7 @@ class HScriptModifier extends Modifier
 	public var script:FunkinHScript;
 	public var name:String = "unknown";
 
-	public function new(modMgr:ModManager, ?parent:Modifier, script:FunkinHScript) 
+	public function new(modMgr:ModManager, ?parent:Modifier, script:HScript) 
 	{
 		this.psychlua = psychlua;
 		this.modMgr = modMgr;
