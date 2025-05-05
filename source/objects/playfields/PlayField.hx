@@ -335,8 +335,9 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 				recentHold = note; // for the sake of ghost-tapping shit.
 				// returned lower so that holds dont interrupt hitting other notes as, even though that'd make sense, it also feels like shit to play on some songs i.e Bopeebo
 			}else{
-				if (note.wasGoodHit)
+				if (note.wasGoodHit) {
 					continue;
+				}
 				}
 
 		return recentHold;
