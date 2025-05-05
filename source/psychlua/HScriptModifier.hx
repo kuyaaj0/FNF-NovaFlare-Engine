@@ -7,6 +7,7 @@ import psychlua.HScript;
 import psychlua.Modifier;
 import objects.StrumNote;
 import objects.Note;
+import objects.NoteObject;
 import math.Vector3;
 
 class HScriptModifier extends Modifier
