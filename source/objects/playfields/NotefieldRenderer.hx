@@ -8,6 +8,7 @@ package objects.playfields;
 			var glowB = modManager.getValue("flashB", modNumber);
  */
 
+import flixel.FlxBasic;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import openfl.geom.ColorTransform;
