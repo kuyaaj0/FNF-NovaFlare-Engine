@@ -9,7 +9,7 @@ import math.Vector3;
 
 class HScriptModifier extends Modifier
 {
-	public var script:FunkinHScript;
+	public var script:HScript;
 	public var name:String = "unknown";
 
 	public function new(modMgr:ModManager, ?parent:Modifier, script:HScript) 
