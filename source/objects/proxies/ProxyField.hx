@@ -6,7 +6,6 @@ import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
 import objects.playfields.FieldBase;
 import objects.playfields.NoteField;
-import objects.playfields.NotefieldRenderer;
 import states.PlayState;
 
 /* 
@@ -30,12 +29,14 @@ class ProxyField extends FieldBase {
 		proxiedField = field;
 	}
 
-	override public function getNotefield() {return proxiedField;}
+	override public function getNotefield():NoteField {
+	    return proxiedField;
+	}
 
 	override function preDraw(){} // hopefully no more crashes
 
 	override function draw()
-		drawQueue = proxiedField.drawQueue; // Just use the host field's queue
+		drawQueue = proxiedField.renderQueue; // Just use the host field's queue
 	
 	
 	override function update(elapsed:Float){
