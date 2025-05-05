@@ -6,6 +6,7 @@ import psychlua.Modifier;
 import psychlua.modifiers.*;
 import psychlua.events.*;
 import objects.Note;
+import objects.NoteObject;
 import math.Vector3;
 import flixel.tweens.FlxEase;
 import flixel.math.FlxPoint;
