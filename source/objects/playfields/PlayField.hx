@@ -315,8 +315,9 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	}
 	
 	// returns true if the playfield has the note, false otherwise.
-	public function hasNote(note:Note)
+	public function hasNote(note:Note) {
 		return spawnedNotes.contains(note) || noteQueue[note.column]!=null && noteQueue[note.column].contains(note);
+	}
 	
 	// sends an input to the playfield
 	public function input(data:Int):Null<Note> {
@@ -331,10 +332,11 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 		while (noteList.length > 0)
 		{
 			var note:Note = noteList.pop();
-			if (note.wasGoodHit && note.holdType == HEAD && note.holdingTime < note.sustainLength)
+			if (note.wasGoodHit && note.holdType == HEAD && note.holdingTime < note.sustainLength) {
 				recentHold = note; // for the sake of ghost-tapping shit.
 				// returned lower so that holds dont interrupt hitting other notes as, even though that'd make sense, it also feels like shit to play on some songs i.e Bopeebo
-			}else
+			}
+			} else
 				if (note.wasGoodHit) {
 					continue;
 				}
