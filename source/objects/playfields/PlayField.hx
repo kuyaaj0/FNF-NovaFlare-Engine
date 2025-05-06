@@ -333,13 +333,12 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 		{
 			var note:Note = noteList.pop();
 			if (note.wasGoodHit && note.holdType == HEAD && note.holdingTime < note.sustainLength) {
-				recentHold = note; // for the sake of ghost-tapping shit.
-				// returned lower so that holds dont interrupt hitting other notes as, even though that'd make sense, it also feels like shit to play on some songs i.e Bopeebo
+				recentHold = note;
+    // returned lower so that holds dont interrupt hitting other notes
+			} else if (note.wasGoodHit) {
+
+				continue;
 			}
-			} else
-				if (note.wasGoodHit) {
-					continue;
-				}
 
 		return recentHold;
 	}
