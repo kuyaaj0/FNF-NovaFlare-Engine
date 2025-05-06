@@ -344,20 +344,20 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	}
 
 	// generates the receptors
-	public function generateStrums(){
-		for(i in 0...keyCount){
-			var babyArrow:StrumNote = new StrumNote(0, 0, i, this, (FlxG.state == PlayState.instance) ? PlayState.instance.hudSkin : 'default');
-			babyArrow.downScroll = ClientPrefs.data.downScroll;
-			babyArrow.alpha = 0;
-			insert(0, babyArrow);
-			babyArrow.x = modManager.getBaseX(i, playerId, keyCount);
-			babyArrow.y = 50;
-			babyArrow.handleRendering = false; // NoteField handles rendering
-			babyArrow.cameras = cameras;
-			strumNotes.push(babyArrow);
-			babyArrow.postAddedToGroup();
-		}
-	}
+public function generateStrums() {
+    for (i in 0...keyCount) {
+        var babyArrow:StrumNote = new StrumNote(0, 0, i, this, (FlxG.state == PlayState.instance) ? PlayState.instance.hudSkin : 'default');
+        babyArrow.downScroll = ClientPrefs.data.downScroll;
+        babyArrow.alpha = 0;
+        insert(0, babyArrow);
+        babyArrow.x = modManager.getBaseX(i, playerId, keyCount);
+        babyArrow.y = 50;
+        babyArrow.handleRendering = false; // NoteField handles rendering
+        babyArrow.cameras = cameras;
+        strumNotes.push(babyArrow);
+        babyArrow.postAddedToGroup();
+    }
+} // Closing brace added here
 
 	// does the introduction thing for the receptors. story mode usually sets skip to true. OYT uses this when mario comes in
 	public function fadeIn(skip:Bool = false)
