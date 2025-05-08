@@ -4,6 +4,10 @@ import flixel.util.FlxSave;
 import openfl.utils.Assets;
 import flixel.FlxBasic;
 import flixel.FlxObject;
+import math.CoolMath;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
 
 class CoolUtil
 {
