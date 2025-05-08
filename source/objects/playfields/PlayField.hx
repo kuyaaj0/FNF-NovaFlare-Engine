@@ -323,7 +323,6 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 	public function input(data:Int):Null<Note> {
 		if (data < 0 || data > keyCount) {
 			return null;
-		}
 
 		var noteList = getTapNotes(data, (note:Note) -> !note.isSustainNote && note.requiresTap && !note.tooLate);
 
@@ -341,6 +340,8 @@ class PlayField extends FlxTypedGroup<FlxBasic>
 			}
 
 		return recentHold;
+	}
+		}
 	}
 
 	// generates the receptors
