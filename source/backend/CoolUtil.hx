@@ -11,6 +11,27 @@ import flixel.tweens.FlxEase;
 
 class CoolUtil
 {
+	inline public static function coolLerp(current:Float, target:Float, elapsed:Float):Float
+		return CoolMath.coolLerp(current, target, elapsed);
+
+	inline public static function scale(x:Float, lower1:Float, higher1:Float, lower2:Float, higher2:Float):Float
+		return CoolMath.scale(x, lower1, higher1, lower2, higher2);
+
+	inline public static function quantizeAlpha(f:Float, interval:Float):Float
+		return CoolMath.quantizeAlpha(f, interval);
+
+	inline public static function snap(f:Float, snap:Float):Float
+		return CoolMath.snap(f, snap);
+
+	inline public static function boundTo(value:Float, min:Float, max:Float):Float
+		return CoolMath.boundTo(value, min, max);
+
+	inline public static function clamp(n:Float, lower:Float, higher:Float):Float
+		return CoolMath.clamp(n, lower, higher);
+
+	inline public static function rotate(x:Float, y:Float, rads:Float, ?point:FlxPoint):FlxPoint
+		return CoolMath.rotate(x, y, rads, point);
+	
 	inline public static function quantize(f:Float, snap:Float){
 		// changed so this actually works lol
 		var m:Float = Math.fround(f * snap);
