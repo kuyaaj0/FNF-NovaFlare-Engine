@@ -5,6 +5,7 @@ import flixel.math.FlxPoint;
 import math.Vector3;
 
 import shaders.NoteColorSwap;
+import shaders.RGBNotePalette;
 
 enum abstract ObjectType(#if cpp cpp.UInt8 #else Int #end)
 {
