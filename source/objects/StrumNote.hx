@@ -4,6 +4,7 @@ import backend.animation.PsychAnimationController;
 
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
+import shaders.RGBNotePalette;
 
 import objects.playfields.PlayField;
 import psychlua.HScript;
@@ -54,6 +55,9 @@ class StrumNote extends NoteObject
 				rgbShader.b = arr[2];
 			}
 		}
+
+		RGBPaletteSwitch = new RGBNotePalette();
+		shader = RGBNotePalette.shader;
 
 		objType = STRUM;
 		noteData = leColumn;
@@ -205,6 +209,17 @@ class StrumNote extends NoteObject
 			centerOrigin();
 			updateZIndex();
 		}
+		else if (animation.curAnim.name == 'static') {
+			RGBPalette.setHSB();
+		}
+		else if (note != null) {
+			// ok now the quants should b fine lol
+			RGBPalette.copyFrom(note.RGBPalette);
+		}
+		else {
+			RGBPalette.setHSB();
+		}
+		
 		if(useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
 	}
 }
