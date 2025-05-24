@@ -159,6 +159,12 @@ class Note extends NoteObject
 	public var texture(default, set):String = null;
 	public var noteSplashTexture:String = null;  //just use fix old mods  XD
 
+	//setting up fixing to add this shit
+	public var field:Dynamic;
+	public var fieldIndex:Int;
+	public var characterHitAnimSuffix:String;
+	public var characterMissAnimSuffix:String;
+	
 	public var noAnimation:Bool = false;
 	public var noMissAnimation:Bool = false;
 	public var hitCausesMiss:Bool = false;
