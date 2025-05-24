@@ -581,7 +581,7 @@ class PlayState extends MusicBeatState
 		    playerField.characters = [for (ch in boyfriendMap) ch];
 		    playerField.isPlayer = !playOpponent;
 		    playerField.autoPlayed = !playerField.isPlayer || cpuControlled;
-		    playerField.noteHitCallback = playOpponent ? opponentNoteHit : goodNoteHit;
+		    playerField.noteHitCallback = playOpponent ? cpuControlled_opponent : cpuControlled
 		    
 		}
 
@@ -590,13 +590,14 @@ class PlayState extends MusicBeatState
 		    dadField.characters = [for (ch in dadMap) ch];
 		    dadField.isPlayer = playOpponent;
 		    dadField.autoPlayed = !dadField.isPlayer || cpuControlled;
-		    dadField.noteHitCallback = playOpponent ? goodNoteHit : opponentNoteHit;
+		    dadField.noteHitCallback = playOpponent ? cpuControlled : cpuControlled_opponent;
 		    
 		}
 
 		// Calls scripts after playfields are fully created
 		callOnScripts("onPlayfieldCreationPost");
 
+var sectionCamera:FlxCamera = new FlxCamera
 		// Camera section setup
 		cameraPoints = [sectionCamera];
 		moveCameraSection(SONG.notes[0]);
@@ -739,7 +740,7 @@ class PlayState extends MusicBeatState
 		FlxG.camera.snapToTarget();
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
-		moveCameraSection();
+		moveCameraSection(0);
 
 		uiGroup.cameras = [camHUD];
 		noteGroup.cameras = [camHUD];
@@ -1042,7 +1043,7 @@ class PlayState extends MusicBeatState
 				{
 					if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos)
 					{
-						moveCameraSection();
+						moveCameraSection(0);
 						FlxG.camera.snapToTarget();
 					}
 					videoCutscene = null;
@@ -1208,7 +1209,7 @@ class PlayState extends MusicBeatState
 				setSongTime(0);			
 				return true;
 			}
-			moveCameraSection();
+			moveCameraSection(0);
 			generateStrums();
 
 			if (callOnScripts('onModifierRegister') != null) {
@@ -1586,7 +1587,7 @@ public function toggleGenerateNotes():Void {
                 
             }
 
-	public function generateNotes(noteData:Array<SwagSection>, callScripts:Bool = true, addToFields:Bool = true, ?keyCount:Int, ?playfields:Array<PlayField>, ?notes:Array<Note>) 
+	dynamic function generateNotes(noteData:Array<SwagSection>, callScripts:Bool = true, addToFields:Bool = true, ?keyCount:Int, ?playfields:Array<PlayField>, ?notes:Array<Note>) 
 	{
     if (playfields == null) {
         playfields = this.playfields.members;
@@ -4208,7 +4209,7 @@ public function initPlayfield(field:PlayField){
 		if (SONG.notes[curSection] != null)
 		{
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
-				moveCameraSection();
+				moveCameraSection(0);
 
 			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.data.camZooms)
 			{
