@@ -2051,7 +2051,7 @@ public function toggleGenerateNotes():Void {
 }
 
 // Good to call this whenever you make a playfield
-public function initPlayfield(field:PlayField:Array<Dynamic>, callOnHScripts:Bool = true){
+public function initPlayfield(field:PlayField, callOnHScripts:Bool = true){
     notefields.add(field.noteField);
 
     field.holdPressCallback = pressHold;
