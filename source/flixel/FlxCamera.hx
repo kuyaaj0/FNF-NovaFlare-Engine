@@ -1,6 +1,7 @@
 package flixel;
 
 import shaders.NoteColorSwap;
+import shaders.RGBNotePalette;
 import backend.ClientPrefs;
 
 import openfl.display.Bitmap;
