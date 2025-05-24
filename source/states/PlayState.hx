@@ -581,7 +581,7 @@ class PlayState extends MusicBeatState
 		    playerField.characters = [for (ch in boyfriendMap) ch];
 		    playerField.isPlayer = !playOpponent;
 		    playerField.autoPlayed = !playerField.isPlayer || cpuControlled;
-		    playerField.noteHitCallback = playOpponent ? cpuControlled_opponent : cpuControlled
+		    playerField.noteHitCallback = playOpponent ? cpuControlled_opponent : cpuControlled;
 		    
 		}
 
