@@ -4377,7 +4377,7 @@ public function initPlayfield(field:PlayField, callOnHScripts:Bool = true){
 	public function callOnHScripts(event:String, ?args:Array<Dynamic>, ?vars:Map<String, Dynamic>, ignoreStops = false, ?exclusions:Array<String>):Dynamic {
 		return callOnScripts(event, args, ignoreStops, exclusions, hscriptArray, vars);
 }
-	#else
+
 	inline public function callOnHScripts(event:String, ?args:Array<Dynamic>, ?vars:Map<String, Dynamic>, ignoreStops = false, ?exclusions:Array<String>):Dynamic {
 		return LuaUtils.Function_Continue;
 	}
