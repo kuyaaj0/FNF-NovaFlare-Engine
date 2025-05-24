@@ -576,7 +576,9 @@ class PlayState extends MusicBeatState
 		newPlayfield(); // Creates playfields for each player
 
 		// Assign player and opponent playfields
+		var playfields: FlxTypedGroup<PlayField> = new FlxTypedGroup<PlayField>();
 		playerField = playfields.members[0];
+		var playOpponent: Bool = false; // Example declaration
 		if (playerField != null) {
 		    playerField.characters = [for (ch in boyfriendMap) ch];
 		    playerField.isPlayer = !playOpponent;
@@ -596,11 +598,11 @@ class PlayState extends MusicBeatState
 
 		// Calls scripts after playfields are fully created
 		callOnScripts("onPlayfieldCreationPost");
-				
-		var sectionCamera:FlxCamera = new FlxCamera();
+
+		var sectionCamera:FlxCamera = new FlxCamera
 		// Camera section setup
 		cameraPoints = [sectionCamera];
-		moveCameraSection(SONG.notes[0]);
+		moveCameraSection(cast(SONG.notes[0], Null<Int>));
 
 		comboGroup = new FlxSpriteGroup();
 		add(comboGroup);
@@ -2049,7 +2051,7 @@ public function toggleGenerateNotes():Void {
 }
 
 // Good to call this whenever you make a playfield
-public function initPlayfield(field:PlayField){
+public function initPlayfield(field:PlayField:Array<Dynamic>, callOnHScripts:Bool = true){
     notefields.add(field.noteField);
 
     field.holdPressCallback = pressHold;
@@ -4370,6 +4372,14 @@ public function initPlayfield(field:PlayField){
 			}
 		}
 	}
+	#end
+
+	public function callOnHScripts(event:String, ?args:Array<Dynamic>, ?vars:Map<String, Dynamic>, ignoreStops = false, ?exclusions:Array<String>):Dynamic
+		return callOnScripts(event, args, ignoreStops, exclusions, hscriptArray, vars);
+
+	#else
+	inline public function callOnHScripts(event:String, ?args:Array<Dynamic>, ?vars:Map<String, Dynamic>, ignoreStops = false, ?exclusions:Array<String>):Dynamic
+		return LuaUtils.Function_Continue;
 	#end
 
 	public function callOnScripts(funcToCall:String, args:Array<Dynamic> = null, ignoreStops = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
