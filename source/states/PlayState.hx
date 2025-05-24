@@ -599,7 +599,7 @@ class PlayState extends MusicBeatState
 		// Calls scripts after playfields are fully created
 		callOnScripts("onPlayfieldCreationPost");
 
-		var sectionCamera:FlxCamera = new FlxCamera
+		var sectionCamera:FlxCamera = new FlxCamera();
 		// Camera section setup
 		cameraPoints = [sectionCamera];
 		moveCameraSection(cast(SONG.notes[0], Null<Int>));
