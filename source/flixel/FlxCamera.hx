@@ -1,6 +1,5 @@
 package flixel;
 
-import shaders.NoteColorSwap;
 import shaders.RGBNotePalette;
 import backend.ClientPrefs;
 
@@ -807,7 +806,7 @@ class FlxCamera extends FlxBasic
 	}
 
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
-			?shader:FlxShader, ?colorSwap:NoteColorSwap):Void
+			?shader:FlxShader, ?RGBPalette:RGBNotePalette):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -834,12 +833,12 @@ class FlxCamera extends FlxBasic
 			#else
 			var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 			#end
-			drawItem.addQuad(frame, matrix, transform, colorSwap);
+			drawItem.addQuad(frame, matrix, transform, RGBPalette);
 		}
 	}
 
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
-			?smoothing:Bool = false, ?shader:FlxShader, ?colorSwap:NoteColorSwap):Void
+			?smoothing:Bool = false, ?shader:FlxShader, ?RGBPalette:RGBNotePalette):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -878,12 +877,12 @@ class FlxCamera extends FlxBasic
 			#else
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
 			#end
-			drawItem.addQuad(frame, _helperMatrix, transform, colorSwap);
+			drawItem.addQuad(frame, _helperMatrix, transform, RGBPalette);
 		}
 	}
 
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
-			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader, ?colorSwap:NoteColorSwap):Void
+			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader, ?RGBPalette:RGBNotePalette):Void
 	{
 		if (FlxG.renderBlit)
 		{
