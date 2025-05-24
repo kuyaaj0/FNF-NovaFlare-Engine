@@ -199,7 +199,7 @@ class Modifier {
 			addSubmod(submod);
 	}
 
-	@:allow(funkin.modchart.ModManager)
+	@:allow(psychlua.ModManager)
 	private function _internalUpdate(){
 		for(pN in 0...target_percents.length){
 			percents[pN] = target_percents[pN];
