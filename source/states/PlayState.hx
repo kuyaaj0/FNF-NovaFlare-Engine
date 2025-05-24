@@ -602,7 +602,7 @@ class PlayState extends MusicBeatState
 		var sectionCamera:FlxCamera = new FlxCamera();
 		// Camera section setup
 		cameraPoints = [sectionCamera];
-		moveCameraSection(cast(SONG.notes[0], Null<Int>));
+		moveCameraSection(cast(SONG.notes[0], Null<Int>))
 
 		comboGroup = new FlxSpriteGroup();
 		add(comboGroup);
