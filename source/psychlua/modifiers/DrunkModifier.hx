@@ -8,7 +8,7 @@ class DrunkModifier extends NoteModifier {
 	inline function adjust(axis:String, val:Float, plr:Int):Float {
 		if ((axis.startsWith("Z") || axis.startsWith("TanZ")) && getOtherValue("legacyZAxis", plr) > 0)
 			return val / 1280;
-else
+		
 		return val;
 	}
 
@@ -23,7 +23,7 @@ else
 		if(perc!=0){
 			var angle = time * (1 + speed) + data * ((offset * 0.2) + 0.2) + visualDiff * ((period * 10) + 10) / FlxG.height;
 			return adjust(axis, perc * (mathFunc(angle) * Note.halfWidth), player);
-		} else
+		}
 		return 0;
 	}
 
