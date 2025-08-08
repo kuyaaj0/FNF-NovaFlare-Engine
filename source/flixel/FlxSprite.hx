@@ -499,7 +499,7 @@ class FlxSprite extends FlxObject
 	public function loadGraphic(graphic:FlxGraphicAsset, animated = false, frameWidth = 0, frameHeight = 0, unique = false, ?key:String):FlxSprite
 	{
 		if (graphic is String) {
-			var gn = funkin.Paths.image(graphic);
+			var gn = Paths.image(graphic);
 			if (gn != null) graphic = gn; 
 		}
 
